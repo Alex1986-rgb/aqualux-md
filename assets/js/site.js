@@ -117,11 +117,14 @@ function pageHome(){
  const hot=P.filter(p=>p.badge==="hot"||p.rating>=4.8).slice(0,10);
  const sale=P.filter(p=>p.old_price).slice(0,10);
  const neu=P.filter(p=>p.badge==="new").slice(0,10);
+ const vf0=P.filter(p=>p.real&&p.img.indexOf(".webp")>-1).slice(0,6).map(p=>p.img);
+ const vf=vf0.length>=2?vf0:P.slice(0,6).map(p=>p.img);
  const revs=C.reviews.map(r=>`<div class="rev"><div class="stars">${stars(r.rating)}</div><p>„${esc(r.text_ro)}”</p><div class="who"><div class="av">${esc(r.name[0])}</div><div><b>${esc(r.name)}</b><span>${esc(r.city)} · ${esc(r.product)}</span></div></div></div>`).join("");
  const faq=m.faq.map(f=>`<div class="q"><div class="h">${esc(f.q_ro)}<span class="pl">+</span></div><div class="a">${esc(f.a_ro)}</div></div>`).join("");
  root.innerHTML=`
  <section class="hero"><div class="hero-track">${slides}</div><button class="hero-ar prev">‹</button><button class="hero-ar next">›</button><div class="hero-dots">${m.hero.map((_,k)=>`<span class="${k?'':'on'}"></span>`).join("")}</div></section>
  <section class="ustrip"><div class="wrap">${usp}</div></section>
+ <div class="flash"><div class="wrap"><span>🔥 <b>Reduceri de sezon</b> — până la −25% la sanitehnică premium. Se termină în:</span><div class="cd" id="cd"><div class="u"><span id="cd-h">00</span><small>ore</small></div><div class="u"><span id="cd-m">00</span><small>min</small></div><div class="u"><span id="cd-s">00</span><small>sec</small></div></div><a class="btn btn-gold" href="catalog.html">Vezi ofertele</a></div></div>
  <section class="sec"><div class="wrap"><div class="sec-t"><div class="k">Colecții</div><h2>Categorii premium</h2></div><div class="cats-grid">${catcards}</div></div></section>
  <section class="sec bg-soft"><div class="wrap"><div class="sec-t"><div class="k">Cele mai dorite</div><h2>Top vânzări</h2></div>${rowOf(hot)}</div></section>
  ${sale.length?`<section class="sec"><div class="wrap"><div class="sec-t"><div class="k">Oferte</div><h2>Reduceri speciale</h2><p>Prețuri premium reduse pe stoc limitat.</p></div>${rowOf(sale)}</div></section>`:""}
@@ -132,11 +135,16 @@ function pageHome(){
    <div class="t"><div class="ic">⟲</div><b>14 zile retur</b><span>Garanție oficială producător</span></div>
    <div class="t"><div class="ic">☎</div><b>Consultanță expertă</b><span>Te ajutăm să alegi corect</span></div>
  </div></div></section>
+ <section class="sec"><div class="wrap"><div class="promo-banner"><h2>−10% la prima comandă</h2><p>Folosește codul la finalizarea comenzii și primești reducere instant la orice produs premium AQUALUX. În plus — livrare gratuită peste 3000 lei.</p><span class="code">AQUA10</span></div></div></section>
+ <section class="sec"><div class="wrap"><div class="video-show"><div class="frames" id="vframes">${vf.map((u,i)=>`<img class="${i===0?"on":""}" src="${u}" alt="">`).join("")}</div><div class="vc"><div class="k">AQUALUX Showroom</div><h2>Sanitehnică premium în mișcare</h2><p>Baterii din alamă, lavoare din marmură și sisteme de duș de lux — colecția în acțiune.</p><button class="play" id="playBtn">▶</button><a class="btn btn-ghost" style="color:#fff;border-color:rgba(255,255,255,.6)" href="catalog.html">Explorează catalogul</a></div></div></div></section>
  <section class="sec bg-soft"><div class="wrap"><div class="sec-t"><div class="k">Recenzii</div><h2>Ce spun clienții noștri</h2></div>${rowOf2(revs)}</div></section>
  <section class="sec"><div class="wrap"><div class="sec-t"><div class="k">Întrebări frecvente</div><h2>FAQ</h2></div><div class="faq">${faq}</div></div></section>
  <section class="sec"><div class="wrap"><div class="news"><h2>Reduceri exclusive pe email</h2><p>Abonează-te și primești -10% la prima comandă.</p><form onsubmit="window.__news(this);return false;"><input type="email" required placeholder="Email-ul tău"><button class="btn btn-gold">Abonează-mă</button></form></div></div></section>`;
  heroCarousel($(".hero",root)); wireRows(root);
  $$(".faq .q .h",root).forEach(h=>h.onclick=()=>h.parentElement.classList.toggle("open"));
+ (function(){var end=new Date();end.setHours(23,59,59,999);function t(){var d=Math.max(0,end-new Date());var H=$("#cd-h");if(!H)return;H.textContent=String(Math.floor(d/3.6e6)).padStart(2,"0");$("#cd-m").textContent=String(Math.floor(d%3.6e6/6e4)).padStart(2,"0");$("#cd-s").textContent=String(Math.floor(d%6e4/1e3)).padStart(2,"0");}t();setInterval(t,1000);})();
+ (function(){var f=$$("#vframes img");if(f.length<2)return;var i=0;setInterval(function(){f[i].classList.remove("on");i=(i+1)%f.length;f[i].classList.add("on");},3000);})();
+ var pb=$("#playBtn");if(pb)pb.onclick=function(){window.open("https://www.youtube.com/results?search_query=premium+bathroom+faucet+showroom","_blank");};
 }
 function rowOf2(html){return `<div class="crow"><button class="car prev">‹</button><div class="ctrack">${html}</div><button class="car next">›</button></div>`;}
 window.__news=f=>{toast("Mulțumim! Codul -10% a fost trimis pe email ✓");f.reset();};
