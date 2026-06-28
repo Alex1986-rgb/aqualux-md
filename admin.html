@@ -44,6 +44,7 @@ th{background:#faf6ec;position:sticky;top:0}td img{width:40px;height:40px;object
 <div class="wrap">
   <div class="tabs">
     <button class="on" data-t="import">📥 Import</button>
+    <button data-t="parser">🔎 Parser</button>
     <button data-t="produse">📦 Produse</button>
     <button data-t="preturi">💰 Prețuri</button>
     <button data-t="trend">📈 Tendințe</button>
@@ -68,6 +69,25 @@ smesitel,Baterie premium cu senzor,auriu,Alamă,1290,1690,18,Senzor infraroșu,,
       </div>
     </div>
     <div class="note">Цена в lei. Если <b>price</b> пусто — считается из <b>opt_usd × 80</b>. Если фото нет — подставится плейсхолдер-hero. После импорта перейди в «Export» и обнови сайт.</div>
+  </section>
+
+  <!-- PARSER -->
+  <section id="t-parser" hidden>
+    <div class="card">
+      <h2>🔎 Parser товаров (Made-in-China)</h2>
+      <p class="h">Нажми «Parsează acum» — система сама вытянет реальные товары (название, цена US$, фото) с Made-in-China по ключевому слову. Цена пересчитывается в lei (×80).</p>
+      <div class="row" style="margin-bottom:10px">
+        <input id="pkw" placeholder="bathroom faucet, smart toilet, marble basin…" value="smart sensor bathroom faucet" style="max-width:340px;font-family:inherit">
+        <select id="pcat" style="max-width:200px;font-family:inherit"></select>
+        <label>Max: <input id="pcount" type="number" value="15" style="width:70px;font-family:inherit"></label>
+        <button class="btn btn-gold" id="parseBtn">Parsează acum</button>
+      </div>
+      <div id="parseMsg" class="muted"></div>
+      <div class="tbl-wrap" style="margin-top:10px;max-height:300px"><table><thead><tr><th></th><th>Nume</th><th>US$</th><th>Preț lei</th></tr></thead><tbody id="parseRows"></tbody></table></div>
+      <div class="note" style="margin-top:12px">Если онлайн-парсинг заблокирован (прокси): открой страницу поиска Made-in-China в браузере → <b>Cmd+U</b> (View Source) → скопируй весь HTML → вставь ниже → «Parsează din HTML lipit».</div>
+      <textarea id="pasteHtml" rows="4" placeholder="Вставь сюда HTML страницы Made-in-China…" style="margin-top:8px"></textarea>
+      <button class="btn btn-ghost" id="parsePaste" style="margin-top:8px">Parsează din HTML lipit</button>
+    </div>
   </section>
 
   <!-- PRODUSE -->
@@ -153,9 +173,11 @@ function kpis(){
 }
 function fillCatSelects(){
   const cats=[...new Set(PRODUCTS.map(p=>p.cat))];
+  const all=["smesitel","unitaz","rakovina","polotenec","dush","kuhnya"];
   ["#filterCat","#peCat"].forEach(sel=>{
     const el=$(sel); el.innerHTML='<option value="">Toate categoriile</option>'+cats.map(c=>`<option value="${c}">${CATNAME[c]||c}</option>`).join("");
   });
+  const pc=$("#pcat"); if(pc) pc.innerHTML=all.map(c=>`<option value="${c}">${CATNAME[c]||c}</option>`).join("");
 }
 function renderRows(){
   const q=($("#search").value||"").toLowerCase(), fc=$("#filterCat").value;
@@ -181,7 +203,7 @@ function renderTrend(){
 // tabs
 $$(".tabs button").forEach(b=>b.onclick=()=>{
   $$(".tabs button").forEach(x=>x.classList.remove("on"));b.classList.add("on");
-  ["import","produse","preturi","trend","export"].forEach(t=>$("#t-"+t).hidden=(t!==b.dataset.t));
+  ["import","parser","produse","preturi","trend","export"].forEach(t=>$("#t-"+t).hidden=(t!==b.dataset.t));
   if(b.dataset.t==="produse")renderRows();
   if(b.dataset.t==="trend")renderTrend();
 });
@@ -237,6 +259,60 @@ function buildDataJS(){
 $("#dlData").onclick=()=>{const blob=new Blob([buildDataJS()],{type:"text/javascript"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="data.js";a.click();$("#expMsg").innerHTML='<span class="ok">✓ data.js descărcat. Încarcă-l pe GitHub în assets/js/.</span>';};
 $("#copyData").onclick=async()=>{try{await navigator.clipboard.writeText(buildDataJS());$("#expMsg").innerHTML='<span class="ok">✓ Copiat în clipboard.</span>';}catch(e){$("#expMsg").innerHTML='<span class="err">Copiere blocată — folosește Descarcă.</span>';}};
 $("#search").oninput=renderRows;$("#filterCat").onchange=renderRows;
+
+/* ===== PARSER (Made-in-China) ===== */
+function decodeHTML(s){const t=document.createElement("textarea");t.innerHTML=s;return t.value;}
+function cleanName(s){s=decodeHTML(s).replace(/\s+/g," ").trim();s=s.replace(/^(China|OEM|ODM|Wholesale|Hot Sale|Factory|New|Customized|20\d\d)\s+/i,"");return s.slice(0,72).trim();}
+function parseMIC(html,cat,limit){
+  const cards=[...html.matchAll(/<h2 class="product-name"[^>]*title="([^"]+)"[\s\S]{0,360}?\/product\/([A-Za-z0-9]+)\/([A-Za-z0-9\-]+)\.html/g)];
+  const imgs=[...html.matchAll(/data-original="([^"]*image\.made-in-china[^"]*?\.(?:jpg|jpeg|png|webp)[^"]*)"/g)]
+    .map(m=>({pos:m.index,url:m[1].startsWith("//")?"https:"+m[1]:m[1]})).filter(o=>!/Co-Ltd|Co\.,/.test(o.url));
+  const prices=[...html.matchAll(/class="price">US\$<span>([\d.]+)/g)].map(m=>({pos:m.index,usd:parseFloat(m[1])}));
+  const seen=new Set(),used=new Set(),out=[];
+  for(const c of cards){
+    const pid=c[2]; if(seen.has(pid))continue; seen.add(pid);
+    const tpos=c.index; let img=null,best=1e15;
+    for(const im of imgs){if(used.has(im.url))continue;const d=Math.abs(im.pos-tpos);if(d<best){best=d;img=im;}}
+    if(!img)for(const im of imgs){const d=Math.abs(im.pos-tpos);if(d<best){best=d;img=im;}}
+    if(!img)continue; used.add(img.url);
+    let usd=0,pb=1e15; for(const pr of prices){const d=Math.abs(pr.pos-tpos);if(d<pb){pb=d;usd=pr.usd;}}
+    const name=cleanName(c[1]); if(name.length<8)continue;
+    out.push({name,img:img.url,usd,price:usd?Math.round(usd*80/10)*10:3200,cat});
+    if(out.length>=limit)break;
+  }
+  return out;
+}
+async function fetchViaProxy(url){
+  const proxies=["https://api.allorigins.win/raw?url=","https://corsproxy.io/?url=","https://thingproxy.freeboard.io/fetch/"];
+  for(const px of proxies){try{const r=await fetch(px+encodeURIComponent(url));if(r.ok){const t=await r.text();if(t.length>40000)return t;}}catch(e){}}
+  throw new Error("proxy");
+}
+function addParsed(out){
+  let n=PRODUCTS.filter(p=>/^par-/.test(p.id)).length;
+  out.forEach((o,k)=>{n++;PRODUCTS.push({id:"par-"+String(n).padStart(3,"0"),cat:o.cat,cat_name:CATNAME[o.cat]||o.cat,real:true,visible:true,
+    name:o.name,slug:o.name.toLowerCase().replace(/[^a-z0-9]+/g,"-")+"-par"+n,price:o.price,old_price:0,discount:0,
+    img:o.img,badge:k<2?"hot":"",rating:4.7,reviews:12+k*4,feat:o.name,
+    specs:{Material:"Premium",Finisaj:"standard",Montare:"Standard",Garanție:"3 ani",Origine:"Import Made-in-China"}});});
+  kpis();fillCatSelects();
+}
+function showParsed(out){$("#parseRows").innerHTML=out.map(o=>`<tr><td><img src="${o.img}" onerror="this.style.opacity=.2"></td><td>${o.name}</td><td>${o.usd||'—'}</td><td>${o.price}</td></tr>`).join("");}
+$("#parseBtn").onclick=async()=>{
+  const kw=$("#pkw").value.trim(),cat=$("#pcat").value,lim=parseInt($("#pcount").value)||15;
+  $("#parseMsg").innerHTML="⏳ Parsez de pe Made-in-China…";
+  try{
+    const url="https://www.made-in-china.com/productdirectory.do?word="+kw.replace(/\s+/g,"+")+"&subaction=hunt";
+    const html=await fetchViaProxy(url); const out=parseMIC(html,cat,lim);
+    showParsed(out); if(out.length)addParsed(out);
+    $("#parseMsg").innerHTML=out.length?`<span class="ok">✓ ${out.length} produse parsate și adăugate în catalog.</span> Перейди в «Export» чтобы опубликовать.`:'<span class="err">0 găsite — proxy a returnat pagină blocată. Folosește «HTML lipit» mai jos.</span>';
+  }catch(e){$("#parseMsg").innerHTML='<span class="err">Proxy blocat/недоступен. Используй «Parsează din HTML lipit» ниже.</span>';}
+};
+$("#parsePaste").onclick=()=>{
+  const html=$("#pasteHtml").value,cat=$("#pcat").value,lim=parseInt($("#pcount").value)||15;
+  if(html.length<5000){$("#parseMsg").innerHTML='<span class="err">Lipește HTML-ul complet al paginii (Cmd+U → tot).</span>';return;}
+  const out=parseMIC(html,cat,lim); showParsed(out); if(out.length)addParsed(out);
+  $("#parseMsg").innerHTML=out.length?`<span class="ok">✓ ${out.length} produse parsate din HTML.</span> Перейди в «Export».`:'<span class="err">0 găsite în HTML-ul lipit.</span>';
+};
+
 // init
 kpis();fillCatSelects();
 </script>
