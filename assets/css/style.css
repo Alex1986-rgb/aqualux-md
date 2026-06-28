@@ -57,6 +57,14 @@ h1,h2,h3,h4{font-family:var(--serif);font-weight:700;margin:0;color:var(--ink)}
 .nav a{font-size:13.5px;font-weight:600;color:var(--text);padding:8px 14px;border-radius:7px;white-space:nowrap}
 .nav a:hover,.nav a.active{background:#f4eedd;color:var(--gold)}
 .nav .all{color:var(--gold)}
+.navgrp{position:relative;display:inline-block}
+.navgrp-t{font-size:13.5px;font-weight:600;padding:8px 14px;border-radius:7px;cursor:pointer;white-space:nowrap;display:inline-block}
+.navgrp:hover .navgrp-t{background:#f4eedd;color:var(--gold)}
+.navdrop{position:absolute;top:100%;left:0;background:#fff;border:1px solid var(--line);border-radius:8px;box-shadow:var(--shadow);min-width:240px;padding:6px;display:none;z-index:60}
+.navgrp:hover .navdrop{display:block}
+.navdrop a{display:flex;justify-content:space-between;align-items:center;padding:8px 12px;border-radius:6px;font-size:13px;white-space:nowrap}
+.navdrop a:hover{background:#f4eedd;color:var(--gold)}
+.navdrop .cnt{color:var(--muted);font-size:11px;margin-left:14px}
 .burger{display:none}
 
 /* ===== HERO ===== */

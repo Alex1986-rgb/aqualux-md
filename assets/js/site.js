@@ -57,7 +57,8 @@ function rowOf(list){return `<div class="crow"><button class="car prev">‹</but
 
 /* ---------- header / footer / fab ---------- */
 function buildHeader(){
- const navItems = C.cats.map(c=>`<a href="catalog.html?cat=${c.id}">${esc(c.name)}</a>`).join("");
+ const grp={}; C.cats.forEach(c=>{(grp[c.group||"Altele"]=grp[c.group||"Altele"]||[]).push(c);});
+ const navItems = Object.entries(grp).map(([g,cs])=>`<div class="navgrp"><span class="navgrp-t">${esc(g)} ▾</span><div class="navdrop">${cs.map(c=>`<a href="catalog.html?cat=${c.id}">${esc(c.name)} <span class="cnt">${c.count}</span></a>`).join("")}</div></div>`).join("");
  const h=`<div class="topbar"><div class="wrap">
     <div>${ICON.phone.replace('<svg','<svg style="width:13px;height:13px;display:inline;vertical-align:-2px"')} <a href="tel:${C.phone.replace(/ /g,'')}">${C.phone}</a> · ${esc(C.address)}</div>
     <div class="tb-r"><span>${esc(C.copy.delivery_badge_ro)}</span><span class="lang">Limba: <b>RO</b> / RU</span></div>
