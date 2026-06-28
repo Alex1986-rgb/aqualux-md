@@ -68,7 +68,7 @@ app.post("/api/order", async (req, res) => {
 
 /* ---------- API: серверный парсер Made-in-China (без лимитов прокси) ---------- */
 function parseMIC(html, cat, limit) {
-  const cards = [...html.matchAll(/<h2 class="product-name"[^>]*title="([^"]+)"[\s\S]{0,360}?\/product\/([A-Za-z0-9]+)\/([A-Za-z0-9\-]+)\.html/g)];
+  const cards = [...html.matchAll(/<h2 class="product-name"[^>]*title="([^"]+)"[\s\S]{0,360}?href="(https?:\/\/[^"]*?\/product\/([A-Za-z0-9]+)\/([A-Za-z0-9\-]+)\.html)"/g)];
   const imgs = [...html.matchAll(/data-original="([^"]*image\.made-in-china[^"]*?\.(?:jpg|jpeg|png|webp)[^"]*)"/g)]
     .map(m => ({ pos: m.index, url: m[1].startsWith("//") ? "https:" + m[1] : m[1] }))
     .filter(o => !/Co-Ltd|Co\.,/.test(o.url));
@@ -76,7 +76,7 @@ function parseMIC(html, cat, limit) {
   const decode = s => s.replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&lt;/g, "<").replace(/&gt;/g, ">");
   const seen = new Set(), used = new Set(), out = [];
   for (const c of cards) {
-    const pid = c[2]; if (seen.has(pid)) continue; seen.add(pid);
+    const pid = c[3]; if (seen.has(pid)) continue; seen.add(pid);
     const tpos = c.index;
     // галерея: до 6 ближайших неиспользованных фото = фото этого товара
     const cand = imgs.filter(im => !used.has(im.url)).map(im => ({ d: Math.abs(im.pos - tpos), url: im.url })).sort((a, b) => a.d - b.d).slice(0, 6);
@@ -85,7 +85,7 @@ function parseMIC(html, cat, limit) {
     let usd = 0, pb = 1e15; for (const pr of prices) { const d = Math.abs(pr.pos - tpos); if (d < pb) { pb = d; usd = pr.usd; } }
     const name = decode(c[1]).replace(/\s+/g, " ").trim().slice(0, 72);
     if (name.length < 8) continue;
-    const url = "https://www.made-in-china.com/product/" + c[2] + "/" + c[3] + ".html"; // ссылка на поставщика
+    const url = c[2]; // полная ссылка на поставщика (с субдоменом)
     out.push({ name, img: images[0], images, usd, price: usd ? Math.round(usd * 80 / 10) * 10 : 3200, cat, url });
     if (out.length >= limit) break;
   }
