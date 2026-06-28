@@ -11,7 +11,8 @@ const ICON = {
  search:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>',
  heart:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 21s-7-4.6-9.3-9C1.2 9 2.5 5.5 6 5.5c2 0 3.2 1.2 4 2.3.8-1.1 2-2.3 4-2.3 3.5 0 4.8 3.5 3.3 6.5C19 16.4 12 21 12 21z"/></svg>',
  user:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>',
- phone:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.6A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 2 .7 2.9a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.2-1.2a2 2 0 0 1 2.1-.5c.9.3 1.9.6 2.9.7a2 2 0 0 1 1.7 2z"/></svg>'
+ phone:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.6A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 2 .7 2.9a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.2-1.2a2 2 0 0 1 2.1-.5c.9.3 1.9.6 2.9.7a2 2 0 0 1 1.7 2z"/></svg>',
+ eye:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg>'
 };
 const CICON = {smesitel:"01",unitaz:"02",rakovina:"03",polotenec:"04",dush:"05",kuhnya:"06"};
 
@@ -31,7 +32,7 @@ function saveSnap(p){if(!p)return;const s=snaps();s[p.id]={id:p.id,name:p.name,p
 function resolve(id){return pById(id)||PCACHE[id]||snaps()[id]||null;}
 function cartItems(){const c=getCart();return Object.keys(c).map(id=>({p:resolve(id),q:c[id]})).filter(x=>x.p);}
 function cartSub(){return cartItems().reduce((s,x)=>s+x.p.price*x.q,0);}
-function addToCart(id,q=1){const c=getCart();c[id]=(c[id]||0)+q;saveCart(c);saveSnap(PCACHE[id]||pById(id));toast("Adăugat în coș ✓");}
+function addToCart(id,q=1){const c=getCart();c[id]=(c[id]||0)+q;saveCart(c);saveSnap(PCACHE[id]||pById(id));toast("Adăugat în coș ✓");if(window.__openCart)window.__openCart();}
 function setQty(id,q){const c=getCart();if(q<=0)delete c[id];else c[id]=q;saveCart(c);}
 function updateCartCount(){const n=cartCount();$$(".cart-count").forEach(e=>{e.textContent=n;e.style.display=n?"flex":"none";});}
 let toastT;function toast(m){let t=$("#toast");if(!t){t=document.createElement("div");t.id="toast";t.className="toast";document.body.appendChild(t);}t.textContent=m;t.classList.add("show");clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove("show"),2200);}
@@ -44,7 +45,8 @@ function card(p){
  const old=p.old_price?`<span class="old">${money(p.old_price)}</span><span class="disc">-${discPct(p)}%</span>`:"";
  return `<div class="pcard">
    <a class="pimg" href="produs.html?id=${p.id}"><img src="${p.img}" alt="${esc(p.name)}" loading="lazy">${b}</a>
-   <button class="wish" title="Favorite">${ICON.heart}</button>
+   <button class="wish${typeof isWished==="function"&&isWished(p.id)?' on':''}" data-wish="${p.id}" title="Favorite">${ICON.heart}</button>
+   <button class="qv" data-qv="${p.id}" title="Vizualizare rapidă">${ICON.eye}</button>
    <div class="pb">
      <span class="cat">${esc(p.cat_name)}</span>
      <a class="pn" href="produs.html?id=${p.id}">${esc(p.name)}</a>
@@ -61,7 +63,7 @@ function buildHeader(){
  const navItems = Object.entries(grp).map(([g,cs])=>`<div class="navgrp"><span class="navgrp-t">${esc(g)} ▾</span><div class="navdrop">${cs.map(c=>`<a href="catalog.html?cat=${c.id}">${esc(c.name)} <span class="cnt">${c.count}</span></a>`).join("")}</div></div>`).join("");
  const h=`<div class="topbar"><div class="wrap">
     <div>${ICON.phone.replace('<svg','<svg style="width:13px;height:13px;display:inline;vertical-align:-2px"')} <a href="tel:${C.phone.replace(/ /g,'')}">${C.phone}</a> · ${esc(C.address)}</div>
-    <div class="tb-r"><span>${esc(C.copy.delivery_badge_ro)}</span><span class="lang">Limba: <b>RO</b> / RU</span></div>
+    <div class="tb-r"><button class="theme-tg" data-theme-toggle title="Schimbă tema">🌙 Temă</button><span>${esc(C.copy.delivery_badge_ro)}</span><span class="lang">Limba: <b>RO</b> / RU</span></div>
   </div></div>
   <header class="hdr"><div class="wrap hdr-main">
     <a class="logo" href="index.html"><span class="dot">A</span><span>EUROMAG<small>MAGAZIN UNIVERSAL</small></span></a>
@@ -71,7 +73,8 @@ function buildHeader(){
     </form>
     <div class="hdr-icons">
       <a class="hicon" href="contacte.html">${ICON.user}<span>Cont</span></a>
-      <a class="hicon" href="cos.html">${ICON.cart}<span class="cart-count">0</span><span>Coș</span></a>
+      <a class="hicon" href="#" data-openwish>${ICON.heart}<span class="wish-count">0</span><span>Favorite</span></a>
+      <a class="hicon" href="cos.html" data-opencart>${ICON.cart}<span class="cart-count">0</span><span>Coș</span></a>
     </div>
   </div></header>
   <nav class="nav"><div class="wrap"><a class="all" href="catalog.html">Toate produsele</a>${navItems}<a href="livrare.html">Livrare</a><a href="despre.html">Despre</a><a href="contacte.html">Contacte</a></div></nav>`;
@@ -275,6 +278,7 @@ function renderProduct(p){
  const bullets=cc.bullets_ro.map(b=>`<li>${esc(b)}</li>`).join("");
  const pills=p.feat.split(/,|·/).map(s=>s.trim()).filter(Boolean).map(s=>`<span>${esc(s)}</span>`).join("");
  const related=P.filter(x=>x.cat===p.cat&&x.id!==p.id).slice(0,10);
+ const rvItems=getRV().filter(id=>id!==p.id).map(resolve).filter(Boolean).slice(0,10);
  const prevs=C.reviews.filter(r=>r.rating>=4).slice(0,4).map(r=>`<div class="rev"><div class="stars">${stars(r.rating)}</div><p>„${esc(r.text_ro)}”</p><div class="who"><div class="av">${esc(r.name[0])}</div><div><b>${esc(r.name)}</b><span>${esc(r.city)}</span></div></div></div>`).join("");
  root.innerHTML=`<div class="wrap"><div class="bcrumb"><a href="index.html">Acasă</a> / <a href="catalog.html?cat=${p.cat}">${esc(p.cat_name)}</a> / ${esc(p.name)}</div>
  <div class="pdp">
@@ -309,6 +313,7 @@ function renderProduct(p){
    <div class="body" id="tb-r" hidden><div class="crow"><button class="car prev">‹</button><div class="ctrack">${prevs}</div><button class="car next">›</button></div></div>
  </div>
  <section class="sec"><div class="sec-t" style="text-align:left"><h2>${esc(C.copy.cross_sell_title_ro)}</h2></div>${rowOf(related)}</section>
+ ${rvItems.length?`<section class="sec"><div class="sec-t" style="text-align:left"><div class="k">Istoric</div><h2>Vizualizate recent</h2></div>${rowOf(rvItems)}</section>`:""}
  </div>`;
  // JSON-LD
  const ld={"@context":"https://schema.org/","@type":"Product","name":p.name,"image":[location.origin+"/"+p.img],"description":p.feat,"sku":p.id,"brand":{"@type":"Brand","name":"EUROMAG"},"aggregateRating":{"@type":"AggregateRating","ratingValue":p.rating,"reviewCount":p.reviews},"offers":{"@type":"Offer","priceCurrency":"MDL","price":p.price,"availability":"https://schema.org/InStock"}};
@@ -319,7 +324,7 @@ function renderProduct(p){
  $("#padd").onclick=()=>addToCart(p.id,Math.max(1,+pq.value||1));
  $("#pbuy").onclick=()=>{addToCart(p.id,Math.max(1,+pq.value||1));location.href="checkout.html";};
  $$(".tabs .heads button",root).forEach(b=>b.onclick=()=>{$$(".tabs .heads button").forEach(x=>x.classList.remove("on"));b.classList.add("on");$$(".tabs .body").forEach(x=>x.hidden=true);$("#tb-"+b.dataset.t).hidden=false;wireRows();});
- wireRows(root);
+ wireRows(root);refreshWishUI();pushRV(p.id);
 }
 
 /* ---------- CART ---------- */
@@ -336,7 +341,7 @@ function pageCart(){
        ${left>0?`<div style="font-size:12.5px;color:var(--muted)">Mai adaugă <b>${money(left)}</b> pentru livrare gratuită</div><div class="progress"><i style="width:${prog}%"></i></div>`:`<div style="color:var(--green);font-size:13px;font-weight:600">✓ Ai livrare gratuită!</div>`}
        <div class="row"><span>Subtotal</span><span>${money(sub)}</span></div>
        <div class="row"><span>Livrare</span><span>${deliv?money(deliv):"Gratuit"}</span></div>
-       <div class="promo"><input id="promo" placeholder="Cod promo (AQUA10)"><button class="btn btn-ghost" id="promoB">Aplică</button></div>
+       <div class="promo"><input id="promo" placeholder="Cod promo (EURO10)"><button class="btn btn-ghost" id="promoB">Aplică</button></div>
        <div class="row total"><span>Total</span><span id="ctotal">${money(total)}</span></div>
        <a class="btn btn-gold btn-block" href="checkout.html" style="margin-top:14px">Finalizează comanda</a>
        <a class="btn btn-ghost btn-block" href="catalog.html" style="margin-top:8px">Continuă cumpărăturile</a>
@@ -345,7 +350,7 @@ function pageCart(){
    $$('[data-m]').forEach(b=>b.onclick=()=>{const c=getCart();setQty(b.dataset.m,(c[b.dataset.m]||1)-1);render();});
    $$('[data-p2]').forEach(b=>b.onclick=()=>{const c=getCart();setQty(b.dataset.p2,(c[b.dataset.p2]||1)+1);render();});
    $$('[data-i]').forEach(inp=>inp.onchange=()=>{setQty(inp.dataset.i,Math.max(0,parseInt(inp.value)||0));render();});
-   $("#promoB").onclick=()=>{if(($("#promo").value||"").toUpperCase()==="AQUA10"){const t=Math.round((sub*0.9+deliv));$("#ctotal").textContent=money(t);toast("Cod aplicat: -10% ✓");}else toast("Cod invalid");};
+   $("#promoB").onclick=()=>{if(($("#promo").value||"").toUpperCase()==="EURO10"){const t=Math.round((sub*0.9+deliv));$("#ctotal").textContent=money(t);toast("Cod aplicat: -10% ✓");}else toast("Cod invalid");};
  }
  render();
 }
@@ -390,7 +395,7 @@ function pageCheckout(){
  $$(".opt input").forEach(r=>r.onchange=()=>{const nm=r.name;$$(`.opt input[name=${nm}]`).forEach(x=>x.closest(".opt").classList.toggle("sel",x.checked));});
  $("#coForm").onsubmit=e=>{e.preventDefault();const f=e.target;
    if(!f.name.value||!f.phone.value||!f.addr.value){toast("Completează câmpurile obligatorii");return;}
-   const ord="AQ-"+Date.now().toString().slice(-6);
+   const ord="EU-"+Date.now().toString().slice(-6);
    const lines=items.map(x=>`${x.p.name} × ${x.q} = ${money(x.p.price*x.q)}`).join("%0A");
    const wa=`https://wa.me/${C.whatsapp}?text=${encodeURIComponent("Comandă nouă "+ord+" — EUROMAG")}%0A${lines}%0ATotal: ${money(total).replace(' ','%20')}%0AClient: ${encodeURIComponent(f.name.value+", "+f.phone.value+", "+f.city.value)}`;
    localStorage.removeItem(CART_KEY);updateCartCount();
@@ -438,12 +443,127 @@ function pageContacts(){
 }
 window.__contact=f=>{toast("Mulțumim! Te contactăm în curând ✓");f.reset();};
 
+/* ===================== MODERN FEATURES ===================== */
+const WISH_KEY="aqualux_wish_v1", RV_KEY="aqualux_rv_v1", THEME_KEY="aqualux_theme";
+/* ---- wishlist ---- */
+function getWish(){try{return JSON.parse(localStorage.getItem(WISH_KEY))||[];}catch(e){return [];}}
+function isWished(id){return getWish().indexOf(id)>-1;}
+function toggleWish(id){let w=getWish();const i=w.indexOf(id);if(i>-1)w.splice(i,1);else w.unshift(id);localStorage.setItem(WISH_KEY,JSON.stringify(w));updateWishCount();return i<0;}
+function updateWishCount(){const n=getWish().length;$$(".wish-count").forEach(e=>{e.textContent=n;e.style.display=n?"flex":"none";});}
+function refreshWishUI(){$$('[data-wish]').forEach(b=>b.classList.toggle("on",isWished(b.dataset.wish)));updateWishCount();}
+/* ---- recently viewed ---- */
+function pushRV(id){let r=getRV();r=r.filter(x=>x!==id);r.unshift(id);localStorage.setItem(RV_KEY,JSON.stringify(r.slice(0,12)));}
+function getRV(){try{return JSON.parse(localStorage.getItem(RV_KEY))||[];}catch(e){return [];}}
+/* ---- drawers (cart + wishlist) ---- */
+function buildDrawerHost(){
+ if($("#drawer-host"))return;
+ const d=document.createElement("div");d.id="drawer-host";
+ d.innerHTML=`<div class="drawer-ov"></div><aside class="drawer" id="cartDrawer"></aside><aside class="drawer" id="wishDrawer"></aside><div class="qv-wrap"><div class="qv-modal" id="qvModal"></div></div>`;
+ document.body.appendChild(d);
+ $(".drawer-ov",d).onclick=closeDrawers;
+ document.addEventListener("keydown",e=>{if(e.key==="Escape")closeDrawers();});
+}
+function closeDrawers(){const h=$("#drawer-host");if(h)h.className="";}
+function openCart(){buildDrawerHost();renderCartDrawer();$("#drawer-host").className="open open-cart";}
+function openWish(){buildDrawerHost();renderWishDrawer();$("#drawer-host").className="open open-wish";}
+function openQV(){buildDrawerHost();$("#drawer-host").className="open open-qv";}
+window.__openCart=openCart;
+function renderCartDrawer(){
+ const items=cartItems(), el=$("#cartDrawer");
+ if(!items.length){el.innerHTML=`<div class="dr-h"><b>Coșul tău</b><button class="dr-x">✕</button></div><div class="dr-empty"><div class="big">🛒</div><p>Coșul este gol</p><a class="btn btn-gold" href="catalog.html">Spre catalog</a></div>`;wireDrawer();return;}
+ const sub=cartSub(),left=Math.max(0,FREE-sub),prog=Math.min(100,sub/FREE*100);
+ const rows=items.map(({p,q})=>`<div class="dr-item"><img src="${p.img}" loading="lazy"><div class="dr-i-b"><a href="produs.html?id=${p.id}">${esc(p.name)}</a><div class="dr-q"><button data-dm="${p.id}">−</button><span>${q}</span><button data-dp="${p.id}">+</button><b class="dr-pr">${money(p.price*q)}</b></div></div><button class="dr-rm" data-drm="${p.id}">✕</button></div>`).join("");
+ el.innerHTML=`<div class="dr-h"><b>Coșul tău (${cartCount()})</b><button class="dr-x">✕</button></div>
+  <div class="dr-ship">${left>0?`Mai adaugă <b>${money(left)}</b> pentru livrare gratuită`:`<span style="color:var(--green)">✓ Livrare gratuită activată!</span>`}<div class="progress"><i style="width:${prog}%"></i></div></div>
+  <div class="dr-list">${rows}</div>
+  <div class="dr-foot"><div class="dr-sub"><span>Subtotal</span><b>${money(sub)}</b></div><a class="btn btn-gold btn-block" href="checkout.html">Finalizează comanda</a><a class="btn btn-ghost btn-block" href="cos.html" style="margin-top:8px">Vezi coșul</a></div>`;
+ wireDrawer();
+}
+function renderWishDrawer(){
+ const el=$("#wishDrawer"), items=getWish().map(resolve).filter(Boolean);
+ if(!items.length){el.innerHTML=`<div class="dr-h"><b>Favorite</b><button class="dr-x">✕</button></div><div class="dr-empty"><div class="big">♡</div><p>Lista de favorite e goală</p><a class="btn btn-gold" href="catalog.html">Spre catalog</a></div>`;wireDrawer();return;}
+ const rows=items.map(p=>`<div class="dr-item"><img src="${p.img}" loading="lazy"><div class="dr-i-b"><a href="produs.html?id=${p.id}">${esc(p.name)}</a><div class="dr-q"><b class="dr-pr">${money(p.price)}</b><button class="btn btn-gold" style="padding:5px 11px;font-size:12px" data-add="${p.id}">În coș</button></div></div><button class="dr-rm" data-wrm="${p.id}">✕</button></div>`).join("");
+ el.innerHTML=`<div class="dr-h"><b>Favorite (${items.length})</b><button class="dr-x">✕</button></div><div class="dr-list">${rows}</div>`;
+ wireDrawer();
+}
+function wireDrawer(){
+ $$(".dr-x").forEach(b=>b.onclick=closeDrawers);
+ $$('[data-dm]').forEach(b=>b.onclick=()=>{const c=getCart();setQty(b.dataset.dm,(c[b.dataset.dm]||1)-1);renderCartDrawer();});
+ $$('[data-dp]').forEach(b=>b.onclick=()=>{const c=getCart();setQty(b.dataset.dp,(c[b.dataset.dp]||1)+1);renderCartDrawer();});
+ $$('[data-drm]').forEach(b=>b.onclick=()=>{setQty(b.dataset.drm,0);renderCartDrawer();});
+ $$('[data-wrm]').forEach(b=>b.onclick=()=>{toggleWish(b.dataset.wrm);renderWishDrawer();refreshWishUI();});
+}
+/* ---- quick view ---- */
+function openQuickView(id){
+ buildDrawerHost();const m=$("#qvModal");
+ m.innerHTML=`<div class="qv-load">Se încarcă…</div>`;openQV();
+ const show=p=>{ if(!p){m.innerHTML=`<button class="dr-x qv-x">✕</button><div class="qv-load">Produs indisponibil</div>`;$(".qv-x").onclick=closeDrawers;return;}
+  const imgs=(p.images&&p.images.length)?p.images.slice(0,4):[p.img];
+  m.innerHTML=`<button class="dr-x qv-x">✕</button>
+   <div class="qv-g"><div class="qv-main"><img id="qvImg" src="${imgs[0]}" alt="${esc(p.name)}"></div><div class="qv-th">${imgs.map((u,i)=>`<img class="${i?'':'on'}" src="${u}" data-qvi>`).join("")}</div></div>
+   <div class="qv-i"><span class="cat">${esc(p.cat_name)}</span><h3>${esc(p.name)}</h3>
+     <div class="rowrate"><span class="stars">${stars(p.rating)}</span> <span>${p.rating} · ${p.reviews} recenzii</span></div>
+     <div class="price"><span class="now">${money(p.price)}</span>${p.old_price?`<span class="old">${money(p.old_price)}</span><span class="disc">-${discPct(p)}%</span>`:""}</div>
+     <p class="qv-d">${esc((p.feat||"").slice(0,160))}</p>
+     <div class="buyrow"><button class="btn btn-gold btn-block" data-add="${p.id}">${esc(C.copy.add_to_cart_ro)}</button></div>
+     <a class="btn btn-ghost btn-block" href="produs.html?id=${p.id}" style="margin-top:8px">Vezi pagina completă →</a></div>`;
+  $(".qv-x").onclick=closeDrawers;
+  $$('#qvModal [data-qvi]').forEach(t=>t.onclick=()=>{$("#qvImg").src=t.src;$$('#qvModal [data-qvi]').forEach(x=>x.classList.remove("on"));t.classList.add("on");});
+ };
+ let p=resolve(id);
+ if(p&&p.specs)show(p);
+ else if(API)fetch(API+"/api/product/"+encodeURIComponent(id)).then(r=>r.ok?r.json():null).then(pr=>show(pr||p)).catch(()=>show(p));
+ else show(p);
+}
+/* ---- instant search ---- */
+function wireInstantSearch(){
+ const form=$(".search");if(!form)return;const inp=form.q;
+ const box=document.createElement("div");box.className="ac-box";form.appendChild(box);
+ const close=()=>box.classList.remove("on");
+ inp.addEventListener("input",()=>{
+  const q=inp.value.trim().toLowerCase();if(q.length<2){close();return;}
+  const cats=C.cats.filter(c=>c.name.toLowerCase().includes(q)).slice(0,4);
+  const prods=P.filter(p=>(p.name+" "+(p.cat_name||"")).toLowerCase().includes(q)).slice(0,6);
+  if(!cats.length&&!prods.length){box.innerHTML=`<div class="ac-empty">Nimic găsit pentru „${esc(q)}”</div>`;box.classList.add("on");return;}
+  box.innerHTML=(cats.length?`<div class="ac-s">Categorii</div>`+cats.map(c=>`<a class="ac-c" href="catalog.html?cat=${c.id}">${esc(c.name)} <span>${c.count}</span></a>`).join(""):"")
+   +(prods.length?`<div class="ac-s">Produse</div>`+prods.map(p=>`<a class="ac-p" href="produs.html?id=${p.id}"><img src="${p.img}" loading="lazy"><span class="ac-n">${esc(p.name)}</span><b>${money(p.price)}</b></a>`).join(""):"")
+   +`<a class="ac-all" href="catalog.html?q=${encodeURIComponent(inp.value)}">Vezi toate rezultatele →</a>`;
+  box.classList.add("on");
+ });
+ document.addEventListener("click",e=>{if(!form.contains(e.target))close();});
+}
+/* ---- dark mode ---- */
+function applyTheme(t){document.documentElement.setAttribute("data-theme",t);$$('[data-theme-toggle]').forEach(b=>b.innerHTML=t==="dark"?"☀️ Temă":"🌙 Temă");}
+function initTheme(){let t=localStorage.getItem(THEME_KEY)||"light";applyTheme(t);
+ document.addEventListener("click",e=>{if(e.target.closest("[data-theme-toggle]")){t=document.documentElement.getAttribute("data-theme")==="dark"?"light":"dark";localStorage.setItem(THEME_KEY,t);applyTheme(t);}});}
+/* ---- scroll reveal ---- */
+function initReveal(){
+ if(!("IntersectionObserver" in window))return;
+ const io=new IntersectionObserver((es)=>{es.forEach(en=>{if(en.isIntersecting){en.target.classList.add("in");io.unobserve(en.target);}});},{threshold:.08,rootMargin:"0px 0px -40px 0px"});
+ const mark=()=>$$(".sec, .ustrip, .groups-grid > *, .trust, .promo-banner, .citybanner").forEach(el=>{if(!el.classList.contains("rev")){el.classList.add("rev");io.observe(el);}});
+ mark();setTimeout(mark,600);setTimeout(mark,1500);
+}
+/* ---- PWA ---- */
+function initPWA(){
+ if(!$('link[rel=manifest]')){const l=document.createElement("link");l.rel="manifest";l.href="manifest.json";document.head.appendChild(l);}
+ const mt=document.createElement("meta");mt.name="theme-color";mt.content="#16130e";document.head.appendChild(mt);
+ if("serviceWorker" in navigator){window.addEventListener("load",()=>{navigator.serviceWorker.register("sw.js").catch(()=>{});});}
+}
+
 /* ---------- boot ---------- */
 document.addEventListener("DOMContentLoaded",()=>{
- buildHeader();buildFooter();buildFab();updateCartCount();
- document.addEventListener("click",e=>{const a=e.target.closest("[data-add]");if(a){addToCart(a.dataset.add);}
-   const w=e.target.closest(".wish");if(w){w.style.color=w.style.color?"":"#b8463c";toast("Adăugat la favorite ♥");}});
+ buildHeader();buildFooter();buildFab();updateCartCount();updateWishCount();
+ initTheme();initPWA();wireInstantSearch();
+ document.addEventListener("click",e=>{
+   const add=e.target.closest("[data-add]");if(add){addToCart(add.dataset.add);return;}
+   const wq=e.target.closest("[data-wish]");if(wq){e.preventDefault();const on=toggleWish(wq.dataset.wish);wq.classList.toggle("on",on);refreshWishUI();toast(on?"Adăugat la favorite ♥":"Eliminat din favorite");return;}
+   const qv=e.target.closest("[data-qv]");if(qv){e.preventDefault();openQuickView(qv.dataset.qv);return;}
+   const oc=e.target.closest("[data-opencart]");if(oc){e.preventDefault();openCart();return;}
+   const ow=e.target.closest("[data-openwish]");if(ow){e.preventDefault();openWish();return;}
+ });
  const pg=document.body.dataset.page;
  ({home:pageHome,catalog:pageCatalog,product:pageProduct,cart:pageCart,checkout:pageCheckout,info:pageInfo,contacts:pageContacts}[pg]||(()=>{}))();
+ initReveal();
+ [300,900,2000].forEach(t=>setTimeout(()=>{refreshWishUI();initReveal();},t));
 });
 })();

@@ -1,0 +1,16 @@
+{
+  "name": "EUROMAG — Magazin universal",
+  "short_name": "EUROMAG",
+  "description": "Magazin universal online în Moldova — electronice, mobilier, sanitehnică, modă, auto și mii de produse cu livrare în toată țara.",
+  "lang": "ro",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#14110c",
+  "theme_color": "#16130e",
+  "categories": ["shopping"],
+  "icons": [
+    { "src": "assets/img/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}
