@@ -160,6 +160,12 @@ const MARGIN_K = { smesitel:2.4,kuhnya:2.3,unitaz:1.9,rakovina:2.2,polotenec:2.3
   malachit:2.6,iluminat:2.4,lustre:2.3,becuri:3.0,prize:2.8,carnize:2.5,benzi_led:2.6,spoturi:2.5,
   mramor:2.4,divane:2.0,motociclete:1.6,electrocar:1.4,
   trotinete:2.2,trotinete_el:2.0,biciclete:2.0,biciclete_el:1.8,hoverboard:2.2,atv:1.6 };
+// доп. категории из файла (расширяемо без правки кода)
+try {
+  const extra = JSON.parse(fs.readFileSync(path.join(__dirname, "categories_extra.json"), "utf8"));
+  for (const c of extra) { CAT_KW[c.id] = c.keyword_en; CAT_NAME[c.id] = c.name_ro; SHIP[c.id] = c.ship_usd; MARGIN_K[c.id] = c.margin_k; }
+  console.log("Доп. категорий загружено:", extra.length);
+} catch (e) { console.log("categories_extra.json не загружен:", e.message); }
 const FX = 18.2, HEAVY = ["cazi","cabine","mobila_baie","mobila_buc","mese"];
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const nice = v => { v = Math.round(v); return v < 1000 ? Math.round(v/10)*10 : Math.round(v/50)*50; };
