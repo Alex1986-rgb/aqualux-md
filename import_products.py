@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Импорт РЕАЛЬНЫХ товаров (с Alibaba) в каталог AQUALUX.
+"""Импорт РЕАЛЬНЫХ товаров (с Alibaba) в каталог EUROMAG.
 
 Как пользоваться:
  1) Заполни data/import.csv (по одной строке на товар, см. шаблон/колонки).
@@ -39,7 +39,7 @@ def placeholder(path,name,finish,sku):
         k=1-0.4*y/S;d.line([(0,y),(S,y)],fill=(int(28*k+6),int(23*k+5),int(16*k+4)))
     G=(200,162,76);d.rectangle([18,18,S-18,S-18],outline=(74,61,40),width=2)
     fb=font(GEOB,30);fa=font(font(ARIB,20).path if hasattr(font(ARIB,20),'path') else ARIB,20) if False else font(ARIB,20)
-    d.text(((S-d.textlength("AQUALUX",font=fb))/2,60),"AQUALUX",font=fb,fill=(227,200,121))
+    d.text(((S-d.textlength("EUROMAG",font=fb))/2,60),"EUROMAG",font=fb,fill=(227,200,121))
     fn=font(ARIB,22)
     d.text(((S-d.textlength(name[:38],font=fn))/2,S/2-10),name[:38],font=fn,fill=(224,214,194))
     fs=font(ARIB,16);s=f"{finish}  ·  {sku}"

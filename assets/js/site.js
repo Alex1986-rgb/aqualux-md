@@ -1,4 +1,4 @@
-/* ===== AQUALUX storefront engine ===== */
+/* ===== EUROMAG storefront engine ===== */
 (function(){
 "use strict";
 const C = window.AQ_CONTENT, P = window.AQ_PRODUCTS;
@@ -64,7 +64,7 @@ function buildHeader(){
     <div class="tb-r"><span>${esc(C.copy.delivery_badge_ro)}</span><span class="lang">Limba: <b>RO</b> / RU</span></div>
   </div></div>
   <header class="hdr"><div class="wrap hdr-main">
-    <a class="logo" href="index.html"><span class="dot">A</span><span>AQUALUX<small>SANITEHNICĂ PREMIUM</small></span></a>
+    <a class="logo" href="index.html"><span class="dot">A</span><span>EUROMAG<small>SANITEHNICĂ PREMIUM</small></span></a>
     <form class="search" onsubmit="location.href='catalog.html?q='+encodeURIComponent(this.q.value);return false;">
       <input name="q" placeholder="Caută: baterie, vas WC, lavoar marmură…" value="${esc(param('q')||'')}">
       <button type="submit">${ICON.search}</button>
@@ -82,13 +82,13 @@ function buildHeader(){
 function buildFooter(){
  const m=C.marketing, cats=C.cats.map(c=>`<a href="catalog.html?cat=${c.id}">${esc(c.name)}</a>`).join("");
  const h=`<footer class="ftr"><div class="wrap"><div class="ftr-cols">
-   <div><div class="logo" style="font-family:Georgia,serif;font-size:24px;font-weight:700">AQUALUX<small style="display:block;font-family:Arial;font-size:9px;letter-spacing:3px">SANITEHNICĂ PREMIUM</small></div>
+   <div><div class="logo" style="font-family:Georgia,serif;font-size:24px;font-weight:700">EUROMAG<small style="display:block;font-family:Arial;font-size:9px;letter-spacing:3px">SANITEHNICĂ PREMIUM</small></div>
      <p style="font-size:13px;max-width:260px">${esc(m.footer_blurb_ro)}</p>
      <div class="pays"><span>Ramburs</span><span>Card / Visa</span><span>Mastercard</span><span>Transfer</span></div></div>
    <div><h4>Catalog</h4>${cats}</div>
    <div><h4>Informații</h4><a href="despre.html">Despre noi</a><a href="livrare.html">Livrare & plată</a><a href="garantie.html">Garanție & retur</a><a href="contacte.html">Contacte</a></div>
    <div><h4>Contacte</h4><a href="tel:${C.phone.replace(/ /g,'')}">${C.phone}</a><a href="mailto:${C.email}">${C.email}</a><p style="font-size:13px;margin:8px 0">${esc(C.address)}</p><p style="font-size:12px;color:#9b917c">Luni–Vineri 09:00–18:00<br>Sâmbătă 10:00–15:00</p></div>
- </div><div class="ftr-bot"><span>© 2026 AQUALUX Moldova. Toate drepturile rezervate.</span><span>Import direct · Dropshipping · Chișinău</span></div></div></footer>`;
+ </div><div class="ftr-bot"><span>© 2026 EUROMAG Moldova. Toate drepturile rezervate.</span><span>Import direct · Dropshipping · Chișinău</span></div></div></footer>`;
  const el=$("#site-footer"); if(el) el.innerHTML=h;
 }
 function buildFab(){const d=document.createElement("div");d.className="fab";
@@ -117,7 +117,7 @@ function pageHome(){
  const m=C.marketing, root=$("#home");
  const heroes=["assets/img/hero/hero1.jpg?v=iv","assets/img/hero/hero2.jpg?v=iv","assets/img/hero/hero3.jpg?v=iv"];
  const slides=m.hero.map((s,k)=>`<div class="hero-slide" style="background-image:url('${heroes[k]}')"><div class="hero-c">
-   <div class="k">AQUALUX · ${esc(C.city)}</div><h1>${esc(s.title_ro)}</h1><p>${esc(s.subtitle_ro)}</p>
+   <div class="k">EUROMAG · ${esc(C.city)}</div><h1>${esc(s.title_ro)}</h1><p>${esc(s.subtitle_ro)}</p>
    <a class="btn btn-gold" href="catalog.html">${esc(s.cta_ro)}</a></div></div>`).join("");
  const usp=m.usp.map((u,k)=>`<div class="u"><div class="ic">${["✦","♦","⛟","✓"][k]||"✦"}</div><div><b>${esc(u.title_ro)}</b><span>${esc(u.text_ro)}</span></div></div>`).join("");
  const catcards=C.cats.map(c=>`<div class="catcard"><div class="ic">${ICON.search.replace('<svg','<svg width=26 height=26')}</div><h3>${esc(c.name)}</h3><span>${c.count} produse →</span><a class="go" href="catalog.html?cat=${c.id}"></a></div>`).join("");
@@ -135,7 +135,7 @@ function pageHome(){
  <section class="sec"><div class="wrap"><div class="sec-t"><div class="k">Colecții</div><h2>Categorii premium</h2></div><div class="cats-grid">${catcards}</div></div></section>
  <section class="sec"><div class="wrap"><div class="citybanner" style="background:url('assets/img/hero/hero2.jpg?v=iv') center/cover">
    <div class="cc"><span class="tag">Showroom · Ialoveni · Moldova</span>
-     <h2>AQUALUX Ialoveni —<br>sanitehnică premium</h2>
+     <h2>EUROMAG Ialoveni —<br>sanitehnică premium</h2>
      <p>Din inima orașului Ialoveni aducem baterii, lavoare din marmură și sisteme de duș de lux, cu livrare rapidă în toată Moldova.</p>
      <div class="meta"><div><b>2–5 zile</b>livrare în Moldova</div><div><b>100+</b>produse premium</div><div><b>Ramburs</b>plata la livrare</div></div>
      <a class="btn btn-gold" href="catalog.html">Vezi colecția</a></div>
@@ -149,8 +149,8 @@ function pageHome(){
    <div class="t"><div class="ic">⟲</div><b>14 zile retur</b><span>Garanție oficială producător</span></div>
    <div class="t"><div class="ic">☎</div><b>Consultanță expertă</b><span>Te ajutăm să alegi corect</span></div>
  </div></div></section>
- <section class="sec"><div class="wrap"><div class="promo-banner"><h2>−10% la prima comandă</h2><p>Folosește codul la finalizarea comenzii și primești reducere instant la orice produs premium AQUALUX. În plus — livrare gratuită peste 3000 lei.</p><span class="code">AQUA10</span></div></div></section>
- <section class="sec"><div class="wrap"><div class="video-show"><div class="frames" id="vframes">${vf.map((u,i)=>`<img class="${i===0?"on":""}" src="${u}" alt="">`).join("")}</div><div class="vc"><div class="k">AQUALUX Showroom</div><h2>Sanitehnică premium în mișcare</h2><p>Baterii din alamă, lavoare din marmură și sisteme de duș de lux — colecția în acțiune.</p><button class="play" id="playBtn">▶</button><a class="btn btn-ghost" style="color:#fff;border-color:rgba(255,255,255,.6)" href="catalog.html">Explorează catalogul</a></div></div></div></section>
+ <section class="sec"><div class="wrap"><div class="promo-banner"><h2>−10% la prima comandă</h2><p>Folosește codul la finalizarea comenzii și primești reducere instant la orice produs premium EUROMAG. În plus — livrare gratuită peste 3000 lei.</p><span class="code">AQUA10</span></div></div></section>
+ <section class="sec"><div class="wrap"><div class="video-show"><div class="frames" id="vframes">${vf.map((u,i)=>`<img class="${i===0?"on":""}" src="${u}" alt="">`).join("")}</div><div class="vc"><div class="k">EUROMAG Showroom</div><h2>Sanitehnică premium în mișcare</h2><p>Baterii din alamă, lavoare din marmură și sisteme de duș de lux — colecția în acțiune.</p><button class="play" id="playBtn">▶</button><a class="btn btn-ghost" style="color:#fff;border-color:rgba(255,255,255,.6)" href="catalog.html">Explorează catalogul</a></div></div></div></section>
  <section class="sec bg-soft"><div class="wrap"><div class="sec-t"><div class="k">Recenzii</div><h2>Ce spun clienții noștri</h2></div>${rowOf2(revs)}</div></section>
  <section class="sec"><div class="wrap"><div class="sec-t"><div class="k">Întrebări frecvente</div><h2>FAQ</h2></div><div class="faq">${faq}</div></div></section>
  <section class="sec"><div class="wrap"><div class="news"><h2>Reduceri exclusive pe email</h2><p>Abonează-te și primești -10% la prima comandă.</p><form onsubmit="window.__news(this);return false;"><input type="email" required placeholder="Email-ul tău"><button class="btn btn-gold">Abonează-mă</button></form></div></div></section>`;
@@ -264,7 +264,7 @@ function pageProduct(){
 function renderProduct(p){
  const root=$("#product");
  if(!p){root.innerHTML=`<div class="wrap"><div class="empty"><div class="big">😕</div><p>Produsul nu a fost găsit.</p><a class="btn btn-gold" href="catalog.html">Înapoi la catalog</a></div></div>`;return;}
- document.title=p.name+" | AQUALUX Chișinău";
+ document.title=p.name+" | EUROMAG Chișinău";
  const cc=C.copy.category[p.cat], save=p.old_price?p.old_price-p.price:0;
  const specRows=Object.entries(p.specs).map(([k,v])=>`<tr><td>${esc(k)}</td><td>${esc(v)}</td></tr>`).join("");
  const bullets=cc.bullets_ro.map(b=>`<li>${esc(b)}</li>`).join("");
@@ -306,7 +306,7 @@ function renderProduct(p){
  <section class="sec"><div class="sec-t" style="text-align:left"><h2>${esc(C.copy.cross_sell_title_ro)}</h2></div>${rowOf(related)}</section>
  </div>`;
  // JSON-LD
- const ld={"@context":"https://schema.org/","@type":"Product","name":p.name,"image":[location.origin+"/"+p.img],"description":p.feat,"sku":p.id,"brand":{"@type":"Brand","name":"AQUALUX"},"aggregateRating":{"@type":"AggregateRating","ratingValue":p.rating,"reviewCount":p.reviews},"offers":{"@type":"Offer","priceCurrency":"MDL","price":p.price,"availability":"https://schema.org/InStock"}};
+ const ld={"@context":"https://schema.org/","@type":"Product","name":p.name,"image":[location.origin+"/"+p.img],"description":p.feat,"sku":p.id,"brand":{"@type":"Brand","name":"EUROMAG"},"aggregateRating":{"@type":"AggregateRating","ratingValue":p.rating,"reviewCount":p.reviews},"offers":{"@type":"Offer","priceCurrency":"MDL","price":p.price,"availability":"https://schema.org/InStock"}};
  const s=document.createElement("script");s.type="application/ld+json";s.textContent=JSON.stringify(ld);document.head.appendChild(s);
  // interactions
  const pq=$("#pq");
@@ -379,7 +379,7 @@ function pageCheckout(){
      <div class="row"><span>Livrare</span><span>${deliv?money(deliv):"Gratuit"}</span></div>
      <div class="row total"><span>Total</span><span>${money(total)}</span></div>
      <button class="btn btn-gold btn-block" type="submit" style="margin-top:14px">Plasează comanda</button>
-     <p style="font-size:11.5px;color:var(--muted);margin-top:10px">Prin plasarea comenzii accepți termenii și politica de confidențialitate AQUALUX.</p>
+     <p style="font-size:11.5px;color:var(--muted);margin-top:10px">Prin plasarea comenzii accepți termenii și politica de confidențialitate EUROMAG.</p>
    </aside>
  </form></div>`;
  $$(".opt input").forEach(r=>r.onchange=()=>{const nm=r.name;$$(`.opt input[name=${nm}]`).forEach(x=>x.closest(".opt").classList.toggle("sel",x.checked));});
@@ -387,10 +387,10 @@ function pageCheckout(){
    if(!f.name.value||!f.phone.value||!f.addr.value){toast("Completează câmpurile obligatorii");return;}
    const ord="AQ-"+Date.now().toString().slice(-6);
    const lines=items.map(x=>`${x.p.name} × ${x.q} = ${money(x.p.price*x.q)}`).join("%0A");
-   const wa=`https://wa.me/${C.whatsapp}?text=${encodeURIComponent("Comandă nouă "+ord+" — AQUALUX")}%0A${lines}%0ATotal: ${money(total).replace(' ','%20')}%0AClient: ${encodeURIComponent(f.name.value+", "+f.phone.value+", "+f.city.value)}`;
+   const wa=`https://wa.me/${C.whatsapp}?text=${encodeURIComponent("Comandă nouă "+ord+" — EUROMAG")}%0A${lines}%0ATotal: ${money(total).replace(' ','%20')}%0AClient: ${encodeURIComponent(f.name.value+", "+f.phone.value+", "+f.city.value)}`;
    localStorage.removeItem(CART_KEY);updateCartCount();
    root.innerHTML=`<div class="wrap"><div class="okbox"><div class="circle">✓</div><h1>Comandă plasată!</h1>
-     <p style="color:var(--muted);max-width:480px;margin:10px auto">Numărul comenzii tale: <b>${ord}</b>. Un consultant AQUALUX te va contacta în scurt timp pentru confirmare.</p>
+     <p style="color:var(--muted);max-width:480px;margin:10px auto">Numărul comenzii tale: <b>${ord}</b>. Un consultant EUROMAG te va contacta în scurt timp pentru confirmare.</p>
      <div style="display:flex;gap:10px;justify-content:center;margin-top:20px;flex-wrap:wrap">
        <a class="btn btn-gold" href="${wa}" target="_blank">Trimite comanda pe WhatsApp</a>
        <a class="btn btn-ghost" href="index.html">Înapoi acasă</a></div>
@@ -403,10 +403,10 @@ function pageCheckout(){
 function pageInfo(){
  const root=$("#info"), kind=document.body.dataset.info, m=C.marketing;
  const blocks={
-  despre:{t:"Despre AQUALUX",h:m.about_ro.split("\\n\\n").map(p=>`<p>${esc(p)}</p>`).join("")+
-    `<h3>De ce AQUALUX</h3><ul>${m.usp.map(u=>`<li><b>${esc(u.title_ro)}</b> — ${esc(u.text_ro)}</li>`).join("")}</ul>`},
+  despre:{t:"Despre EUROMAG",h:m.about_ro.split("\\n\\n").map(p=>`<p>${esc(p)}</p>`).join("")+
+    `<h3>De ce EUROMAG</h3><ul>${m.usp.map(u=>`<li><b>${esc(u.title_ro)}</b> — ${esc(u.text_ro)}</li>`).join("")}</ul>`},
   livrare:{t:"Livrare & plată",h:`<p>${esc(m.delivery_ro)}</p><h3>Metode de plată</h3><ul><li><b>Ramburs</b> — plata la livrare, direct curierului.</li><li><b>Card online</b> — Visa / Mastercard, plată securizată.</li><li><b>Transfer bancar</b> — pentru persoane juridice, cu factură.</li></ul><h3>Termene</h3><ul><li>Produse din stoc: <b>2–5 zile</b> în toată Moldova.</li><li>La comandă (import direct): <b>10–30 zile</b>, comunicat înainte de confirmare.</li><li>Livrare gratuită la comenzi peste <b>${money(FREE)}</b>.</li></ul>`},
-  garantie:{t:"Garanție & retur",h:`<p>${esc(m.returns_ro)}</p><h3>Condiții de retur</h3><ul><li>14 zile pentru retur, produsul în stare originală și ambalaj intact.</li><li>Garanție oficială de la producător pentru fiecare produs.</li><li>Asistență AQUALUX pe tot parcursul procesului.</li></ul>`}
+  garantie:{t:"Garanție & retur",h:`<p>${esc(m.returns_ro)}</p><h3>Condiții de retur</h3><ul><li>14 zile pentru retur, produsul în stare originală și ambalaj intact.</li><li>Garanție oficială de la producător pentru fiecare produs.</li><li>Asistență EUROMAG pe tot parcursul procesului.</li></ul>`}
  };
  const b=blocks[kind]||blocks.despre;
  root.innerHTML=`<div class="page-head"><div class="wrap"><h1>${esc(b.t)}</h1></div></div><div class="wrap" style="padding:30px 20px 50px"><div class="prose">${b.h}</div></div>`;
@@ -415,7 +415,7 @@ function pageInfo(){
 /* ---------- CONTACTS ---------- */
 function pageContacts(){
  const root=$("#contacts");
- root.innerHTML=`<div class="page-head"><div class="wrap"><h1>Contacte</h1><p>Suntem aici să te ajutăm să alegi sanitehnica premium potrivită.</p></div></div>
+ root.innerHTML=`<div class="page-head"><div class="wrap"><h1>Contacte</h1><p>Suntem aici să te ajutăm să alegi magazin universal potrivită.</p></div></div>
  <div class="wrap" style="padding:30px 20px 50px"><div class="co-grid">
    <div class="co-card"><h3>Scrie-ne</h3>
      <form onsubmit="window.__contact(this);return false;">

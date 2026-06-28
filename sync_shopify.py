@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""МОСТ Shopify → AQUALUX (наш сайт).
+"""МОСТ Shopify → EUROMAG (наш сайт).
 Тянет товары из твоего Shopify (подключённого к Alibaba) по Admin API и
 пересобирает assets/js/data.js + data/products.json под наш дизайн.
 
@@ -46,7 +46,7 @@ def slugify(s):
 
 def shopify_get(url):
     req = urllib.request.Request(url, headers={"X-Shopify-Access-Token":TOKEN,
-        "Content-Type":"application/json","User-Agent":"AQUALUX-sync"})
+        "Content-Type":"application/json","User-Agent":"EUROMAG-sync"})
     with urllib.request.urlopen(req, timeout=30) as r:
         return r.read().decode("utf-8"), r.headers.get("Link","")
 

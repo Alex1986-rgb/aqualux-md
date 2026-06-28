@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Экспорт каталога AQUALUX в CSV формата Wix Stores (импорт товаров).
+"""Экспорт каталога EUROMAG в CSV формата Wix Stores (импорт товаров).
 Картинки берутся по live-URL с GitHub Pages (Wix их скачает при импорте)."""
 import json, csv
 from pathlib import Path
@@ -30,7 +30,7 @@ for p in products:
         "price": p["price"], "surcharge": "",
         "visible": "true", "discountMode": "", "discountValue": "",
         "inventory": "InStock", "weight": "", "cost": "",  # cost пусто — приватно
-        "brand": "AQUALUX",
+        "brand": "EUROMAG",
     })
 
 out = ROOT/"data/wix_products_import.csv"

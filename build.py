@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""AQUALUX — генератор каталога: products.json + content.json + изображения товаров/hero."""
+"""EUROMAG — генератор каталога: products.json + content.json + изображения товаров/hero."""
 import os, json, math, re
 from PIL import Image, ImageDraw, ImageFont
 
@@ -160,7 +160,7 @@ def make_img(path, cat_name, name, finish, sku, tint):
     d.rectangle([30,30,S-30,S-30], outline=(111,90,52), width=1)
     fb=font(GEOB,30); fc=font(ARIB,16); fn=font(GEO,27); ff=font(ARIB,18); fs=font(ARI,15)
     # brand
-    s="AQUALUX"; d.text(((S-d.textlength(s,font=fb))/2,52), s, font=fb, fill=GOLDL)
+    s="EUROMAG"; d.text(((S-d.textlength(s,font=fb))/2,52), s, font=fb, fill=GOLDL)
     sp=font(ARI,12); s2="·  SANITEHNICĂ PREMIUM  ·"
     d.text(((S-d.textlength(s2,font=sp))/2,96), s2, font=sp, fill=MUT)
     d.line([(S/2-70,120),(S/2+70,120)], fill=GOLD, width=1)
@@ -248,8 +248,8 @@ with open(os.path.join(DATA,"products.json"),"w",encoding="utf-8") as f:
     json.dump(products, f, ensure_ascii=False)
 
 content = {
- "brand":"AQUALUX","city":"Chișinău","currency":"lei","free_delivery":3000,
- "phone":"+373 60 000 000","whatsapp":"37360000000","email":"comenzi@aqualux.md",
+ "brand":"EUROMAG","city":"Chișinău","currency":"lei","free_delivery":3000,
+ "phone":"+373 60 000 000","whatsapp":"37360000000","email":"comenzi@euromag.md",
  "address":"Chișinău, bd. Ștefan cel Mare 1",
  "cats":cats_meta,"marketing":marketing,"reviews":reviews,"seo":seo,"copy":copy
 }

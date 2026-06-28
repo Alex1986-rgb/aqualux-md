@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """Скрапит реальные товары (название, цена US$, фото) с Made-in-China по 6 категориям,
-скачивает фото и формирует data/import.csv для импорта в магазин AQUALUX."""
+скачивает фото и формирует data/import.csv для импорта в магазин EUROMAG."""
 import os, re, csv, subprocess, time, html as H
 from concurrent.futures import ThreadPoolExecutor
 

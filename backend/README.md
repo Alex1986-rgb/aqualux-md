@@ -1,4 +1,4 @@
-# AQUALUX — Level 3 Backend
+# EUROMAG — Level 3 Backend
 
 Node.js (Express) сервер: API товаров с пагинацией, заказы → Telegram, **серверный парсер Made-in-China без лимитов прокси**, приватная статистика маржи под ключом.
 

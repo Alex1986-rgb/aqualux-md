@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""МЕГА-каталог AQUALUX: ванная + кухня + мебель/стулья/столы/зеркала/аксессуары.
+"""МЕГА-каталог EUROMAG: ванная + кухня + мебель/стулья/столы/зеркала/аксессуары.
 Публичный products.json/data.js — БЕЗ себестоимости.
 Приватный data/supply.json — закуп+доставка, маржа, срок доставки (только локально, gitignored).
 Масштабируется: меняй счётчики в COUNTS (до 5000 — тогда лучше backend Level 3)."""
@@ -34,7 +34,7 @@ def make_ph(path, label):
         except:return ImageFont.load_default()
     fb=fnt("/System/Library/Fonts/Supplemental/Georgia Bold.ttf",30)
     fl=fnt("/System/Library/Fonts/Supplemental/Arial Bold.ttf",22)
-    d.text(((S-d.textlength("AQUALUX",font=fb))/2,60),"AQUALUX",font=fb,fill=(227,200,121))
+    d.text(((S-d.textlength("EUROMAG",font=fb))/2,60),"EUROMAG",font=fb,fill=(227,200,121))
     d.text(((S-d.textlength(label.upper(),font=fl))/2,S/2+100),label.upper(),font=fl,fill=G)
     img.save(path,"JPEG",quality=84)
 
@@ -117,8 +117,8 @@ for cid,name,kind,base,ship,deliv,mk,mat,mount,arch,fins,sizes in CATS:
     else:
         ph=f"assets/img/products/cat-{cid}.jpg"; make_ph(PIMG/f"cat-{cid}.jpg", name); photos=[ph]
     # копирайт для страницы товара
-    copy_cat[cid]={"intro_ro":f"{name} premium AQUALUX — design modern, materiale durabile și finisaje de lux pentru casa ta.",
-        "bullets_ro":[f"{name}: calitate premium, import direct","Materiale rezistente și finisaj impecabil","Design contemporan pentru orice interior","Garanție și suport AQUALUX","Livrare în toată Moldova"],
+    copy_cat[cid]={"intro_ro":f"{name} premium EUROMAG — design modern, materiale durabile și finisaje de lux pentru casa ta.",
+        "bullets_ro":[f"{name}: calitate premium, import direct","Materiale rezistente și finisaj impecabil","Design contemporan pentru orice interior","Garanție și suport EUROMAG","Livrare în toată Moldova"],
         "specs_labels_ro":{"material":"Material","finish":"Finisaj","mounting":"Montare","warranty":"Garanție","origin":"Origine"},
         "care_ro":"Curățați cu o lavetă moale; evitați substanțele abrazive pentru a păstra finisajul."}
     # комбинации (архетип × финиш × вариант модели × размер)

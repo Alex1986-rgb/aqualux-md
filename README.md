@@ -1,4 +1,4 @@
-# AQUALUX — premium интернет-магазин сантехники (Молдова)
+# EUROMAG — premium интернет-магазин сантехники (Молдова)
 
 Профессиональный магазин премиум-сантехники для рынка Молдовы (язык: română, валюта: **lei / MDL**), модель **дропшиппинг**. Статический сайт без сборки — открывается двойным кликом и разворачивается на любом хостинге / GitHub Pages.
 
@@ -44,7 +44,7 @@ python3 build.py && python3 make_pages.py
 
 ## Деплой на GitHub Pages
 ```bash
-cd ~/Downloads/aqualux-md && git init && git add -A && git commit -m "AQUALUX store"
+cd ~/Downloads/aqualux-md && git init && git add -A && git commit -m "EUROMAG store"
 # создай репозиторий и:
 git remote add origin <repo-url> && git push -u origin main
 # Settings → Pages → Branch: main / root

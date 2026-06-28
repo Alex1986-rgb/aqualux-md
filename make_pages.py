@@ -14,7 +14,7 @@ HEAD="""<!DOCTYPE html><html lang="ro"><head>
 <meta name="robots" content="index,follow">
 <link rel="canonical" href="{site}{file}">
 <meta property="og:type" content="website"><meta property="og:locale" content="ro_MD">
-<meta property="og:site_name" content="AQUALUX">
+<meta property="og:site_name" content="EUROMAG">
 <meta property="og:title" content="{title}"><meta property="og:description" content="{desc}">
 <meta property="og:image" content="{site}assets/img/hero/hero1.jpg">
 <meta name="theme-color" content="#16130e">
@@ -29,7 +29,7 @@ HEAD="""<!DOCTYPE html><html lang="ro"><head>
 <script src="assets/js/site.js"></script>
 </body></html>"""
 
-ORG=json.dumps({"@context":"https://schema.org","@type":"Store","name":"AQUALUX","image":SITE+"assets/img/hero/hero1.jpg",
+ORG=json.dumps({"@context":"https://schema.org","@type":"Store","name":"EUROMAG","image":SITE+"assets/img/hero/hero1.jpg",
  "description":"Magazin online de sanitehnică premium în Chișinău, Moldova.","url":SITE,"telephone":"+37360000000",
  "address":{"@type":"PostalAddress","addressLocality":"Chișinău","addressCountry":"MD","streetAddress":"bd. Ștefan cel Mare 1"},
  "priceRange":"$$$"},ensure_ascii=False)
@@ -37,12 +37,12 @@ ORG=json.dumps({"@context":"https://schema.org","@type":"Store","name":"AQUALUX"
 PAGES=[
  ("index.html","home","home",seo["pages"]["home"],""),
  ("catalog.html","catalog","catalog",seo["pages"]["catalog"],""),
- ("produs.html","product","product",{"title":"Produs premium | AQUALUX Chișinău","description":seo["pages"]["catalog"]["description"]},""),
- ("cos.html","cart","cart",{"title":"Coș de cumpărături | AQUALUX","description":"Coșul tău de cumpărături AQUALUX — sanitehnică premium cu livrare în Moldova."},""),
- ("checkout.html","checkout","checkout",{"title":"Finalizare comandă | AQUALUX","description":"Finalizează comanda AQUALUX: livrare în toată Moldova, ramburs, card sau transfer."},""),
+ ("produs.html","product","product",{"title":"Produs premium | EUROMAG Chișinău","description":seo["pages"]["catalog"]["description"]},""),
+ ("cos.html","cart","cart",{"title":"Coș de cumpărături | EUROMAG","description":"Coșul tău de cumpărături EUROMAG — sanitehnică premium cu livrare în Moldova."},""),
+ ("checkout.html","checkout","checkout",{"title":"Finalizare comandă | EUROMAG","description":"Finalizează comanda EUROMAG: livrare în toată Moldova, ramburs, card sau transfer."},""),
  ("despre.html","info","info",seo["pages"]["despre"],' data-info="despre"'),
- ("livrare.html","info","info",{"title":"Livrare & Plată | AQUALUX Moldova","description":"Condiții de livrare și plată AQUALUX: curier în toată Moldova, ramburs, card, transfer bancar."},' data-info="livrare"'),
- ("garantie.html","info","info",{"title":"Garanție & Retur | AQUALUX","description":"Politica de garanție și retur AQUALUX: 14 zile retur, garanție oficială producător."},' data-info="garantie"'),
+ ("livrare.html","info","info",{"title":"Livrare & Plată | EUROMAG Moldova","description":"Condiții de livrare și plată EUROMAG: curier în toată Moldova, ramburs, card, transfer bancar."},' data-info="livrare"'),
+ ("garantie.html","info","info",{"title":"Garanție & Retur | EUROMAG","description":"Politica de garanție și retur EUROMAG: 14 zile retur, garanție oficială producător."},' data-info="garantie"'),
  ("contacte.html","contacts","contacts",seo["pages"]["contacte"],""),
 ]
 for file,page,root,meta,extra in PAGES:

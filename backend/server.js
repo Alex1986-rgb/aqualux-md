@@ -1,4 +1,4 @@
-/* ===== AQUALUX Level 3 backend =====
+/* ===== EUROMAG Level 3 backend =====
  * API товаров (с пагинацией), заказы → Telegram, серверный парсер Made-in-China (без лимитов прокси),
  * приватная статистика маржи (под ключом). Деплой: Render / Railway (free tier).
  *
@@ -46,7 +46,7 @@ app.post("/api/order", async (req, res) => {
   const o = req.body || {};
   const orderId = "AQ-" + Date.now().toString().slice(-6);
   const txt =
-    `🛒 *Comandă nouă AQUALUX* ${orderId}\n` +
+    `🛒 *Comandă nouă EUROMAG* ${orderId}\n` +
     `👤 ${o.name || "-"}  ☎ ${o.phone || "-"}\n` +
     `📍 ${o.city || "-"}, ${o.addr || "-"}\n` +
     `💳 ${o.payment || "ramburs"} · 🚚 ${o.delivery || "curier"}\n` +
@@ -348,4 +348,4 @@ app.get("/api/health", (_, res) => res.json({ ok: true, service: "aqualux-backen
 app.use(express.static(path.join(__dirname, "public"))); // опц. отдавать фронт
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`AQUALUX backend → http://localhost:${PORT}`));
+app.listen(PORT, () => console.log(`EUROMAG backend → http://localhost:${PORT}`));
