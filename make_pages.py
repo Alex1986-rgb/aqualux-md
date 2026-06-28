@@ -55,7 +55,10 @@ open(os.path.join(BASE,"robots.txt"),"w").write("User-agent: *\nAllow: /\nSitema
 
 # sitemap.xml
 urls=[("","1.0"),("catalog.html","0.9"),("despre.html","0.6"),("livrare.html","0.6"),("garantie.html","0.5"),("contacte.html","0.6")]
-urls+=[("catalog.html?cat=%s"%c,"0.8") for c in ["smesitel","unitaz","rakovina","polotenec","dush","kuhnya"]]
+import urllib.parse as _up
+_cats=json.load(open(os.path.join(BASE,"data","content.json"),encoding="utf-8"))["cats"]
+urls+=[("catalog.html?cat=%s"%c["id"],"0.75") for c in _cats if c.get("count")]
+urls+=[("catalog.html?group=%s"%_up.quote(g),"0.8") for g in sorted(set(c.get("group","") for c in _cats if c.get("group")))]
 urls+=[("produs.html?id=%s"%p["id"],"0.7") for p in prods]
 sm='<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
 for u,pr in urls:
