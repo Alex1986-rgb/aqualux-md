@@ -27,8 +27,9 @@ const readJSON = (f, d) => { try { return JSON.parse(fs.readFileSync(path.join(D
 /* ---------- API: товары (пагинация + фильтры) ---------- */
 app.get("/api/products", (req, res) => {
   let p = readJSON("products.json", []);
-  const { cat, q, page = "1", per = "24", sort } = req.query;
+  const { cat, cats, q, page = "1", per = "24", sort } = req.query;
   if (cat) p = p.filter(x => x.cat === cat);
+  if (cats) { const set = new Set(String(cats).split(",").filter(Boolean)); if (set.size) p = p.filter(x => set.has(x.cat)); }
   if (q) { const s = q.toLowerCase(); p = p.filter(x => (x.name || "").toLowerCase().includes(s)); }
   if (sort === "asc") p.sort((a, b) => a.price - b.price);
   else if (sort === "desc") p.sort((a, b) => b.price - a.price);
@@ -44,7 +45,7 @@ app.get("/api/product/:id", (req, res) => {
 /* ---------- API: заказ → Telegram + сохранение ---------- */
 app.post("/api/order", async (req, res) => {
   const o = req.body || {};
-  const orderId = "AQ-" + Date.now().toString().slice(-6);
+  const orderId = "EU-" + Date.now().toString().slice(-6);
   const txt =
     `🛒 *Comandă nouă EUROMAG* ${orderId}\n` +
     `👤 ${o.name || "-"}  ☎ ${o.phone || "-"}\n` +

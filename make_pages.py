@@ -30,7 +30,7 @@ HEAD="""<!DOCTYPE html><html lang="ro"><head>
 </body></html>"""
 
 ORG=json.dumps({"@context":"https://schema.org","@type":"Store","name":"EUROMAG","image":SITE+"assets/img/hero/hero1.jpg",
- "description":"Magazin online de magazin universal în Chișinău, Moldova.","url":SITE,"telephone":"+37360000000",
+ "description":"Magazin online universal în Moldova — mii de produse cu livrare în toată țara.","url":SITE,"telephone":"+37360000000",
  "address":{"@type":"PostalAddress","addressLocality":"Chișinău","addressCountry":"MD","streetAddress":"bd. Ștefan cel Mare 1"},
  "priceRange":"$$$"},ensure_ascii=False)
 

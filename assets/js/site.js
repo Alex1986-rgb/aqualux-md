@@ -66,7 +66,7 @@ function buildHeader(){
   <header class="hdr"><div class="wrap hdr-main">
     <a class="logo" href="index.html"><span class="dot">A</span><span>EUROMAG<small>MAGAZIN UNIVERSAL</small></span></a>
     <form class="search" onsubmit="location.href='catalog.html?q='+encodeURIComponent(this.q.value);return false;">
-      <input name="q" placeholder="Caută: baterie, vas WC, lavoar marmură…" value="${esc(param('q')||'')}">
+      <input name="q" placeholder="Caută: telefon, mobilier, baterie, jucării…" value="${esc(param('q')||'')}">
       <button type="submit">${ICON.search}</button>
     </form>
     <div class="hdr-icons">
@@ -120,7 +120,10 @@ function pageHome(){
    <div class="k">EUROMAG · ${esc(C.city)}</div><h1>${esc(s.title_ro)}</h1><p>${esc(s.subtitle_ro)}</p>
    <a class="btn btn-gold" href="catalog.html">${esc(s.cta_ro)}</a></div></div>`).join("");
  const usp=m.usp.map((u,k)=>`<div class="u"><div class="ic">${["✦","♦","⛟","✓"][k]||"✦"}</div><div><b>${esc(u.title_ro)}</b><span>${esc(u.text_ro)}</span></div></div>`).join("");
- const catcards=C.cats.map(c=>`<div class="catcard"><div class="ic">${ICON.search.replace('<svg','<svg width=26 height=26')}</div><h3>${esc(c.name)}</h3><span>${c.count} produse →</span><a class="go" href="catalog.html?cat=${c.id}"></a></div>`).join("");
+ const GICON={"Sanitehnică":"🚿","Mobilier":"🛋️","Iluminat & electrice":"💡","Piatră & decor":"🪨","Transport":"🛵","Electronică":"📱","Grădină & exterior":"🌳","Vânătoare & pescuit":"🎣","Copii & jucării":"🧸","Electrocasnice":"🔌","Scule":"🛠️","Sport":"🏋️","Modă":"👗","Bijuterii":"💍","Frumusețe":"💄","Medical":"🩺","Auto & moto":"🚗","Animale":"🐾","Birou":"🖊️","Textile casă":"🛏️","Construcții":"🧱","Securitate":"🔒","Energie":"☀️","Industrial":"🏭"};
+ const grpAgg={};C.cats.forEach(c=>{const g=c.group||"Altele";(grpAgg[g]=grpAgg[g]||{n:0,p:0});grpAgg[g].n++;grpAgg[g].p+=c.count||0;});
+ const totalProd=C.cats.reduce((s,c)=>s+(c.count||0),0);
+ const groupcards=Object.entries(grpAgg).map(([g,a])=>`<div class="gcard"><div class="gic">${GICON[g]||"✦"}</div><div class="gtx"><h3>${esc(g)}</h3><span>${a.n} categorii · ${a.p} produse</span></div><a class="go" href="catalog.html?group=${encodeURIComponent(g)}" aria-label="${esc(g)}"></a></div>`).join("");
  const hot=P.filter(p=>p.badge==="hot"||p.rating>=4.8).slice(0,10);
  const sale=P.filter(p=>p.old_price).slice(0,10);
  const neu=P.filter(p=>p.badge==="new").slice(0,10);
@@ -132,12 +135,12 @@ function pageHome(){
  <section class="hero"><div class="hero-track">${slides}</div><button class="hero-ar prev">‹</button><button class="hero-ar next">›</button><div class="hero-dots">${m.hero.map((_,k)=>`<span class="${k?'':'on'}"></span>`).join("")}</div></section>
  <section class="ustrip"><div class="wrap">${usp}</div></section>
  <div class="flash"><div class="wrap"><span>🔥 <b>Reduceri de sezon</b> — până la −25% la magazin universal. Se termină în:</span><div class="cd" id="cd"><div class="u"><span id="cd-h">00</span><small>ore</small></div><div class="u"><span id="cd-m">00</span><small>min</small></div><div class="u"><span id="cd-s">00</span><small>sec</small></div></div><a class="btn btn-gold" href="catalog.html">Vezi ofertele</a></div></div>
- <section class="sec"><div class="wrap"><div class="sec-t"><div class="k">Colecții</div><h2>Categorii premium</h2></div><div class="cats-grid">${catcards}</div></div></section>
+ <section class="sec"><div class="wrap"><div class="sec-t"><div class="k">Catalog complet</div><h2>Cumpără pe secțiuni</h2><p>Peste ${totalProd.toLocaleString("ro-RO")} de produse în ${Object.keys(grpAgg).length} secțiuni — de la sanitehnică la electronice, modă și auto.</p></div><div class="groups-grid">${groupcards}</div></div></section>
  <section class="sec"><div class="wrap"><div class="citybanner" style="background:url('assets/img/hero/hero2.jpg?v=iv') center/cover">
    <div class="cc"><span class="tag">Showroom · Ialoveni · Moldova</span>
-     <h2>EUROMAG Ialoveni —<br>magazin universal</h2>
-     <p>Din inima orașului Ialoveni aducem baterii, lavoare din marmură și sisteme de duș de lux, cu livrare rapidă în toată Moldova.</p>
-     <div class="meta"><div><b>2–5 zile</b>livrare în Moldova</div><div><b>100+</b>produse premium</div><div><b>Ramburs</b>plata la livrare</div></div>
+     <h2>EUROMAG —<br>totul într-un singur loc</h2>
+     <p>Din inima orașului Ialoveni livrăm în toată Moldova: sanitehnică, mobilier, electronice, electrocasnice, modă, auto, grădină și mii de alte produse — la prețuri directe de la producători.</p>
+     <div class="meta"><div><b>2–5 zile</b>livrare în Moldova</div><div><b>${Object.keys(grpAgg).length} secțiuni</b>mii de produse</div><div><b>Ramburs</b>plata la livrare</div></div>
      <a class="btn btn-gold" href="catalog.html">Vezi colecția</a></div>
  </div></div></section>
  <section class="sec bg-soft"><div class="wrap"><div class="sec-t"><div class="k">Cele mai dorite</div><h2>Top vânzări</h2></div>${rowOf(hot)}</div></section>
@@ -149,8 +152,8 @@ function pageHome(){
    <div class="t"><div class="ic">⟲</div><b>14 zile retur</b><span>Garanție oficială producător</span></div>
    <div class="t"><div class="ic">☎</div><b>Consultanță expertă</b><span>Te ajutăm să alegi corect</span></div>
  </div></div></section>
- <section class="sec"><div class="wrap"><div class="promo-banner"><h2>−10% la prima comandă</h2><p>Folosește codul la finalizarea comenzii și primești reducere instant la orice produs premium EUROMAG. În plus — livrare gratuită peste 3000 lei.</p><span class="code">AQUA10</span></div></div></section>
- <section class="sec"><div class="wrap"><div class="video-show"><div class="frames" id="vframes">${vf.map((u,i)=>`<img class="${i===0?"on":""}" src="${u}" alt="">`).join("")}</div><div class="vc"><div class="k">EUROMAG Showroom</div><h2>Magazin universal în mișcare</h2><p>Baterii din alamă, lavoare din marmură și sisteme de duș de lux — colecția în acțiune.</p><button class="play" id="playBtn">▶</button><a class="btn btn-ghost" style="color:#fff;border-color:rgba(255,255,255,.6)" href="catalog.html">Explorează catalogul</a></div></div></div></section>
+ <section class="sec"><div class="wrap"><div class="promo-banner"><h2>−10% la prima comandă</h2><p>Folosește codul la finalizarea comenzii și primești reducere instant la orice produs premium EUROMAG. În plus — livrare gratuită peste 3000 lei.</p><span class="code">EURO10</span></div></div></section>
+ <section class="sec"><div class="wrap"><div class="video-show"><div class="frames" id="vframes">${vf.map((u,i)=>`<img class="${i===0?"on":""}" src="${u}" alt="">`).join("")}</div><div class="vc"><div class="k">EUROMAG Showroom</div><h2>Magazin universal în mișcare</h2><p>Sanitehnică, mobilier, electronice și mii de produse pentru casă, auto și stil — toate într-un singur loc.</p><button class="play" id="playBtn">▶</button><a class="btn btn-ghost" style="color:#fff;border-color:rgba(255,255,255,.6)" href="catalog.html">Explorează catalogul</a></div></div></div></section>
  <section class="sec bg-soft"><div class="wrap"><div class="sec-t"><div class="k">Recenzii</div><h2>Ce spun clienții noștri</h2></div>${rowOf2(revs)}</div></section>
  <section class="sec"><div class="wrap"><div class="sec-t"><div class="k">Întrebări frecvente</div><h2>FAQ</h2></div><div class="faq">${faq}</div></div></section>
  <section class="sec"><div class="wrap"><div class="news"><h2>Reduceri exclusive pe email</h2><p>Abonează-te și primești -10% la prima comandă.</p><form onsubmit="window.__news(this);return false;"><input type="email" required placeholder="Email-ul tău"><button class="btn btn-gold">Abonează-mă</button></form></div></div></section>`;
@@ -166,8 +169,9 @@ window.__news=f=>{toast("Mulțumim! Codul -10% a fost trimis pe email ✓");f.re
 /* ---------- CATALOG (headless API mode) ---------- */
 function pageCatalogAPI(){
  const root=$("#catalog");
- let cat=param("cat"), q=param("q")||"", sort="pop", page=1, per=24;
- const title=cat?(C.cats.find(c=>c.id===cat)||{}).name||"Catalog":(q?`Rezultate: „${esc(q)}”`:"Toate produsele");
+ let cat=param("cat"), group=param("group"), q=param("q")||"", sort="pop", page=1, per=24;
+ const groupCats=group?C.cats.filter(c=>c.group===group).map(c=>c.id):[];
+ const title=group?esc(group):(cat?(C.cats.find(c=>c.id===cat)||{}).name||"Catalog":(q?`Rezultate: „${esc(q)}”`:"Toate produsele"));
  const intro=cat&&C.seo.category_intros&&C.seo.category_intros[cat]?`<p>${esc(C.seo.category_intros[cat])}</p>`:"";
  const catBoxes=C.cats.map(c=>`<label><input type="radio" name="apicat" value="${c.id}" ${cat===c.id?"checked":""}> ${esc(c.name)} <span class="cnt">${c.count}</span></label>`).join("");
  root.innerHTML=`<div class="page-head"><div class="wrap"><h1>${esc(title)}</h1>${intro}<p class="small" style="color:#3c7a4a;font-weight:700">⚡ Live din backend API · paginare pe server (5000+)</p></div></div>
@@ -179,7 +183,7 @@ function pageCatalogAPI(){
  async function load(){
    $("#cat-grid").innerHTML='<p class="muted" style="padding:30px">Se încarcă din backend…</p>';
    try{
-     const u=`${API}/api/products?page=${page}&per=${per}`+(cat?`&cat=${cat}`:"")+(q?`&q=${encodeURIComponent(q)}`:"")+(sort!=="pop"?`&sort=${sort}`:"");
+     const u=`${API}/api/products?page=${page}&per=${per}`+(cat?`&cat=${cat}`:"")+((group&&groupCats.length)?`&cats=${groupCats.join(",")}`:"")+(q?`&q=${encodeURIComponent(q)}`:"")+(sort!=="pop"?`&sort=${sort}`:"");
      const d=await (await fetch(u)).json();
      $("#cat-found").textContent=`${d.total} produse`;
      $("#cat-grid").innerHTML=(d.items&&d.items.length)?d.items.map(card).join(""):`<div class="empty"><div class="big">🔍</div><p>Niciun produs.</p></div>`;
@@ -194,7 +198,7 @@ function pageCatalogAPI(){
      $$("#cat-pager button").forEach(b=>b.onclick=()=>{page=+b.dataset.pg;load();scrollTo({top:200,behavior:"smooth"});});
    }catch(e){$("#cat-grid").innerHTML=`<div class="empty"><div class="big">⚠️</div><p>Backend indisponibil — folosesc catalogul local.</p></div>`;window.__noapi=1;pageCatalog();}
  }
- $$('input[name=apicat]').forEach(r=>r.onchange=()=>{cat=r.value;page=1;load();});
+ $$('input[name=apicat]').forEach(r=>r.onchange=()=>{cat=r.value;group="";page=1;load();});
  $("#cat-sort").onchange=e=>{sort=e.target.value;page=1;load();};
  load();
 }
@@ -202,8 +206,9 @@ function pageCatalogAPI(){
 function pageCatalog(){
  if(API && !window.__noapi) return pageCatalogAPI();
  const root=$("#catalog");
- let cat=param("cat"), q=(param("q")||"").toLowerCase(), sort="pop", page=1, per=12;
- const sel={cats:cat?[cat]:[], mats:[], price:""};
+ let cat=param("cat"), group=param("group"), q=(param("q")||"").toLowerCase(), sort="pop", page=1, per=12;
+ const groupCats=group?C.cats.filter(c=>c.group===group).map(c=>c.id):[];
+ const sel={cats:cat?[cat]:(group?groupCats.slice():[]), mats:[], price:""};
  const allMats=[...new Set(P.map(p=>p.specs.Material))];
  const priceB=[["0-3000","sub 3 000 lei"],["3000-7000","3 000 – 7 000 lei"],["7000-15000","7 000 – 15 000 lei"],["15000-999999","peste 15 000 lei"]];
  function filtered(){
@@ -231,7 +236,7 @@ function pageCatalog(){
  const catBoxes=C.cats.map(c=>`<label><input type="checkbox" data-f="cat" value="${c.id}" ${sel.cats.includes(c.id)?"checked":""}> ${esc(c.name)} <span class="cnt">${c.count}</span></label>`).join("");
  const matBoxes=allMats.map(mt=>`<label><input type="checkbox" data-f="mat" value="${esc(mt)}"> ${esc(mt)}</label>`).join("");
  const priceBoxes=priceB.map(([v,l])=>`<label><input type="radio" name="price" data-f="price" value="${v}"> ${l}</label>`).join("");
- const title=cat?(C.cats.find(c=>c.id===cat)||{}).name||"Catalog":(q?`Rezultate: „${esc(q)}”`:"Toate produsele");
+ const title=group?esc(group):(cat?(C.cats.find(c=>c.id===cat)||{}).name||"Catalog":(q?`Rezultate: „${esc(q)}”`:"Toate produsele"));
  const intro=cat&&C.seo.category_intros[cat]?`<p>${esc(C.seo.category_intros[cat])}</p>`:"";
  root.innerHTML=`<div class="page-head"><div class="wrap"><h1>${esc(title)}</h1>${intro}</div></div>
   <div class="wrap" style="padding-top:26px;padding-bottom:40px"><div class="catalog">
