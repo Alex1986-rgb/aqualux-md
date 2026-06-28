@@ -143,19 +143,23 @@ const CAT_KW = { smesitel:"bathroom sensor faucet", kuhnya:"kitchen faucet pull 
   mobila_buc:"kitchen cabinet furniture", scaune:"dining chair modern", mese:"dining table modern", accesorii:"bathroom accessories set",
   malachit:"malachite stone product", iluminat:"ceiling light lamp modern", lustre:"crystal chandelier light", becuri:"led bulb lamp",
   prize:"wall socket switch", carnize:"curtain rod track", benzi_led:"led strip light", spoturi:"led spotlight downlight",
-  mramor:"marble stone slab natural", divane:"sofa couch living room set", motociclete:"electric motorcycle scooter", electrocar:"electric car vehicle EV" };
+  mramor:"marble stone slab natural", divane:"sofa couch living room set", motociclete:"electric motorcycle scooter", electrocar:"electric car vehicle EV",
+  trotinete:"kick scooter foldable", trotinete_el:"electric scooter adult", biciclete:"bicycle mountain bike", biciclete_el:"electric bike ebike", hoverboard:"hoverboard self balancing", atv:"atv quad bike" };
 const CAT_NAME = { smesitel:"Baterii pentru baie", kuhnya:"Baterii de bucătărie", unitaz:"Vase WC", rakovina:"Lavoare",
   polotenec:"Uscătoare de prosoape", dush:"Sisteme de duș", cazi:"Căzi de baie", cabine:"Cabine de duș",
   mobila_baie:"Mobilier de baie", oglinzi:"Oglinzi", mobila_buc:"Mobilier de bucătărie", scaune:"Scaune", mese:"Mese", accesorii:"Accesorii",
   malachit:"Articole din malachit", iluminat:"Corpuri de iluminat", lustre:"Candelabre & Lustre", becuri:"Becuri LED",
   prize:"Prize și întrerupătoare", carnize:"Galerii & Carnize", benzi_led:"Benzi LED", spoturi:"Spoturi & Proiectoare",
-  mramor:"Articole din marmură", divane:"Canapele & Divane", motociclete:"Motociclete & Scutere", electrocar:"Mașini electrice" };
+  mramor:"Articole din marmură", divane:"Canapele & Divane", motociclete:"Motociclete & Scutere", electrocar:"Mașini electrice",
+  trotinete:"Trotinete", trotinete_el:"Trotinete electrice", biciclete:"Biciclete", biciclete_el:"Biciclete electrice", hoverboard:"Hoverboard", atv:"ATV & Quad" };
 const SHIP = { smesitel:12,kuhnya:12,unitaz:55,rakovina:30,polotenec:18,dush:30,cazi:120,cabine:80,mobila_baie:80,oglinzi:20,mobila_buc:110,scaune:25,mese:70,accesorii:8,
   malachit:40,iluminat:15,lustre:40,becuri:4,prize:4,carnize:12,benzi_led:6,spoturi:8,
-  mramor:60,divane:150,motociclete:300,electrocar:2000 };
+  mramor:60,divane:150,motociclete:300,electrocar:2000,
+  trotinete:40,trotinete_el:60,biciclete:80,biciclete_el:120,hoverboard:50,atv:400 };
 const MARGIN_K = { smesitel:2.4,kuhnya:2.3,unitaz:1.9,rakovina:2.2,polotenec:2.3,dush:2.1,cazi:1.8,cabine:1.9,mobila_baie:2.0,oglinzi:2.5,mobila_buc:1.85,scaune:2.4,mese:2.0,accesorii:2.6,
   malachit:2.6,iluminat:2.4,lustre:2.3,becuri:3.0,prize:2.8,carnize:2.5,benzi_led:2.6,spoturi:2.5,
-  mramor:2.4,divane:2.0,motociclete:1.6,electrocar:1.4 };
+  mramor:2.4,divane:2.0,motociclete:1.6,electrocar:1.4,
+  trotinete:2.2,trotinete_el:2.0,biciclete:2.0,biciclete_el:1.8,hoverboard:2.2,atv:1.6 };
 const FX = 18.2, HEAVY = ["cazi","cabine","mobila_baie","mobila_buc","mese"];
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const nice = v => { v = Math.round(v); return v < 1000 ? Math.round(v/10)*10 : Math.round(v/50)*50; };
