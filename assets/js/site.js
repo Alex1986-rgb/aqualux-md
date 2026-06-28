@@ -273,8 +273,8 @@ function renderProduct(p){
  root.innerHTML=`<div class="wrap"><div class="bcrumb"><a href="index.html">Acasă</a> / <a href="catalog.html?cat=${p.cat}">${esc(p.cat_name)}</a> / ${esc(p.name)}</div>
  <div class="pdp">
    <div class="gallery">
-     <div class="main"><img id="gmain" src="${p.img}" alt="${esc(p.name)}"></div>
-     <div class="thumbs"><img class="on" src="${p.img}" onclick="document.getElementById('gmain').src=this.src"><img src="assets/img/hero/hero1.jpg?v=iv" onclick="document.getElementById('gmain').src=this.src" style="object-position:center"><img src="assets/img/hero/hero3.jpg?v=iv" onclick="document.getElementById('gmain').src=this.src"></div>
+     <div class="main"><img id="gmain" src="${(p.images&&p.images[0])||p.img}" alt="${esc(p.name)}"></div>
+     <div class="thumbs">${((p.images&&p.images.length)?p.images:[p.img]).map((u,gi)=>`<img class="${gi===0?'on':''}" src="${u}" onclick="document.getElementById('gmain').src=this.src;this.parentNode.querySelectorAll('img').forEach(t=>t.classList.remove('on'));this.classList.add('on')">`).join("")}</div>
    </div>
    <div class="info">
      <span class="cat">${esc(p.cat_name)}</span><h1>${esc(p.name)}</h1>

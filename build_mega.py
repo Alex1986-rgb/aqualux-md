@@ -77,18 +77,37 @@ CATS=[
   [("Set accesorii baie 6 piese",1.5),("Suport prosop dublu",0.6),("Dozator de săpun",0.5),("Etajeră de duș inox",0.8),("Suport hârtie igienică",0.5),("Cârlige decorative set",0.45),("Perie WC cu suport",0.55),("Coș de rufe design",1.2)],["auriu","negru mat","crom","inox"],[""]),
  ("malachit","Articole din malachit","both",180,40,(20,40),2.6,"Malachit natural / onix verde","Decorativ / pe blat",
   [("Lavoar din malachit",1.7),("Blat din malachit",2.4),("Vază decorativă din malachit",0.8),("Set de baie din malachit",1.5),("Placă decorativă din malachit",0.7),("Oglindă cu ramă din malachit",1.3),("Sfeșnic din malachit",0.5),("Cutie de bijuterii din malachit",0.45),("Tablou mozaic din malachit",1.1),("Blat de masă din malachit",2.2)],["verde malachit","verde regal","verde-negru","onix verde"],["","mic","mediu","mare"]),
+ # ===== ОСВЕЩЕНИЕ / ЭЛЕКТРИКА =====
+ ("iluminat","Corpuri de iluminat","both",30,15,(10,20),2.4,"Metal / sticlă / LED","Pe tavan / perete",
+  [("Plafonieră LED",1.0),("Aplică de perete",0.8),("Corp suspendat (pendul)",1.2),("Lampă de masă",0.9),("Iluminat pentru oglindă",0.7),("Lampadar de podea",1.3)],["auriu","negru mat","crom","alb","alamă"],["","mic","mare"]),
+ ("lustre","Candelabre & Lustre","both",90,40,(14,28),2.3,"Cristal / metal / LED","Pe tavan",
+  [("Lustră de cristal",1.6),("Candelabru clasic",1.3),("Lustră LED modernă",1.1),("Lustră rustică",0.9),("Lustră cu abajururi",1.0),("Plafonieră mare cu cristale",1.4)],["auriu","crom","negru","cristal","alamă"],["Ø40","Ø60","Ø80","Ø100"]),
+ ("becuri","Becuri LED","both",3,4,(7,14),3.0,"LED","E27 / E14 / GU10",
+  [("Bec LED E27",1.0),("Bec LED E14",0.9),("Spot LED GU10",1.1),("Bec filament vintage",1.4),("Bec inteligent Wi-Fi",2.2),("Bec RGB color cu telecomandă",1.8)],["alb cald","alb rece","neutru","RGB"],["","set 4","set 10"]),
+ ("prize","Prize și întrerupătoare","both",6,4,(7,14),2.8,"Policarbonat / sticlă","Încastrat",
+  [("Priză simplă",1.0),("Priză dublă cu USB",1.6),("Întrerupător simplu",0.9),("Întrerupător dublu",1.1),("Priză cu capac IP44 (baie)",1.3),("Variator (dimmer)",1.5),("Ramă decorativă",0.6)],["alb","negru","auriu","sticlă neagră","argintiu"],[""]),
+ ("carnize","Galerii & Carnize","both",18,12,(10,20),2.5,"Aluminiu / metal / lemn","Pe perete / tavan",
+  [("Galerie dublă metalică",1.0),("Carniză de tavan",0.9),("Galerie cu inel decorativ",1.1),("Carniză electrică motorizată",2.4),("Galerie telescopică",0.8),("Carniză din lemn masiv",1.2)],["auriu","negru mat","crom","nuc","alb"],["1.5 m","2 m","2.5 m","3 m"]),
+ ("benzi_led","Benzi LED","both",8,6,(7,14),2.6,"LED / silicon","Autoadeziv",
+  [("Bandă LED RGB",1.2),("Bandă LED albă",1.0),("Bandă LED pentru mobilier",0.9),("Bandă LED cu senzor",1.3),("Bandă LED exterior IP65",1.4),("Kit bandă cu telecomandă",1.5)],["RGB","alb cald","alb rece","RGBW"],["3 m","5 m","10 m"]),
+ ("spoturi","Spoturi & Proiectoare","both",12,8,(7,16),2.5,"Aluminiu / LED","Încastrat / aplicat",
+  [("Spot LED încastrat",1.0),("Spot orientabil",1.1),("Proiector LED",1.4),("Spot pe șină",1.2),("Spot dublu",1.3),("Spot exterior IP65",1.5)],["alb","negru","auriu","crom","nichel"],["","set 3","set 6"]),
 ]
 # счётчики на категорию — сумма 5000 (каталог отдаёт backend с пагинацией, не тормозит)
 COUNTS={"smesitel":500,"kuhnya":450,"unitaz":350,"rakovina":450,"polotenec":300,"dush":400,
- "cazi":300,"cabine":280,"mobila_baie":320,"oglinzi":280,"mobila_buc":300,"scaune":280,"mese":240,"accesorii":250,"malachit":300}
+ "cazi":300,"cabine":280,"mobila_baie":320,"oglinzi":280,"mobila_buc":300,"scaune":280,"mese":240,"accesorii":250,"malachit":300,
+ "iluminat":250,"lustre":220,"becuri":250,"prize":250,"carnize":200,"benzi_led":180,"spoturi":200}
 FIN_MULT={"auriu":1.15,"auriu periat":1.12,"auriu roze":1.13,"negru mat":1.08,"gun metal":1.10,"crom":1.0,
  "inox":1.02,"alb mat":1.04,"alb lucios":1.0,"alb":1.0,"crem":1.05,"gri":1.0,"negru":1.06,"verde":1.04,
  "argintiu":1.0,"stejar":1.08,"nuc":1.12,"gri antracit":1.05,"bej cașmir":1.06,"bej":1.0,"verde smarald":1.1,
  "albastru":1.04,"marmură":1.3,"gri bej":1.03,"auriu PVD":1.15,
- "malachit":1.6,"onix verde":1.5,"verde malachit":1.6,"verde regal":1.65,"verde-negru":1.55}
+ "malachit":1.6,"onix verde":1.5,"verde malachit":1.6,"verde regal":1.65,"verde-negru":1.55,
+ "alamă":1.12,"cristal":1.5,"alb cald":1.0,"alb rece":1.0,"neutru":1.0,"RGB":1.2,"RGBW":1.25,
+ "sticlă neagră":1.15,"argintiu":1.0,"nichel":1.05}
 SIZE_MULT={"":1.0,"50 cm":0.9,"60 cm":1.0,"80 cm":1.25,"90 cm":1.15,"100 cm":1.45,"120 cm":1.7,
- "140 cm":1.2,"160 cm":1.45,"180 cm":1.7,"2 m":1.0,"2.6 m":1.4,"3 m":1.7,"2.6 м":1.4,
- "mic":0.7,"mediu":1.0,"mare":1.55}
+ "140 cm":1.2,"160 cm":1.45,"180 cm":1.7,"2 m":1.0,"2.6 m":1.4,"3 m":1.5,"2.6 м":1.4,
+ "mic":0.7,"mediu":1.0,"mare":1.55,"Ø40":0.9,"Ø60":1.15,"Ø80":1.4,"Ø100":1.7,
+ "set 4":1.8,"set 10":3.5,"set 3":1.6,"set 6":2.8,"1.5 m":0.85,"2.5 m":1.25}
 BADGES=["hot","new","","premium","limited","",""]
 
 products=[]; supply={}; copy_cat={}; cats_meta=[]; idx=0
@@ -123,10 +142,10 @@ for cid,name,kind,base,ship,deliv,mk,mat,mount,arch,fins,sizes in CATS:
         margin=retail-landed; mpct=round(margin/retail*100) if retail else 0
         dd=deliv[0]+(k*7)%(deliv[1]-deliv[0]+1)
         badge="sale" if old else BADGES[k%len(BADGES)]
-        img=photos[k%len(photos)]
+        imgs=[photos[(k+j)%len(photos)] for j in range(min(4,len(photos)))]
         products.append({"id":pid,"cat":cid,"cat_name":name,"real":True,
             "name":nm,"slug":slugify(nm)+"-"+pid.lower(),"price":retail,"old_price":old,
-            "discount":(round((1-retail/old)*100) if old>retail else 0),"img":img,"badge":badge,
+            "discount":(round((1-retail/old)*100) if old>retail else 0),"img":imgs[0],"images":imgs,"badge":badge,
             "rating":round(4.5+(k%5)/10,1),"reviews":8+(k*7)%90,"feat":f"{name} premium · finisaj {fin} · livrare în Moldova",
             "specs":{"Material":mat,"Finisaj":fin,"Montare":mount,"Mărime":sz or "standard","Garanție":"5 ani" if cid in("cazi","unitaz","rakovina","mobila_baie","mobila_buc") else "3 ani","Origine":"Import premium"}})
         # ПРИВАТНО

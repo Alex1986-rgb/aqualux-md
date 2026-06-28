@@ -77,14 +77,15 @@ function parseMIC(html, cat, limit) {
   const seen = new Set(), used = new Set(), out = [];
   for (const c of cards) {
     const pid = c[2]; if (seen.has(pid)) continue; seen.add(pid);
-    const tpos = c.index; let img = null, best = 1e15;
-    for (const im of imgs) { if (used.has(im.url)) continue; const d = Math.abs(im.pos - tpos); if (d < best) { best = d; img = im; } }
-    if (!img) for (const im of imgs) { const d = Math.abs(im.pos - tpos); if (d < best) { best = d; img = im; } }
-    if (!img) continue; used.add(img.url);
+    const tpos = c.index;
+    // галерея: до 6 ближайших неиспользованных фото = фото этого товара
+    const cand = imgs.filter(im => !used.has(im.url)).map(im => ({ d: Math.abs(im.pos - tpos), url: im.url })).sort((a, b) => a.d - b.d).slice(0, 6);
+    if (!cand.length) continue;
+    const images = cand.map(x => x.url); images.forEach(u => used.add(u));
     let usd = 0, pb = 1e15; for (const pr of prices) { const d = Math.abs(pr.pos - tpos); if (d < pb) { pb = d; usd = pr.usd; } }
     const name = decode(c[1]).replace(/\s+/g, " ").trim().slice(0, 72);
     if (name.length < 8) continue;
-    out.push({ name, img: img.url, usd, price: usd ? Math.round(usd * 80 / 10) * 10 : 3200, cat });
+    out.push({ name, img: images[0], images, usd, price: usd ? Math.round(usd * 80 / 10) * 10 : 3200, cat });
     if (out.length >= limit) break;
   }
   return out;
@@ -163,7 +164,7 @@ app.get("/api/import-all", async (req, res) => {
         const landed = nice((cost + ship) * FX), retail = nice(landed * (MARGIN_K[cat] || 2.1)), margin = retail - landed;
         products.push({ id: pid, cat, cat_name: CAT_NAME[cat], real: true, name: it.name,
           slug: it.name.toLowerCase().replace(/[^a-z0-9]+/g,"-").slice(0,70) + "-" + pid.toLowerCase(),
-          price: retail, old_price: 0, discount: 0, img: it.img, badge: got <= 2 ? "hot" : "",
+          price: retail, old_price: 0, discount: 0, img: it.img, images: it.images || [it.img], badge: got <= 2 ? "hot" : "",
           rating: 4.7, reviews: 12 + got % 40, feat: it.name,
           specs: { Material: "Premium", Finisaj: "standard", Montare: "Standard", Garanție: "3 ani", Origine: "Import Made-in-China" } });
         supply[pid] = { cost_usd: Math.round(cost*100)/100, ship_usd: ship, landed_mdl: landed, retail_mdl: retail,
@@ -191,7 +192,7 @@ function mkProduct(cat, it){
   const landed = nice((cost+ship)*FX), retail = nice(landed*(MARGIN_K[cat]||2.1)), margin = retail-landed;
   products.push({ id:pid, cat, cat_name:CAT_NAME[cat], real:true, name:it.name,
     slug:it.name.toLowerCase().replace(/[^a-z0-9]+/g,"-").slice(0,70)+"-"+pid.toLowerCase(),
-    price:retail, old_price:0, discount:0, img:it.img, badge:"", rating:4.7, reviews:14, feat:it.name,
+    price:retail, old_price:0, discount:0, img:it.img, images:it.images||[it.img], badge:"", rating:4.7, reviews:14, feat:it.name,
     specs:{ Material:"Premium", Finisaj:"standard", Montare:"Standard", Garanție:"3 ani", Origine:"Import Made-in-China" } });
   supply[pid] = { cost_usd:Math.round(cost*100)/100, ship_usd:ship, landed_mdl:landed, retail_mdl:retail,
     margin_mdl:margin, margin_pct:Math.round(margin/retail*100), delivery_days:HEAVY.includes(cat)?25:12 };
