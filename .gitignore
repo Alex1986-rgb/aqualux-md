@@ -2,3 +2,7 @@
 __pycache__/
 *.pyc
 /tmp/
+
+# приватные данные поставщиков/закупки — НЕ публиковать
+data/alibaba_supply.csv
+data/import.csv
