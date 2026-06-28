@@ -108,7 +108,7 @@ function heroCarousel(el){
 /* ---------- HOME ---------- */
 function pageHome(){
  const m=C.marketing, root=$("#home");
- const heroes=["assets/img/hero/hero1.jpg","assets/img/hero/hero2.jpg","assets/img/hero/hero3.jpg"];
+ const heroes=["assets/img/hero/hero1.jpg?v=iv","assets/img/hero/hero2.jpg?v=iv","assets/img/hero/hero3.jpg?v=iv"];
  const slides=m.hero.map((s,k)=>`<div class="hero-slide" style="background-image:url('${heroes[k]}')"><div class="hero-c">
    <div class="k">AQUALUX · ${esc(C.city)}</div><h1>${esc(s.title_ro)}</h1><p>${esc(s.subtitle_ro)}</p>
    <a class="btn btn-gold" href="catalog.html">${esc(s.cta_ro)}</a></div></div>`).join("");
@@ -126,6 +126,13 @@ function pageHome(){
  <section class="ustrip"><div class="wrap">${usp}</div></section>
  <div class="flash"><div class="wrap"><span>🔥 <b>Reduceri de sezon</b> — până la −25% la sanitehnică premium. Se termină în:</span><div class="cd" id="cd"><div class="u"><span id="cd-h">00</span><small>ore</small></div><div class="u"><span id="cd-m">00</span><small>min</small></div><div class="u"><span id="cd-s">00</span><small>sec</small></div></div><a class="btn btn-gold" href="catalog.html">Vezi ofertele</a></div></div>
  <section class="sec"><div class="wrap"><div class="sec-t"><div class="k">Colecții</div><h2>Categorii premium</h2></div><div class="cats-grid">${catcards}</div></div></section>
+ <section class="sec"><div class="wrap"><div class="citybanner" style="background:url('assets/img/hero/hero2.jpg?v=iv') center/cover">
+   <div class="cc"><span class="tag">Showroom · Ialoveni · Moldova</span>
+     <h2>AQUALUX Ialoveni —<br>sanitehnică premium</h2>
+     <p>Din inima orașului Ialoveni aducem baterii, lavoare din marmură și sisteme de duș de lux, cu livrare rapidă în toată Moldova.</p>
+     <div class="meta"><div><b>2–5 zile</b>livrare în Moldova</div><div><b>100+</b>produse premium</div><div><b>Ramburs</b>plata la livrare</div></div>
+     <a class="btn btn-gold" href="catalog.html">Vezi colecția</a></div>
+ </div></div></section>
  <section class="sec bg-soft"><div class="wrap"><div class="sec-t"><div class="k">Cele mai dorite</div><h2>Top vânzări</h2></div>${rowOf(hot)}</div></section>
  ${sale.length?`<section class="sec"><div class="wrap"><div class="sec-t"><div class="k">Oferte</div><h2>Reduceri speciale</h2><p>Prețuri premium reduse pe stoc limitat.</p></div>${rowOf(sale)}</div></section>`:""}
  <section class="sec bg-soft"><div class="wrap"><div class="sec-t"><div class="k">Noutăți</div><h2>Adăugate recent</h2></div>${rowOf(neu.length?neu:P.slice(20,30))}</div></section>
@@ -220,7 +227,7 @@ function pageProduct(){
  <div class="pdp">
    <div class="gallery">
      <div class="main"><img id="gmain" src="${p.img}" alt="${esc(p.name)}"></div>
-     <div class="thumbs"><img class="on" src="${p.img}" onclick="document.getElementById('gmain').src=this.src"><img src="assets/img/hero/hero1.jpg" onclick="document.getElementById('gmain').src=this.src" style="object-position:center"><img src="assets/img/hero/hero3.jpg" onclick="document.getElementById('gmain').src=this.src"></div>
+     <div class="thumbs"><img class="on" src="${p.img}" onclick="document.getElementById('gmain').src=this.src"><img src="assets/img/hero/hero1.jpg?v=iv" onclick="document.getElementById('gmain').src=this.src" style="object-position:center"><img src="assets/img/hero/hero3.jpg?v=iv" onclick="document.getElementById('gmain').src=this.src"></div>
    </div>
    <div class="info">
      <span class="cat">${esc(p.cat_name)}</span><h1>${esc(p.name)}</h1>

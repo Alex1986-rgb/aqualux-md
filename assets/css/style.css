@@ -310,3 +310,13 @@ h1,h2,h3,h4{font-family:var(--serif);font-weight:700;margin:0;color:var(--ink)}
 .play{width:76px;height:76px;border-radius:50%;border:none;cursor:pointer;background:linear-gradient(135deg,var(--gold2),var(--gold));color:#fff;font-size:26px;box-shadow:0 8px 28px rgba(184,145,47,.55);margin-bottom:14px;display:flex;align-items:center;justify-content:center}
 .play:hover{transform:scale(1.07)}
 .sec-t h2{background:linear-gradient(90deg,#221c12 30%,#b8912f);-webkit-background-clip:text;background-clip:text}
+/* Ialoveni city banner */
+.citybanner{position:relative;border-radius:18px;overflow:hidden;min-height:300px;display:flex;align-items:center;color:#fff;padding:46px;box-shadow:var(--shadow)}
+.citybanner::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(13,17,12,.92),rgba(13,17,12,.78) 35%,rgba(13,17,12,.25))}
+.citybanner .cc{position:relative;max-width:600px}
+.citybanner .tag{display:inline-block;border:1px solid var(--goldl);color:var(--goldl);padding:5px 14px;border-radius:20px;font-size:11px;letter-spacing:2.5px;text-transform:uppercase}
+.citybanner h2{color:#fff;font-size:36px;line-height:1.12;margin:14px 0 10px}
+.citybanner p{color:#e4dac6;margin-bottom:22px;max-width:500px;font-size:15px}
+.citybanner .meta{display:flex;gap:22px;flex-wrap:wrap;margin-bottom:20px;font-size:13px;color:#cdbfa3}
+.citybanner .meta b{color:#fff;display:block;font-size:16px}
+@media(max-width:680px){.citybanner{padding:28px;min-height:260px}.citybanner h2{font-size:26px}}
