@@ -64,7 +64,7 @@ function buildHeader(){
     <div class="tb-r"><span>${esc(C.copy.delivery_badge_ro)}</span><span class="lang">Limba: <b>RO</b> / RU</span></div>
   </div></div>
   <header class="hdr"><div class="wrap hdr-main">
-    <a class="logo" href="index.html"><span class="dot">A</span><span>EUROMAG<small>SANITEHNICĂ PREMIUM</small></span></a>
+    <a class="logo" href="index.html"><span class="dot">A</span><span>EUROMAG<small>MAGAZIN UNIVERSAL</small></span></a>
     <form class="search" onsubmit="location.href='catalog.html?q='+encodeURIComponent(this.q.value);return false;">
       <input name="q" placeholder="Caută: baterie, vas WC, lavoar marmură…" value="${esc(param('q')||'')}">
       <button type="submit">${ICON.search}</button>
@@ -82,7 +82,7 @@ function buildHeader(){
 function buildFooter(){
  const m=C.marketing, cats=C.cats.map(c=>`<a href="catalog.html?cat=${c.id}">${esc(c.name)}</a>`).join("");
  const h=`<footer class="ftr"><div class="wrap"><div class="ftr-cols">
-   <div><div class="logo" style="font-family:Georgia,serif;font-size:24px;font-weight:700">EUROMAG<small style="display:block;font-family:Arial;font-size:9px;letter-spacing:3px">SANITEHNICĂ PREMIUM</small></div>
+   <div><div class="logo" style="font-family:Georgia,serif;font-size:24px;font-weight:700">EUROMAG<small style="display:block;font-family:Arial;font-size:9px;letter-spacing:3px">MAGAZIN UNIVERSAL</small></div>
      <p style="font-size:13px;max-width:260px">${esc(m.footer_blurb_ro)}</p>
      <div class="pays"><span>Ramburs</span><span>Card / Visa</span><span>Mastercard</span><span>Transfer</span></div></div>
    <div><h4>Catalog</h4>${cats}</div>
@@ -131,11 +131,11 @@ function pageHome(){
  root.innerHTML=`
  <section class="hero"><div class="hero-track">${slides}</div><button class="hero-ar prev">‹</button><button class="hero-ar next">›</button><div class="hero-dots">${m.hero.map((_,k)=>`<span class="${k?'':'on'}"></span>`).join("")}</div></section>
  <section class="ustrip"><div class="wrap">${usp}</div></section>
- <div class="flash"><div class="wrap"><span>🔥 <b>Reduceri de sezon</b> — până la −25% la sanitehnică premium. Se termină în:</span><div class="cd" id="cd"><div class="u"><span id="cd-h">00</span><small>ore</small></div><div class="u"><span id="cd-m">00</span><small>min</small></div><div class="u"><span id="cd-s">00</span><small>sec</small></div></div><a class="btn btn-gold" href="catalog.html">Vezi ofertele</a></div></div>
+ <div class="flash"><div class="wrap"><span>🔥 <b>Reduceri de sezon</b> — până la −25% la magazin universal. Se termină în:</span><div class="cd" id="cd"><div class="u"><span id="cd-h">00</span><small>ore</small></div><div class="u"><span id="cd-m">00</span><small>min</small></div><div class="u"><span id="cd-s">00</span><small>sec</small></div></div><a class="btn btn-gold" href="catalog.html">Vezi ofertele</a></div></div>
  <section class="sec"><div class="wrap"><div class="sec-t"><div class="k">Colecții</div><h2>Categorii premium</h2></div><div class="cats-grid">${catcards}</div></div></section>
  <section class="sec"><div class="wrap"><div class="citybanner" style="background:url('assets/img/hero/hero2.jpg?v=iv') center/cover">
    <div class="cc"><span class="tag">Showroom · Ialoveni · Moldova</span>
-     <h2>EUROMAG Ialoveni —<br>sanitehnică premium</h2>
+     <h2>EUROMAG Ialoveni —<br>magazin universal</h2>
      <p>Din inima orașului Ialoveni aducem baterii, lavoare din marmură și sisteme de duș de lux, cu livrare rapidă în toată Moldova.</p>
      <div class="meta"><div><b>2–5 zile</b>livrare în Moldova</div><div><b>100+</b>produse premium</div><div><b>Ramburs</b>plata la livrare</div></div>
      <a class="btn btn-gold" href="catalog.html">Vezi colecția</a></div>
@@ -150,7 +150,7 @@ function pageHome(){
    <div class="t"><div class="ic">☎</div><b>Consultanță expertă</b><span>Te ajutăm să alegi corect</span></div>
  </div></div></section>
  <section class="sec"><div class="wrap"><div class="promo-banner"><h2>−10% la prima comandă</h2><p>Folosește codul la finalizarea comenzii și primești reducere instant la orice produs premium EUROMAG. În plus — livrare gratuită peste 3000 lei.</p><span class="code">AQUA10</span></div></div></section>
- <section class="sec"><div class="wrap"><div class="video-show"><div class="frames" id="vframes">${vf.map((u,i)=>`<img class="${i===0?"on":""}" src="${u}" alt="">`).join("")}</div><div class="vc"><div class="k">EUROMAG Showroom</div><h2>Sanitehnică premium în mișcare</h2><p>Baterii din alamă, lavoare din marmură și sisteme de duș de lux — colecția în acțiune.</p><button class="play" id="playBtn">▶</button><a class="btn btn-ghost" style="color:#fff;border-color:rgba(255,255,255,.6)" href="catalog.html">Explorează catalogul</a></div></div></div></section>
+ <section class="sec"><div class="wrap"><div class="video-show"><div class="frames" id="vframes">${vf.map((u,i)=>`<img class="${i===0?"on":""}" src="${u}" alt="">`).join("")}</div><div class="vc"><div class="k">EUROMAG Showroom</div><h2>Magazin universal în mișcare</h2><p>Baterii din alamă, lavoare din marmură și sisteme de duș de lux — colecția în acțiune.</p><button class="play" id="playBtn">▶</button><a class="btn btn-ghost" style="color:#fff;border-color:rgba(255,255,255,.6)" href="catalog.html">Explorează catalogul</a></div></div></div></section>
  <section class="sec bg-soft"><div class="wrap"><div class="sec-t"><div class="k">Recenzii</div><h2>Ce spun clienții noștri</h2></div>${rowOf2(revs)}</div></section>
  <section class="sec"><div class="wrap"><div class="sec-t"><div class="k">Întrebări frecvente</div><h2>FAQ</h2></div><div class="faq">${faq}</div></div></section>
  <section class="sec"><div class="wrap"><div class="news"><h2>Reduceri exclusive pe email</h2><p>Abonează-te și primești -10% la prima comandă.</p><form onsubmit="window.__news(this);return false;"><input type="email" required placeholder="Email-ul tău"><button class="btn btn-gold">Abonează-mă</button></form></div></div></section>`;

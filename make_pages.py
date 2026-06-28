@@ -30,7 +30,7 @@ HEAD="""<!DOCTYPE html><html lang="ro"><head>
 </body></html>"""
 
 ORG=json.dumps({"@context":"https://schema.org","@type":"Store","name":"EUROMAG","image":SITE+"assets/img/hero/hero1.jpg",
- "description":"Magazin online de sanitehnică premium în Chișinău, Moldova.","url":SITE,"telephone":"+37360000000",
+ "description":"Magazin online de magazin universal în Chișinău, Moldova.","url":SITE,"telephone":"+37360000000",
  "address":{"@type":"PostalAddress","addressLocality":"Chișinău","addressCountry":"MD","streetAddress":"bd. Ștefan cel Mare 1"},
  "priceRange":"$$$"},ensure_ascii=False)
 
@@ -38,7 +38,7 @@ PAGES=[
  ("index.html","home","home",seo["pages"]["home"],""),
  ("catalog.html","catalog","catalog",seo["pages"]["catalog"],""),
  ("produs.html","product","product",{"title":"Produs premium | EUROMAG Chișinău","description":seo["pages"]["catalog"]["description"]},""),
- ("cos.html","cart","cart",{"title":"Coș de cumpărături | EUROMAG","description":"Coșul tău de cumpărături EUROMAG — sanitehnică premium cu livrare în Moldova."},""),
+ ("cos.html","cart","cart",{"title":"Coș de cumpărături | EUROMAG","description":"Coșul tău de cumpărături EUROMAG — magazin universal cu livrare în Moldova."},""),
  ("checkout.html","checkout","checkout",{"title":"Finalizare comandă | EUROMAG","description":"Finalizează comanda EUROMAG: livrare în toată Moldova, ramburs, card sau transfer."},""),
  ("despre.html","info","info",seo["pages"]["despre"],' data-info="despre"'),
  ("livrare.html","info","info",{"title":"Livrare & Plată | EUROMAG Moldova","description":"Condiții de livrare și plată EUROMAG: curier în toată Moldova, ramburs, card, transfer bancar."},' data-info="livrare"'),

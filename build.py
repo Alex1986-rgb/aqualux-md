@@ -161,7 +161,7 @@ def make_img(path, cat_name, name, finish, sku, tint):
     fb=font(GEOB,30); fc=font(ARIB,16); fn=font(GEO,27); ff=font(ARIB,18); fs=font(ARI,15)
     # brand
     s="EUROMAG"; d.text(((S-d.textlength(s,font=fb))/2,52), s, font=fb, fill=GOLDL)
-    sp=font(ARI,12); s2="·  SANITEHNICĂ PREMIUM  ·"
+    sp=font(ARI,12); s2="·  MAGAZIN UNIVERSAL  ·"
     d.text(((S-d.textlength(s2,font=sp))/2,96), s2, font=sp, fill=MUT)
     d.line([(S/2-70,120),(S/2+70,120)], fill=GOLD, width=1)
     # medallion + droplet (finish-colored ring)
