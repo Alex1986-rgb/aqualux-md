@@ -192,7 +192,7 @@ app.get("/api/import-all", async (req, res) => {
           rating: 4.7, reviews: 12 + got % 40, feat: it.name,
           specs: { Material: "Premium", Finisaj: "standard", Montare: "Standard", Garanție: "3 ani", Origine: "Import Made-in-China" } });
         supply[pid] = { cost_usd: Math.round(cost*100)/100, ship_usd: ship, landed_mdl: landed, retail_mdl: retail,
-          margin_mdl: margin, margin_pct: Math.round(margin/retail*100), delivery_days: HEAVY.includes(cat) ? 25 : 12 };
+          margin_mdl: margin, margin_pct: Math.round(margin/retail*100), delivery_days: HEAVY.includes(cat) ? 25 : 12, source_url: it.url || "" };
       }
       if (added === 0) break;           // нет новых на странице — стоп (пагинация исчерпана/блок)
       await sleep(700);                 // пауза против антибота
@@ -278,6 +278,57 @@ const apAuth = (req,res)=>{ if(req.get("X-Admin-Key")!==process.env.ADMIN_KEY){ 
 app.post("/api/autopilot/start", (req,res)=>{ if(!apAuth(req,res))return; apStart(+(req.query.target||5000), +(req.query.delay||12)); res.json({ok:true, running:AP.running, target:AP.target}); });
 app.post("/api/autopilot/stop", (req,res)=>{ if(!apAuth(req,res))return; apStop(); res.json({ok:true, running:false}); });
 app.get("/api/autopilot/status", (req,res)=>{ if(!apAuth(req,res))return; res.json({ running:AP.running, total:AP.total||readJSON("products.json",[]).length, target:AP.target, added:AP.added, cursor:AP.cursor, cat:CAT_LIST[AP.cursor.ci], cat_name:CAT_NAME[CAT_LIST[AP.cursor.ci]], log:AP.log, startedAt:AP.startedAt }); });
+
+/* ---------- ОБОГАТИТЕЛЬ: полные карточки с детальных страниц ---------- */
+async function fetchUrl(url){
+  const r = await fetch(url, { headers: { "User-Agent": UA, "Referer": "https://www.made-in-china.com/", "Accept": "text/html,application/xhtml+xml", "Accept-Language": "en-US,en;q=0.9" } });
+  return await r.text();
+}
+function parseDetail(html){
+  const norm = u => u.startsWith("//") ? "https:" + u : u;
+  const images = [...new Set((html.match(/(?:https?:)?\/\/image\.made-in-china\.com\/[A-Za-z0-9]+\/[^"'\s)]+?\.(?:jpg|jpeg|png|webp)/g) || []).map(norm).filter(u => !/Co-Ltd|Co\.,|logo|avatar|icon|head/i.test(u)))].slice(0, 18);
+  let video = "";
+  const vm = html.match(/https?:\/\/v\.made-in-china\.com\/[^"'\s\\)]+/i) || html.match(/"(https?:\/\/[^"]+?\.mp4[^"]*)"/i);
+  if (vm) video = (vm[1] || vm[0]).replace(/\\u002[Ff]/g, "/").replace(/\\\//g, "/");
+  const specs = {}; let m;
+  const dtdd = /<dt[^>]*>([^<]{2,40})<\/dt>\s*<dd[^>]*>([^<]{1,80})<\/dd>/g;
+  while ((m = dtdd.exec(html)) && Object.keys(specs).length < 15) specs[m[1].trim()] = m[2].trim();
+  const jp = /"(?:name|propName|attrName)"\s*:\s*"([^"]{2,40})"\s*,\s*"(?:value|propValue|attrValue)"\s*:\s*"([^"]{1,80})"/g;
+  while ((m = jp.exec(html)) && Object.keys(specs).length < 15) { const k = m[1].trim(); if (!specs[k]) specs[k] = m[2].trim(); }
+  let desc = (html.match(/property="og:description" content="([^"]*)"/i) || [])[1] || (html.match(/<meta name="description" content="([^"]*)"/i) || [])[1] || "";
+  return { images, video, description: desc.replace(/&amp;/g,"&").slice(0, 600), specs };
+}
+let EN = { running:false, done:0, log:[], timer:null, delay:14000 };
+function enLog(m){ EN.log.unshift("["+new Date().toISOString().slice(11,19)+"] "+m); EN.log = EN.log.slice(0,30); }
+const enrichable = (s) => s && /\.en\.made-in-china\.com\/product\//.test(s.source_url||"");
+async function enrichOne(){
+  if(!EN.running) return;
+  const products = readJSON("products.json", []), supply = readJSON("supply.json", {});
+  const p = products.find(x => !x.enriched && enrichable(supply[x.id]));
+  if(!p){ enLog("✓ обогащать нечего (нужны корректные ссылки — пересканируй автопилотом)"); return enStop(); }
+  try{
+    const html = await fetchUrl(supply[p.id].source_url);
+    if((html||"").length < 50000){ p.enriched = true; enLog(p.id+": блок/пусто, пропуск"); }
+    else {
+      const d = parseDetail(html);
+      if(d.images.length >= 3){ p.images = d.images; p.img = d.images[0]; }
+      if(d.video) p.video = d.video;
+      if(d.description) p.description = d.description;
+      if(Object.keys(d.specs).length) p.specs = { ...p.specs, ...d.specs };
+      p.enriched = true; EN.done++;
+      enLog(`${p.id}: ${d.images.length} фото · видео:${d.video?"да":"нет"} · спеки:${Object.keys(d.specs).length}`);
+    }
+    const i = products.findIndex(x => x.id === p.id); products[i] = p;
+    fs.writeFileSync(path.join(DATA, "products.json"), JSON.stringify(products));
+  }catch(e){ p.enriched = true; const i = products.findIndex(x => x.id === p.id); if(i>=0){ products[i]=p; fs.writeFileSync(path.join(DATA,"products.json"), JSON.stringify(products)); } enLog("err "+e.message); }
+  EN.timer = setTimeout(enrichOne, EN.delay);
+}
+function enStart(delay){ if(EN.running) return; EN.delay = Math.max(8000,(delay||14)*1000); EN.running = true; EN.done = 0; enLog("▶ обогатитель старт"); enrichOne(); }
+function enStop(){ EN.running = false; if(EN.timer) clearTimeout(EN.timer); enLog("⏸ обогатитель стоп"); }
+app.post("/api/enrich/start", (req,res)=>{ if(!apAuth(req,res))return; enStart(+(req.query.delay||14)); res.json({ ok:true }); });
+app.post("/api/enrich/stop", (req,res)=>{ if(!apAuth(req,res))return; enStop(); res.json({ ok:true }); });
+app.get("/api/enrich/status", (req,res)=>{ if(!apAuth(req,res))return; const P=readJSON("products.json",[]),S=readJSON("supply.json",{});
+  res.json({ running:EN.running, enriched:P.filter(p=>p.enriched).length, enrichable:P.filter(p=>enrichable(S[p.id])).length, total:P.length, sessionDone:EN.done, log:EN.log }); });
 
 app.get("/api/health", (_, res) => res.json({ ok: true, service: "aqualux-backend" }));
 app.use(express.static(path.join(__dirname, "public"))); // опц. отдавать фронт

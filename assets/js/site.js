@@ -256,9 +256,9 @@ function pageCatalog(){
 
 /* ---------- PRODUCT ---------- */
 function pageProduct(){
- const id=param("id"); let p=pById(id)||snaps()[id];
- if(!p && API){fetch(API+"/api/product/"+encodeURIComponent(id)).then(r=>r.ok?r.json():null).then(pr=>{if(pr)PCACHE[pr.id]=pr;renderProduct(pr);}).catch(()=>renderProduct(null));return;}
- renderProduct(p);
+ const id=param("id");
+ if(API){fetch(API+"/api/product/"+encodeURIComponent(id)).then(r=>r.ok?r.json():null).then(pr=>{if(pr){PCACHE[pr.id]=pr;renderProduct(pr);}else renderProduct(pById(id)||snaps()[id]);}).catch(()=>renderProduct(pById(id)||snaps()[id]));return;}
+ renderProduct(pById(id)||snaps()[id]);
 }
 function renderProduct(p){
  const root=$("#product");
@@ -296,9 +296,9 @@ function renderProduct(p){
  </div>
  <div class="tabs">
    <div class="heads"><button class="on" data-t="d">Descriere</button><button data-t="s">Specificații</button><button data-t="v">Video</button><button data-t="l">Livrare</button><button data-t="r">Recenzii</button></div>
-   <div class="body" id="tb-d"><div class="prose"><p>${esc(cc.intro_ro)} ${esc(p.feat)}.</p><ul>${bullets}</ul><p style="color:var(--muted);font-size:13px">${esc(cc.care_ro)}</p></div></div>
+   <div class="body" id="tb-d"><div class="prose">${p.description?`<p>${esc(p.description)}</p>`:""}<p>${esc(cc.intro_ro)} ${esc(p.feat)}.</p><ul>${bullets}</ul><p style="color:var(--muted);font-size:13px">${esc(cc.care_ro)}</p></div></div>
    <div class="body" id="tb-s" hidden><table class="spec-tbl">${specRows}</table></div>
-   <div class="body" id="tb-v" hidden><div class="videobox"><div style="font-size:40px">▶</div><div>Prezentare video — se adaugă din panoul de administrare</div></div></div>
+   <div class="body" id="tb-v" hidden>${p.video?`<video controls preload="metadata" style="width:100%;max-width:680px;border-radius:var(--radius);background:#000" src="${p.video}">Browserul nu suportă video.</video>`:`<div class="videobox"><div style="font-size:40px">▶</div><div>Video se adaugă automat din carduri furnizor (enrichment)</div></div>`}</div>
    <div class="body" id="tb-l" hidden><div class="prose"><p>${esc(C.marketing.delivery_ro)}</p><p>${esc(C.marketing.returns_ro)}</p></div></div>
    <div class="body" id="tb-r" hidden><div class="crow"><button class="car prev">‹</button><div class="ctrack">${prevs}</div><button class="car next">›</button></div></div>
  </div>
