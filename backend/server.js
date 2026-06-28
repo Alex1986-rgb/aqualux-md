@@ -112,6 +112,137 @@ app.get("/api/admin/stats", (req, res) => {
     margin_pct: retail ? Math.round(margin / retail * 100) : 0, supply });
 });
 
+app.get("/api/admin/orders", (req, res) => {
+  if (req.get("X-Admin-Key") !== process.env.ADMIN_KEY) return res.status(401).json({ error: "unauthorized" });
+  res.json(readJSON("orders.json", []).reverse());
+});
+
+/* ---------- МАССОВЫЙ ИМПОРТ: все категории × пагинация ---------- */
+const CAT_KW = { smesitel:"bathroom sensor faucet", kuhnya:"kitchen faucet pull out", unitaz:"smart toilet bidet",
+  rakovina:"wash basin sink", polotenec:"heated towel rail", dush:"shower system set", cazi:"freestanding bathtub",
+  cabine:"shower enclosure cabin", mobila_baie:"bathroom cabinet vanity", oglinzi:"led bathroom mirror",
+  mobila_buc:"kitchen cabinet furniture", scaune:"dining chair modern", mese:"dining table modern", accesorii:"bathroom accessories set" };
+const CAT_NAME = { smesitel:"Baterii pentru baie", kuhnya:"Baterii de bucătărie", unitaz:"Vase WC", rakovina:"Lavoare",
+  polotenec:"Uscătoare de prosoape", dush:"Sisteme de duș", cazi:"Căzi de baie", cabine:"Cabine de duș",
+  mobila_baie:"Mobilier de baie", oglinzi:"Oglinzi", mobila_buc:"Mobilier de bucătărie", scaune:"Scaune", mese:"Mese", accesorii:"Accesorii" };
+const SHIP = { smesitel:12,kuhnya:12,unitaz:55,rakovina:30,polotenec:18,dush:30,cazi:120,cabine:80,mobila_baie:80,oglinzi:20,mobila_buc:110,scaune:25,mese:70,accesorii:8 };
+const MARGIN_K = { smesitel:2.4,kuhnya:2.3,unitaz:1.9,rakovina:2.2,polotenec:2.3,dush:2.1,cazi:1.8,cabine:1.9,mobila_baie:2.0,oglinzi:2.5,mobila_buc:1.85,scaune:2.4,mese:2.0,accesorii:2.6 };
+const FX = 18.2, HEAVY = ["cazi","cabine","mobila_baie","mobila_buc","mese"];
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const nice = v => { v = Math.round(v); return v < 1000 ? Math.round(v/10)*10 : Math.round(v/50)*50; };
+async function fetchPage(kw, page) {
+  const urls = [
+    `https://www.made-in-china.com/multi-search/${encodeURIComponent(kw)}/F1/${page}.html`,
+    `https://www.made-in-china.com/productdirectory.do?word=${encodeURIComponent(kw).replace(/%20/g,"+")}&subaction=hunt&page=${page}`,
+  ];
+  for (const u of urls) { try { const r = await fetch(u, { headers: { "User-Agent": UA, "Referer": "https://www.made-in-china.com/" } }); const t = await r.text(); if (t.length > 200000) return t; } catch (e) {} }
+  return "";
+}
+app.get("/api/import-all", async (req, res) => {
+  if (req.get("X-Admin-Key") !== process.env.ADMIN_KEY) return res.status(401).json({ error: "unauthorized" });
+  const perCat = Math.min(400, Math.max(10, +(req.query.per_cat || 60)));
+  const mode = req.query.mode === "append" ? "append" : "replace";
+  const onlyCat = req.query.cat; // опц. одна категория
+  const maxPages = Math.min(14, Math.ceil(perCat/30) + 2);
+  let products = mode === "append" ? readJSON("products.json", []) : [];
+  let supply = mode === "append" ? readJSON("supply.json", {}) : {};
+  const seenImg = new Set(products.map(p => p.img));
+  const summary = {}; let idx = products.length, blocked = 0;
+  const cats = onlyCat ? { [onlyCat]: CAT_KW[onlyCat] } : CAT_KW;
+  for (const [cat, kw] of Object.entries(cats)) {
+    if (!kw) continue; let got = 0;
+    for (let pg = 1; pg <= maxPages && got < perCat; pg++) {
+      const html = await fetchPage(kw, pg);
+      if (!html) { blocked++; break; }
+      const items = parseMIC(html, cat, 1000); let added = 0;
+      for (const it of items) {
+        if (got >= perCat) break;
+        if (seenImg.has(it.img)) continue; seenImg.add(it.img);
+        idx++; got++; added++;
+        const pid = `MIC-${idx}`, cost = it.usd || 40, ship = SHIP[cat] || 15;
+        const landed = nice((cost + ship) * FX), retail = nice(landed * (MARGIN_K[cat] || 2.1)), margin = retail - landed;
+        products.push({ id: pid, cat, cat_name: CAT_NAME[cat], real: true, name: it.name,
+          slug: it.name.toLowerCase().replace(/[^a-z0-9]+/g,"-").slice(0,70) + "-" + pid.toLowerCase(),
+          price: retail, old_price: 0, discount: 0, img: it.img, badge: got <= 2 ? "hot" : "",
+          rating: 4.7, reviews: 12 + got % 40, feat: it.name,
+          specs: { Material: "Premium", Finisaj: "standard", Montare: "Standard", Garanție: "3 ani", Origine: "Import Made-in-China" } });
+        supply[pid] = { cost_usd: Math.round(cost*100)/100, ship_usd: ship, landed_mdl: landed, retail_mdl: retail,
+          margin_mdl: margin, margin_pct: Math.round(margin/retail*100), delivery_days: HEAVY.includes(cat) ? 25 : 12 };
+      }
+      if (added === 0) break;           // нет новых на странице — стоп (пагинация исчерпана/блок)
+      await sleep(700);                 // пауза против антибота
+    }
+    summary[cat] = got;
+  }
+  fs.writeFileSync(path.join(DATA, "products.json"), JSON.stringify(products));
+  fs.writeFileSync(path.join(DATA, "supply.json"), JSON.stringify(supply));
+  res.json({ total: products.length, blocked, perCategory: summary });
+});
+
+/* ---------- АВТОПИЛОТ: фоновый импорт чанками ---------- */
+const CAT_LIST = Object.keys(CAT_KW);
+let AP = { running:false, target:5000, delay:12000, total:0, added:0, cursor:{ci:0,page:1}, roundEmpty:0, log:[], timer:null, startedAt:null };
+function apSave(){ try{ fs.writeFileSync(path.join(DATA,"autopilot.json"), JSON.stringify({cursor:AP.cursor,target:AP.target,delay:AP.delay})); }catch(e){} }
+function apLog(m){ AP.log.unshift("["+new Date().toISOString().slice(11,19)+"] "+m); AP.log = AP.log.slice(0,40); }
+function mkProduct(cat, it){
+  let products = readJSON("products.json", []), supply = readJSON("supply.json", {});
+  let maxN = products.reduce((m,p)=>{ const mm=/^MIC-(\d+)$/.exec(p.id); return mm?Math.max(m,+mm[1]):m; }, 0);
+  const pid = "MIC-"+(maxN+1), cost = it.usd||40, ship = SHIP[cat]||15;
+  const landed = nice((cost+ship)*FX), retail = nice(landed*(MARGIN_K[cat]||2.1)), margin = retail-landed;
+  products.push({ id:pid, cat, cat_name:CAT_NAME[cat], real:true, name:it.name,
+    slug:it.name.toLowerCase().replace(/[^a-z0-9]+/g,"-").slice(0,70)+"-"+pid.toLowerCase(),
+    price:retail, old_price:0, discount:0, img:it.img, badge:"", rating:4.7, reviews:14, feat:it.name,
+    specs:{ Material:"Premium", Finisaj:"standard", Montare:"Standard", Garanție:"3 ani", Origine:"Import Made-in-China" } });
+  supply[pid] = { cost_usd:Math.round(cost*100)/100, ship_usd:ship, landed_mdl:landed, retail_mdl:retail,
+    margin_mdl:margin, margin_pct:Math.round(margin/retail*100), delivery_days:HEAVY.includes(cat)?25:12 };
+  return { products, supply };
+}
+async function importChunk(cat, page){
+  const html = await fetchPage(CAT_KW[cat], page);
+  if(!html) return { added:0, blocked:true, total:readJSON("products.json",[]).length };
+  const items = parseMIC(html, cat, 1000);
+  let products = readJSON("products.json", []), supply = readJSON("supply.json", {});
+  const seen = new Set(products.map(p=>p.img));
+  let added = 0;
+  for(const it of items){
+    if(seen.has(it.img)) continue; seen.add(it.img);
+    const r = mkProduct(cat, it); products = r.products; supply = r.supply; added++;
+  }
+  if(added){ fs.writeFileSync(path.join(DATA,"products.json"), JSON.stringify(products)); fs.writeFileSync(path.join(DATA,"supply.json"), JSON.stringify(supply)); }
+  return { added, blocked:false, total:products.length };
+}
+async function apTick(){
+  if(!AP.running) return;
+  const cat = CAT_LIST[AP.cursor.ci];
+  try{
+    const r = await importChunk(cat, AP.cursor.page);
+    AP.total = r.total; AP.added += r.added;
+    apLog(`${cat} p${AP.cursor.page}: +${r.added}${r.blocked?" ⛔блок":""} → ${AP.total}`);
+    if(r.blocked || r.added===0){ AP.cursor.ci=(AP.cursor.ci+1)%CAT_LIST.length; AP.cursor.page=1; AP.roundEmpty = r.added===0?AP.roundEmpty+1:0; }
+    else { AP.cursor.page++; AP.roundEmpty=0; }
+    apSave();
+    if(AP.total >= AP.target){ apLog("🎯 цель достигнута"); return apStop(); }
+    if(AP.roundEmpty >= CAT_LIST.length){ apLog("⏹ все категории исчерпаны"); return apStop(); }
+  }catch(e){ apLog("err: "+e.message); }
+  AP.timer = setTimeout(apTick, AP.delay);
+}
+function apStart(target, delay){
+  if(AP.running) return;
+  const s = readJSON("autopilot.json", {});
+  AP.cursor = s.cursor || { ci:0, page:1 };
+  AP.target = target || s.target || 5000;
+  AP.delay = Math.max(5000, (delay||12)*1000);
+  AP.total = readJSON("products.json", []).length;
+  AP.added = 0; AP.roundEmpty = 0; AP.running = true; AP.startedAt = Date.now();
+  apLog("▶ автопилот старт · цель "+AP.target+" · пауза "+(AP.delay/1000)+"с");
+  apTick();
+}
+function apStop(){ AP.running=false; if(AP.timer) clearTimeout(AP.timer); apLog("⏸ автопилот стоп"); }
+const apAuth = (req,res)=>{ if(req.get("X-Admin-Key")!==process.env.ADMIN_KEY){ res.status(401).json({error:"unauthorized"}); return false; } return true; };
+app.post("/api/autopilot/start", (req,res)=>{ if(!apAuth(req,res))return; apStart(+(req.query.target||5000), +(req.query.delay||12)); res.json({ok:true, running:AP.running, target:AP.target}); });
+app.post("/api/autopilot/stop", (req,res)=>{ if(!apAuth(req,res))return; apStop(); res.json({ok:true, running:false}); });
+app.get("/api/autopilot/status", (req,res)=>{ if(!apAuth(req,res))return; res.json({ running:AP.running, total:AP.total||readJSON("products.json",[]).length, target:AP.target, added:AP.added, cursor:AP.cursor, cat:CAT_LIST[AP.cursor.ci], cat_name:CAT_NAME[CAT_LIST[AP.cursor.ci]], log:AP.log, startedAt:AP.startedAt }); });
+
 app.get("/api/health", (_, res) => res.json({ ok: true, service: "aqualux-backend" }));
 app.use(express.static(path.join(__dirname, "public"))); // опц. отдавать фронт
 
