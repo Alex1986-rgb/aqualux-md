@@ -2,6 +2,8 @@
 (function(){
 "use strict";
 const C = window.AQ_CONTENT, P = window.AQ_PRODUCTS;
+const API = (window.AQ_API || "").replace(/\/$/, "");   // headless backend (опц.)
+const PCACHE = {};                                       // кэш карточек (для корзины из API)
 const CART_KEY = "aqualux_cart_v1";
 const FREE = C.free_delivery, DELIV = 200, CITIES = ["Chișinău","Bălți","Cahul","Orhei","Ungheni","Comrat","Soroca","Edineț","Hîncești","Strășeni","Căușeni","Drochia"];
 const ICON = {
@@ -24,9 +26,12 @@ const param = k => new URLSearchParams(location.search).get(k);
 function getCart(){try{return JSON.parse(localStorage.getItem(CART_KEY))||{};}catch(e){return {};}}
 function saveCart(c){localStorage.setItem(CART_KEY,JSON.stringify(c));updateCartCount();}
 function cartCount(){return Object.values(getCart()).reduce((a,b)=>a+b,0);}
-function cartItems(){const c=getCart();return Object.keys(c).map(id=>({p:pById(id),q:c[id]})).filter(x=>x.p);}
+function snaps(){try{return JSON.parse(localStorage.getItem("aqualux_snap"))||{};}catch(e){return {};}}
+function saveSnap(p){if(!p)return;const s=snaps();s[p.id]={id:p.id,name:p.name,price:p.price,img:p.img,cat:p.cat,cat_name:p.cat_name,specs:p.specs,feat:p.feat,rating:p.rating,reviews:p.reviews,old_price:p.old_price,discount:p.discount};localStorage.setItem("aqualux_snap",JSON.stringify(s));}
+function resolve(id){return pById(id)||PCACHE[id]||snaps()[id]||null;}
+function cartItems(){const c=getCart();return Object.keys(c).map(id=>({p:resolve(id),q:c[id]})).filter(x=>x.p);}
 function cartSub(){return cartItems().reduce((s,x)=>s+x.p.price*x.q,0);}
-function addToCart(id,q=1){const c=getCart();c[id]=(c[id]||0)+q;saveCart(c);toast("Adăugat în coș ✓");}
+function addToCart(id,q=1){const c=getCart();c[id]=(c[id]||0)+q;saveCart(c);saveSnap(PCACHE[id]||pById(id));toast("Adăugat în coș ✓");}
 function setQty(id,q){const c=getCart();if(q<=0)delete c[id];else c[id]=q;saveCart(c);}
 function updateCartCount(){const n=cartCount();$$(".cart-count").forEach(e=>{e.textContent=n;e.style.display=n?"flex":"none";});}
 let toastT;function toast(m){let t=$("#toast");if(!t){t=document.createElement("div");t.id="toast";t.className="toast";document.body.appendChild(t);}t.textContent=m;t.classList.add("show");clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove("show"),2200);}
@@ -34,6 +39,7 @@ function discPct(p){return p.discount?p.discount:(p.old_price?Math.round((1-p.pr
 
 /* ---------- product card ---------- */
 function card(p){
+ PCACHE[p.id]=p;
  const b=p.badge?`<div class="badges"><span class="bdg ${p.badge}">${esc(C.copy.badges_ro[p.badge]||"")}${p.badge==="sale"?" -"+discPct(p)+"%":""}</span></div>`:"";
  const old=p.old_price?`<span class="old">${money(p.old_price)}</span><span class="disc">-${discPct(p)}%</span>`:"";
  return `<div class="pcard">
@@ -156,8 +162,44 @@ function pageHome(){
 function rowOf2(html){return `<div class="crow"><button class="car prev">‹</button><div class="ctrack">${html}</div><button class="car next">›</button></div>`;}
 window.__news=f=>{toast("Mulțumim! Codul -10% a fost trimis pe email ✓");f.reset();};
 
+/* ---------- CATALOG (headless API mode) ---------- */
+function pageCatalogAPI(){
+ const root=$("#catalog");
+ let cat=param("cat"), q=param("q")||"", sort="pop", page=1, per=24;
+ const title=cat?(C.cats.find(c=>c.id===cat)||{}).name||"Catalog":(q?`Rezultate: „${esc(q)}”`:"Toate produsele");
+ const intro=cat&&C.seo.category_intros&&C.seo.category_intros[cat]?`<p>${esc(C.seo.category_intros[cat])}</p>`:"";
+ const catBoxes=C.cats.map(c=>`<label><input type="radio" name="apicat" value="${c.id}" ${cat===c.id?"checked":""}> ${esc(c.name)} <span class="cnt">${c.count}</span></label>`).join("");
+ root.innerHTML=`<div class="page-head"><div class="wrap"><h1>${esc(title)}</h1>${intro}<p class="small" style="color:#3c7a4a;font-weight:700">⚡ Live din backend API · paginare pe server (5000+)</p></div></div>
+  <div class="wrap" style="padding-top:26px;padding-bottom:40px"><div class="catalog">
+   <aside class="filters"><h4>Categorii</h4><label><input type="radio" name="apicat" value="" ${!cat?"checked":""}> Toate produsele</label>${catBoxes}</aside>
+   <div><div class="top"><span class="found" id="cat-found"></span><div>Sortează: <select id="cat-sort"><option value="pop">Populare</option><option value="asc">Preț crescător</option><option value="desc">Preț descrescător</option></select></div></div>
+     <div class="pgrid" id="cat-grid"></div><div class="pager" id="cat-pager"></div></div>
+ </div></div>`;
+ async function load(){
+   $("#cat-grid").innerHTML='<p class="muted" style="padding:30px">Se încarcă din backend…</p>';
+   try{
+     const u=`${API}/api/products?page=${page}&per=${per}`+(cat?`&cat=${cat}`:"")+(q?`&q=${encodeURIComponent(q)}`:"")+(sort!=="pop"?`&sort=${sort}`:"");
+     const d=await (await fetch(u)).json();
+     $("#cat-found").textContent=`${d.total} produse`;
+     $("#cat-grid").innerHTML=(d.items&&d.items.length)?d.items.map(card).join(""):`<div class="empty"><div class="big">🔍</div><p>Niciun produs.</p></div>`;
+     const pages=d.pages||1; let pg="";
+     const lo=Math.max(1,page-3),hi=Math.min(pages,page+3);
+     if(page>1)pg+=`<button data-pg="${page-1}">‹</button>`;
+     if(lo>1)pg+=`<button data-pg="1">1</button>`+(lo>2?'<span style="padding:0 6px">…</span>':'');
+     for(let i=lo;i<=hi;i++)pg+=`<button class="${i===page?'on':''}" data-pg="${i}">${i}</button>`;
+     if(hi<pages)pg+=(hi<pages-1?'<span style="padding:0 6px">…</span>':'')+`<button data-pg="${pages}">${pages}</button>`;
+     if(page<pages)pg+=`<button data-pg="${page+1}">›</button>`;
+     $("#cat-pager").innerHTML=pages>1?pg:"";
+     $$("#cat-pager button").forEach(b=>b.onclick=()=>{page=+b.dataset.pg;load();scrollTo({top:200,behavior:"smooth"});});
+   }catch(e){$("#cat-grid").innerHTML=`<div class="empty"><div class="big">⚠️</div><p>Backend indisponibil — folosesc catalogul local.</p></div>`;window.__noapi=1;pageCatalog();}
+ }
+ $$('input[name=apicat]').forEach(r=>r.onchange=()=>{cat=r.value;page=1;load();});
+ $("#cat-sort").onchange=e=>{sort=e.target.value;page=1;load();};
+ load();
+}
 /* ---------- CATALOG ---------- */
 function pageCatalog(){
+ if(API && !window.__noapi) return pageCatalogAPI();
  const root=$("#catalog");
  let cat=param("cat"), q=(param("q")||"").toLowerCase(), sort="pop", page=1, per=12;
  const sel={cats:cat?[cat]:[], mats:[], price:""};
@@ -214,7 +256,12 @@ function pageCatalog(){
 
 /* ---------- PRODUCT ---------- */
 function pageProduct(){
- const root=$("#product"), p=pById(param("id"));
+ const id=param("id"); let p=pById(id)||snaps()[id];
+ if(!p && API){fetch(API+"/api/product/"+encodeURIComponent(id)).then(r=>r.ok?r.json():null).then(pr=>{if(pr)PCACHE[pr.id]=pr;renderProduct(pr);}).catch(()=>renderProduct(null));return;}
+ renderProduct(p);
+}
+function renderProduct(p){
+ const root=$("#product");
  if(!p){root.innerHTML=`<div class="wrap"><div class="empty"><div class="big">😕</div><p>Produsul nu a fost găsit.</p><a class="btn btn-gold" href="catalog.html">Înapoi la catalog</a></div></div>`;return;}
  document.title=p.name+" | AQUALUX Chișinău";
  const cc=C.copy.category[p.cat], save=p.old_price?p.old_price-p.price:0;

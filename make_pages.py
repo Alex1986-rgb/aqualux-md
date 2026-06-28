@@ -24,6 +24,7 @@ HEAD="""<!DOCTYPE html><html lang="ro"><head>
 <div id="site-header"></div>
 <main id="{root}"></main>
 <div id="site-footer"></div>
+<script src="assets/js/config.js"></script>
 <script src="assets/js/data.js"></script>
 <script src="assets/js/site.js"></script>
 </body></html>"""
