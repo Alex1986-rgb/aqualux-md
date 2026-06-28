@@ -128,13 +128,13 @@ for cid,name,kind,base,ship,deliv,mk,mat,mount,arch,fins,sizes in CATS:
             for a in arch:
                 for sz in sizes:
                     combos.append((a,fi,sz,v))
-    target=COUNTS[cid]; L=len(combos); n=0; k=0
+    target=min(COUNTS[cid], len(combos)); n=0; k=0   # только реально РАЗНЫЕ комбинации (без дублей-изданий)
     while n<target:
-        a,fin,sz,v=combos[k%L]; model=k//L; k+=1
+        a,fin,sz,v=combos[k]; k+=1
         n+=1; idx+=1; pid=f"AQ-{idx:05d}"
         label,um=a
-        nm=label+((" "+v) if v else "")+", "+fin+((" — "+sz) if sz else "")+((" · ed. "+str(model+1)) if model else "")
-        cost=base*um*FIN_MULT.get(fin,1.0)*SIZE_MULT.get(sz,1.0)*VAR_MULT.get(v,1.0)*(1+0.03*model)
+        nm=label+((" "+v) if v else "")+", "+fin+((" — "+sz) if sz else "")
+        cost=base*um*FIN_MULT.get(fin,1.0)*SIZE_MULT.get(sz,1.0)*VAR_MULT.get(v,1.0)
         sh=ship*SIZE_MULT.get(sz,1.0)
         landed=nice((cost+sh)*FX)
         retail=nice(landed*mk)
@@ -153,6 +153,19 @@ for cid,name,kind,base,ship,deliv,mk,mat,mount,arch,fins,sizes in CATS:
             "retail_mdl":retail,"margin_mdl":margin,"margin_pct":mpct,"delivery_days":dd}
     cats_meta.append({"id":cid,"name":name,"count":n})
     print(f"{name}: {n}")
+
+# ДЕДУПЛИКАЦИЯ по имени + пересчёт счётчиков
+from collections import Counter
+seen=set(); uniq=[]
+for p in products:
+    key=(p["cat"], p["name"].lower())
+    if key in seen: continue
+    seen.add(key); uniq.append(p)
+dups=len(products)-len(uniq); products=uniq
+ids=set(p["id"] for p in products); supply={k:v for k,v in supply.items() if k in ids}
+cnt=Counter(p["cat"] for p in products)
+for m in cats_meta: m["count"]=cnt.get(m["id"],0)
+print(f"\nДубликатов удалено: {dups}")
 
 # контент
 content=json.loads((ROOT/"data/content.json").read_text(encoding="utf-8"))
