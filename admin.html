@@ -1,0 +1,243 @@
+<!DOCTYPE html><html lang="ro"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AQUALUX · Panou Admin (Level 2)</title>
+<style>
+:root{--ink:#16130e;--gold:#b8912f;--gold2:#c8a24c;--line:#e7e0d0;--panel:#fbf9f4;--green:#3c7a4a;--red:#b8463c}
+*{box-sizing:border-box}body{margin:0;font:14px/1.5 "Helvetica Neue",Arial,sans-serif;color:#2a241b;background:#f4f1ea}
+header{background:linear-gradient(120deg,#1f1a12,#16130e);color:#f3ead4;padding:16px 24px;display:flex;align-items:center;gap:14px}
+header .logo{font:700 22px Georgia,serif;color:#e3c879}header .tag{font-size:11px;letter-spacing:2px;color:#bcae93;text-transform:uppercase}
+header .stat{margin-left:auto;display:flex;gap:22px}header .stat b{display:block;font-size:20px;color:#fff}header .stat span{font-size:11px;color:#bcae93}
+.wrap{max-width:1180px;margin:0 auto;padding:20px}
+.tabs{display:flex;gap:6px;margin:18px 0;flex-wrap:wrap}
+.tabs button{border:1.5px solid var(--line);background:#fff;padding:10px 18px;border-radius:8px;cursor:pointer;font-weight:600}
+.tabs button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:20px;margin-bottom:18px}
+.card h2{font:700 18px Georgia,serif;margin:0 0 6px}.card p.h{color:#7a7060;margin:0 0 14px;font-size:13px}
+.btn{border:none;border-radius:8px;padding:11px 20px;font-weight:700;cursor:pointer;font-size:14px}
+.btn-gold{background:linear-gradient(135deg,var(--gold2),var(--gold));color:#fff}
+.btn-dark{background:var(--ink);color:#f3ead4}.btn-ghost{background:#fff;border:1.5px solid var(--line)}
+textarea,input,select{width:100%;border:1.5px solid var(--line);border-radius:8px;padding:10px;font:13px/1.4 monospace}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+table{width:100%;border-collapse:collapse;font-size:13px}th,td{padding:8px 10px;border-bottom:1px solid #eee;text-align:left}
+th{background:#faf6ec;position:sticky;top:0}td img{width:40px;height:40px;object-fit:cover;border-radius:6px;background:var(--ink)}
+.tbl-wrap{max-height:460px;overflow:auto;border:1px solid var(--line);border-radius:10px}
+.pill{font-size:11px;padding:2px 8px;border-radius:12px;color:#fff}.pill.hot{background:#c8731f}.pill.sale{background:var(--red)}.pill.new{background:var(--green)}.pill.premium{background:var(--gold)}.pill.limited{background:#7d5bd0}
+.score{font-weight:800;color:var(--gold)}
+.muted{color:#7a7060;font-size:12px}.ok{color:var(--green);font-weight:700}.err{color:var(--red);font-weight:700}
+.kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:8px}
+.kpi .k{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px;text-align:center}
+.kpi .k b{display:block;font:800 22px/1 Georgia,serif;color:var(--ink)}.kpi .k span{font-size:11px;color:#7a7060}
+.priceinp{width:84px;font-family:inherit}
+.hide-row{opacity:.4}
+.note{background:#f6f1e5;border-left:3px solid var(--gold);padding:10px 14px;font-size:12.5px;border-radius:0 6px 6px 0;color:#5c5343}
+</style></head>
+<body>
+<header>
+  <div><div class="logo">AQUALUX</div><div class="tag">Panou Admin · Level 2</div></div>
+  <div class="stat">
+    <div><b id="kp-total">0</b><span>produse</span></div>
+    <div><b id="kp-real">0</b><span>reale</span></div>
+    <div><b id="kp-avg">0</b><span>preț mediu</span></div>
+    <div><b id="kp-sale">0</b><span>la reducere</span></div>
+  </div>
+</header>
+<div class="wrap">
+  <div class="tabs">
+    <button class="on" data-t="import">📥 Import</button>
+    <button data-t="produse">📦 Produse</button>
+    <button data-t="preturi">💰 Prețuri</button>
+    <button data-t="trend">📈 Tendințe</button>
+    <button data-t="export">🚀 Export & Publicare</button>
+  </div>
+
+  <!-- IMPORT -->
+  <section id="t-import">
+    <div class="card">
+      <h2>Import produse (fără terminal)</h2>
+      <p class="h">Lipește CSV sau încarcă fișier. Coloane: <code>category,name,finish,material,price,old_price,opt_usd,feat,image,badge</code>. Categorii: smesitel, unitaz, rakovina, polotenec, dush, kuhnya.</p>
+      <div class="row" style="margin-bottom:10px">
+        <input type="file" id="csvFile" accept=".csv" style="max-width:280px">
+        <button class="btn btn-ghost" id="loadSample">Exemplu CSV</button>
+        <label class="row" style="gap:6px"><input type="checkbox" id="replaceMode" style="width:auto"> Înlocuiește tot catalogul</label>
+      </div>
+      <textarea id="csvBox" rows="8" placeholder="category,name,finish,material,price,old_price,opt_usd,feat,image,badge
+smesitel,Baterie premium cu senzor,auriu,Alamă,1290,1690,18,Senzor infraroșu,,sale"></textarea>
+      <div class="row" style="margin-top:12px">
+        <button class="btn btn-gold" id="doImport">Importă în catalog</button>
+        <span id="importMsg" class="muted"></span>
+      </div>
+    </div>
+    <div class="note">Цена в lei. Если <b>price</b> пусто — считается из <b>opt_usd × 80</b>. Если фото нет — подставится плейсхолдер-hero. После импорта перейди в «Export» и обнови сайт.</div>
+  </section>
+
+  <!-- PRODUSE -->
+  <section id="t-produse" hidden>
+    <div class="card">
+      <h2>Catalog</h2>
+      <p class="h">Редактируй цену, бейдж, скрывай товары. Изменения попадут в Export.</p>
+      <div class="row" style="margin-bottom:10px">
+        <input id="search" placeholder="Caută produs…" style="max-width:260px;font-family:inherit">
+        <select id="filterCat" style="max-width:200px;font-family:inherit"><option value="">Toate categoriile</option></select>
+      </div>
+      <div class="tbl-wrap"><table><thead><tr><th></th><th>Nume</th><th>Cat.</th><th>Preț</th><th>Badge</th><th>Trend</th><th>Vizibil</th></tr></thead><tbody id="rows"></tbody></table></div>
+    </div>
+  </section>
+
+  <!-- PRETURI -->
+  <section id="t-preturi" hidden>
+    <div class="card">
+      <h2>Pricing engine</h2>
+      <p class="h">Корректировка цен по всему каталогу или категории.</p>
+      <div class="row">
+        <select id="peCat" style="max-width:220px;font-family:inherit"><option value="">Toate categoriile</option></select>
+        <label>Ajustare preț: <input id="peAdj" type="number" value="0" style="width:90px;font-family:inherit"> %</label>
+        <button class="btn btn-dark" id="peApply">Aplică</button>
+        <span id="peMsg" class="muted"></span>
+      </div>
+      <p class="muted" style="margin-top:10px">Напр. «+10» поднимет цены на 10%, «-5» снизит на 5%. Старые цены (old_price) пересчитываются пропорционально.</p>
+    </div>
+  </section>
+
+  <!-- TREND -->
+  <section id="t-trend" hidden>
+    <div class="card">
+      <h2>Sistem de tendințe (Trend Score)</h2>
+      <p class="h">Trend Score = preț mic + reducere + rating + recenzii + badge. Top товары для рекламы.</p>
+      <div class="kpi" id="trendKpi"></div>
+      <div class="tbl-wrap"><table><thead><tr><th>#</th><th>Nume</th><th>Cat.</th><th>Preț</th><th>Trend Score</th></tr></thead><tbody id="trendRows"></tbody></table></div>
+    </div>
+  </section>
+
+  <!-- EXPORT -->
+  <section id="t-export" hidden>
+    <div class="card">
+      <h2>Export & Publicare pe site</h2>
+      <p class="h">Сгенерируй обновлённый <code>data.js</code> и опубликуй — без терминала.</p>
+      <div class="row" style="margin-bottom:12px">
+        <button class="btn btn-gold" id="dlData">⬇ Descarcă data.js</button>
+        <button class="btn btn-ghost" id="copyData">📋 Copiază</button>
+        <span id="expMsg" class="muted"></span>
+      </div>
+      <ol style="font-size:13px;color:#5c5343;line-height:1.7">
+        <li>Нажми <b>«Descarcă data.js»</b> — скачается файл.</li>
+        <li>Открой репозиторий на GitHub → папка <code>assets/js/</code> → <b>Add file → Upload files</b> → загрузи новый <code>data.js</code> (заменит старый) → <b>Commit changes</b>.</li>
+        <li>Через ~1 минуту сайт обновится. Терминал не нужен.</li>
+      </ol>
+      <div class="note">Альтернатива (быстрее): положи скачанный <code>data.js</code> в <code>~/Downloads/aqualux-md/assets/js/</code> и выполни <code>git add -A &amp;&amp; git commit -m update &amp;&amp; git push</code>.</div>
+    </div>
+  </section>
+</div>
+
+<script src="assets/js/data.js"></script>
+<script>
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+let PRODUCTS = JSON.parse(JSON.stringify(window.AQ_PRODUCTS||[]));
+const CONTENT = window.AQ_CONTENT||{};
+const CATNAME={smesitel:"Baterii pentru baie",unitaz:"Vase WC",rakovina:"Lavoare",polotenec:"Uscătoare de prosoape",dush:"Sisteme de duș",kuhnya:"Baterii de bucătărie"};
+PRODUCTS.forEach(p=>{if(p.visible===undefined)p.visible=true;});
+
+function money(n){return Number(n).toLocaleString("ro-RO")+" lei";}
+function trendScore(p){
+  const max=Math.max(...PRODUCTS.map(x=>x.price))||1;
+  const disc=p.discount||(p.old_price?Math.round((1-p.price/p.old_price)*100):0);
+  const bb={hot:10,new:6,sale:8,limited:5,premium:4}[p.badge]||0;
+  let s=(1-p.price/max)*30 + Math.min(disc,40)/40*25 + (p.rating||4.6)/5*20 + Math.min(p.reviews||0,80)/80*15 + bb;
+  return Math.max(0,Math.min(100,Math.round(s)));
+}
+function kpis(){
+  const vis=PRODUCTS.filter(p=>p.visible);
+  $("#kp-total").textContent=vis.length;
+  $("#kp-real").textContent=vis.filter(p=>p.real).length;
+  $("#kp-avg").textContent=vis.length?Math.round(vis.reduce((a,p)=>a+p.price,0)/vis.length).toLocaleString("ro-RO"):0;
+  $("#kp-sale").textContent=vis.filter(p=>p.old_price).length;
+}
+function fillCatSelects(){
+  const cats=[...new Set(PRODUCTS.map(p=>p.cat))];
+  ["#filterCat","#peCat"].forEach(sel=>{
+    const el=$(sel); el.innerHTML='<option value="">Toate categoriile</option>'+cats.map(c=>`<option value="${c}">${CATNAME[c]||c}</option>`).join("");
+  });
+}
+function renderRows(){
+  const q=($("#search").value||"").toLowerCase(), fc=$("#filterCat").value;
+  const list=PRODUCTS.filter(p=>(!fc||p.cat===fc)&&(p.name||"").toLowerCase().includes(q));
+  $("#rows").innerHTML=list.map(p=>{
+    const i=PRODUCTS.indexOf(p);
+    return `<tr class="${p.visible?'':'hide-row'}">
+      <td><img src="${p.img}" onerror="this.style.opacity=.2"></td>
+      <td>${p.name}</td><td class="muted">${CATNAME[p.cat]||p.cat}</td>
+      <td><input class="priceinp" type="number" value="${p.price}" onchange="setPrice(${i},this.value)"></td>
+      <td>${p.badge?`<span class="pill ${p.badge}">${p.badge}</span>`:'<span class="muted">—</span>'}</td>
+      <td class="score">${trendScore(p)}</td>
+      <td><input type="checkbox" ${p.visible?'checked':''} onchange="setVis(${i},this.checked)"></td>
+    </tr>`;}).join("");
+}
+function setPrice(i,v){PRODUCTS[i].price=parseInt(v)||0;kpis();}
+function setVis(i,v){PRODUCTS[i].visible=v;kpis();renderRows();}
+function renderTrend(){
+  const sorted=[...PRODUCTS].map(p=>({p,s:trendScore(p)})).sort((a,b)=>b.s-a.s);
+  $("#trendKpi").innerHTML=sorted.slice(0,4).map(x=>`<div class="k"><b>${x.s}</b><span>${x.p.name.slice(0,28)}</span></div>`).join("");
+  $("#trendRows").innerHTML=sorted.slice(0,30).map((x,n)=>`<tr><td>${n+1}</td><td>${x.p.name}</td><td class="muted">${CATNAME[x.p.cat]||x.p.cat}</td><td>${money(x.p.price)}</td><td class="score">${x.s}</td></tr>`).join("");
+}
+// tabs
+$$(".tabs button").forEach(b=>b.onclick=()=>{
+  $$(".tabs button").forEach(x=>x.classList.remove("on"));b.classList.add("on");
+  ["import","produse","preturi","trend","export"].forEach(t=>$("#t-"+t).hidden=(t!==b.dataset.t));
+  if(b.dataset.t==="produse")renderRows();
+  if(b.dataset.t==="trend")renderTrend();
+});
+// import
+function parseCSV(text){
+  const lines=text.trim().split(/\r?\n/); if(lines.length<2)return [];
+  const head=lines[0].split(",").map(s=>s.trim());
+  return lines.slice(1).map(line=>{
+    const cells=line.match(/("([^"]|"")*"|[^,]*)(,|$)/g).map(c=>c.replace(/,$/,'').replace(/^"|"$/g,'').replace(/""/g,'"').trim());
+    const o={}; head.forEach((h,i)=>o[h]=cells[i]||""); return o;
+  });
+}
+function importRows(rows){
+  let n=PRODUCTS.filter(p=>/^adm-/.test(p.id)).length, added=0;
+  const base=$("#replaceMode").checked?[]:PRODUCTS.slice();
+  if($("#replaceMode").checked)PRODUCTS=[];else PRODUCTS=base;
+  rows.forEach(r=>{
+    if(!(r.name||"").trim())return;
+    const cat=(r.category||"smesitel").trim();
+    const opt=parseFloat(r.opt_usd)||0;
+    const price=parseInt(r.price)|| (opt?Math.round(opt*80/10)*10:0);
+    const old=parseInt(r.old_price)||0;
+    n++;added++;
+    PRODUCTS.push({id:"adm-"+String(n).padStart(3,"0"),cat,cat_name:CATNAME[cat]||cat,real:true,visible:true,
+      name:r.name.trim(),slug:(r.name.trim().toLowerCase().replace(/[^a-z0-9]+/g,"-"))+"-adm"+n,
+      price,old_price:old,discount:old>price?Math.round((1-price/old)*100):0,
+      img:(r.image&&r.image.trim())?("assets/img/products/"+r.image.trim()):"assets/img/hero/hero1.jpg?v=iv",
+      badge:(r.badge||"").trim(),rating:4.7,reviews:12+added*3,feat:(r.feat||r.name).trim(),
+      specs:{Material:(r.material||"").trim()||"Premium",Finisaj:(r.finish||"standard").trim(),Montare:"Standard",Garanție:"3 ani",Origine:"Import premium"}});
+  });
+  $("#importMsg").innerHTML=`<span class="ok">✓ Importate ${added} produse.</span> Total: ${PRODUCTS.length}. Перейди в «Export».`;
+  kpis();fillCatSelects();
+}
+$("#doImport").onclick=()=>{const r=parseCSV($("#csvBox").value);if(!r.length){$("#importMsg").innerHTML='<span class="err">CSV gol sau invalid.</span>';return;}importRows(r);};
+$("#csvFile").onchange=e=>{const f=e.target.files[0];if(!f)return;const rd=new FileReader();rd.onload=()=>{$("#csvBox").value=rd.result;};rd.readAsText(f);};
+$("#loadSample").onclick=()=>{$("#csvBox").value=`category,name,finish,material,price,old_price,opt_usd,feat,image,badge
+smesitel,Baterie premium cu senzor LED,auriu,Alamă masivă,1490,1890,18,Senzor infraroșu cu afișaj,,sale
+unitaz,Vas WC inteligent cu bideu,alb,Porțelan,18900,,240,Bideu și telecomandă,,hot
+rakovina,Lavoar din marmură naturală,alb,Marmură,5990,,80,Piesă unică din piatră,,new`;};
+// pricing
+$("#peApply").onclick=()=>{
+  const cat=$("#peCat").value, adj=parseFloat($("#peAdj").value)||0, k=1+adj/100; let c=0;
+  PRODUCTS.forEach(p=>{if(!cat||p.cat===cat){p.price=Math.max(1,Math.round(p.price*k));if(p.old_price)p.old_price=Math.round(p.old_price*k);c++;}});
+  $("#peMsg").innerHTML=`<span class="ok">✓ ${c} produse recalculate (${adj>0?'+':''}${adj}%).</span>`;kpis();
+};
+// export
+function buildDataJS(){
+  const out=PRODUCTS.filter(p=>p.visible).map(p=>{const q={...p};delete q.visible;return q;});
+  const content={...CONTENT};
+  (content.cats||[]).forEach(c=>c.count=out.filter(p=>p.cat===c.id).length);
+  return "window.AQ_PRODUCTS="+JSON.stringify(out)+";\nwindow.AQ_CONTENT="+JSON.stringify(content)+";\n";
+}
+$("#dlData").onclick=()=>{const blob=new Blob([buildDataJS()],{type:"text/javascript"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="data.js";a.click();$("#expMsg").innerHTML='<span class="ok">✓ data.js descărcat. Încarcă-l pe GitHub în assets/js/.</span>';};
+$("#copyData").onclick=async()=>{try{await navigator.clipboard.writeText(buildDataJS());$("#expMsg").innerHTML='<span class="ok">✓ Copiat în clipboard.</span>';}catch(e){$("#expMsg").innerHTML='<span class="err">Copiere blocată — folosește Descarcă.</span>';}};
+$("#search").oninput=renderRows;$("#filterCat").onchange=renderRows;
+// init
+kpis();fillCatSelects();
+</script>
+</body></html>
