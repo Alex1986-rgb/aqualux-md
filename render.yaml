@@ -1,0 +1,18 @@
+# Render Blueprint — авто-деплой backend AQUALUX (Level 3)
+# render.com → New → Blueprint → выбрать этот репозиторий → задать ADMIN_KEY → Apply
+services:
+  - type: web
+    name: aqualux-backend
+    runtime: node
+    plan: free
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: node server.js
+    healthCheckPath: /api/health
+    envVars:
+      - key: ADMIN_KEY
+        sync: false          # задаёшь свой секретный ключ в UI
+      - key: TG_TOKEN
+        sync: false          # опц. — токен Telegram-бота для заказов
+      - key: TG_CHAT
+        sync: false          # опц. — твой chat_id
