@@ -371,13 +371,13 @@ h1,h2,h3,h4{font-family:var(--serif);font-weight:700;margin:0;color:var(--ink)}
 .qv-g{padding:24px}.qv-i{padding:24px}
 @media(min-width:680px){.qv-modal{display:grid;grid-template-columns:1fr 1fr;align-items:start}.qv-g{padding:26px 14px 26px 26px}.qv-i{padding:26px 26px 26px 14px}}
 /* scroll reveal */
-.rev{opacity:0;transform:translateY(26px);transition:opacity .6s ease,transform .65s cubic-bezier(.2,.7,.2,1)}
-.rev.in{opacity:1;transform:none}
-@media(prefers-reduced-motion:reduce){.rev{opacity:1!important;transform:none!important;transition:none}}
+html.has-reveal .reveal{opacity:0;transform:translateY(22px);transition:opacity .55s ease,transform .6s cubic-bezier(.2,.7,.2,1)}
+html.has-reveal .reveal.reveal-on{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){html.has-reveal .reveal{opacity:1!important;transform:none!important;transition:none}}
 /* dark mode */
 [data-theme=dark]{--bg:#14110c;--panel:#1d1813;--line:#2f2920;--text:#e9e1d2;--muted:#a99f8c;--soft:#8a8170;--ink:#f1ebdb;--shadow:0 8px 30px rgba(0,0,0,.55)}
 [data-theme=dark] body{background:var(--bg)}
-[data-theme=dark] .pcard,[data-theme=dark] .gcard,[data-theme=dark] .navdrop,[data-theme=dark] .drawer,[data-theme=dark] .qv-modal,[data-theme=dark] .ac-box,[data-theme=dark] .co-card,[data-theme=dark] .summary,[data-theme=dark] .nav,[data-theme=dark] .hdr,[data-theme=dark] .search input,[data-theme=dark] .filters,[data-theme=dark] .spec-tbl{background:var(--panel);color:var(--text)}
+[data-theme=dark] .pcard,[data-theme=dark] .gcard,[data-theme=dark] .navdrop,[data-theme=dark] .drawer,[data-theme=dark] .qv-modal,[data-theme=dark] .ac-box,[data-theme=dark] .co-card,[data-theme=dark] .summary,[data-theme=dark] .nav,[data-theme=dark] .hdr,[data-theme=dark] .search input,[data-theme=dark] .filters,[data-theme=dark] .spec-tbl,[data-theme=dark] .ustrip{background:var(--panel);color:var(--text)}
 [data-theme=dark] .bg-soft{background:#191510}
 [data-theme=dark] .gic{background:linear-gradient(135deg,#2b2318,#342b1e)}
 [data-theme=dark] .pcard .wish,[data-theme=dark] .pcard .qv{background:rgba(40,33,24,.95);color:#cabfa8}

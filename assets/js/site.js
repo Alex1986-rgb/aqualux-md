@@ -539,9 +539,12 @@ function initTheme(){let t=localStorage.getItem(THEME_KEY)||"light";applyTheme(t
 /* ---- scroll reveal ---- */
 function initReveal(){
  if(!("IntersectionObserver" in window))return;
- const io=new IntersectionObserver((es)=>{es.forEach(en=>{if(en.isIntersecting){en.target.classList.add("in");io.unobserve(en.target);}});},{threshold:.08,rootMargin:"0px 0px -40px 0px"});
- const mark=()=>$$(".sec, .ustrip, .groups-grid > *, .trust, .promo-banner, .citybanner").forEach(el=>{if(!el.classList.contains("rev")){el.classList.add("rev");io.observe(el);}});
- mark();setTimeout(mark,600);setTimeout(mark,1500);
+ document.documentElement.classList.add("has-reveal");
+ const io=new IntersectionObserver((es)=>{es.forEach(en=>{if(en.isIntersecting){en.target.classList.add("reveal-on");io.unobserve(en.target);}});},{threshold:.04,rootMargin:"0px 0px -30px 0px"});
+ const mark=()=>$$(".sec, .ustrip, .groups-grid > *, .trust, .promo-banner, .citybanner").forEach(el=>{if(!el.classList.contains("reveal")){el.classList.add("reveal");io.observe(el);}});
+ mark();[400,1000].forEach(t=>setTimeout(mark,t));
+ // safety: никогда не оставляем контент скрытым, даже если observer не сработал
+ setTimeout(()=>$$(".reveal").forEach(el=>el.classList.add("reveal-on")),1600);
 }
 /* ---- PWA ---- */
 function initPWA(){
