@@ -7,5 +7,5 @@
        window.AQ_API = "https://aqualux-backend.onrender.com";
 */
 window.AQ_API = (location.hostname === "localhost" || location.hostname === "127.0.0.1")
-  ? "http://localhost:3000"
+  ? "http://localhost:4000"
   : "";   // ← сюда вставь URL backend на Render, чтобы live-сайт стал headless
