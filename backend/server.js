@@ -210,10 +210,18 @@ async function importChunk(cat, page){
   const items = parseMIC(html, cat, 1000);
   let products = readJSON("products.json", []), supply = readJSON("supply.json", {});
   const seen = new Set(products.map(p=>p.img));
+  let maxN = products.reduce((m,p)=>{ const mm=/^MIC-(\d+)$/.exec(p.id); return mm?Math.max(m,+mm[1]):m; }, 0);
   let added = 0;
   for(const it of items){
     if(seen.has(it.img)) continue; seen.add(it.img);
-    const r = mkProduct(cat, it); products = r.products; supply = r.supply; added++;
+    maxN++; added++;
+    const pid="MIC-"+maxN, cost=it.usd||40, ship=SHIP[cat]||15;
+    const landed=nice((cost+ship)*FX), retail=nice(landed*(MARGIN_K[cat]||2.1)), margin=retail-landed;
+    products.push({ id:pid, cat, cat_name:CAT_NAME[cat], real:true, name:it.name,
+      slug:it.name.toLowerCase().replace(/[^a-z0-9]+/g,"-").slice(0,70)+"-"+pid.toLowerCase(),
+      price:retail, old_price:0, discount:0, img:it.img, images:it.images||[it.img], badge:"", rating:4.7, reviews:14, feat:it.name,
+      specs:{ Material:"Premium", Finisaj:"standard", Montare:"Standard", Garanție:"3 ani", Origine:"Import Made-in-China" } });
+    supply[pid]={ cost_usd:Math.round(cost*100)/100, ship_usd:ship, landed_mdl:landed, retail_mdl:retail, margin_mdl:margin, margin_pct:Math.round(margin/retail*100), delivery_days:HEAVY.includes(cat)?25:12 };
   }
   if(added){ fs.writeFileSync(path.join(DATA,"products.json"), JSON.stringify(products)); fs.writeFileSync(path.join(DATA,"supply.json"), JSON.stringify(supply)); }
   return { added, blocked:false, total:products.length };
@@ -225,8 +233,11 @@ async function apTick(){
     const r = await importChunk(cat, AP.cursor.page);
     AP.total = r.total; AP.added += r.added;
     apLog(`${cat} p${AP.cursor.page}: +${r.added}${r.blocked?" ⛔блок":""} → ${AP.total}`);
-    if(r.blocked || r.added===0){ AP.cursor.ci=(AP.cursor.ci+1)%CAT_LIST.length; AP.cursor.page=1; AP.roundEmpty = r.added===0?AP.roundEmpty+1:0; }
-    else { AP.cursor.page++; AP.roundEmpty=0; }
+    if(r.blocked){ AP.cursor.ci=(AP.cursor.ci+1)%CAT_LIST.length; AP.cursor.page=1; AP.emptyStreak=0; AP.roundEmpty++; }
+    else if(r.added===0){ AP.emptyStreak=(AP.emptyStreak||0)+1;
+      if(AP.emptyStreak>=4){ AP.cursor.ci=(AP.cursor.ci+1)%CAT_LIST.length; AP.cursor.page=1; AP.emptyStreak=0; AP.roundEmpty++; }
+      else { AP.cursor.page++; } }                       // 0 новых — листаем ГЛУБЖЕ (до 4 пустых подряд)
+    else { AP.cursor.page++; AP.emptyStreak=0; AP.roundEmpty=0; }
     apSave();
     if(AP.total >= AP.target){ apLog("🎯 цель достигнута"); return apStop(); }
     if(AP.roundEmpty >= CAT_LIST.length){ apLog("⏹ все категории исчерпаны"); return apStop(); }
