@@ -6,3 +6,4 @@ __pycache__/
 # приватные данные поставщиков/закупки — НЕ публиковать
 data/alibaba_supply.csv
 data/import.csv
+data/wix_products_import.csv
