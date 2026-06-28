@@ -7,3 +7,4 @@ __pycache__/
 data/alibaba_supply.csv
 data/import.csv
 data/wix_products_import.csv
+data/supply.json

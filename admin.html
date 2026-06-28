@@ -39,6 +39,8 @@ th{background:#faf6ec;position:sticky;top:0}td img{width:40px;height:40px;object
     <div><b id="kp-real">0</b><span>reale</span></div>
     <div><b id="kp-avg">0</b><span>preț mediu</span></div>
     <div><b id="kp-sale">0</b><span>la reducere</span></div>
+    <div><b id="kp-margin">—</b><span>marjă med.</span></div>
+    <div><b id="kp-profit">—</b><span>profit potențial</span></div>
   </div>
 </header>
 <div class="wrap">
@@ -99,7 +101,8 @@ smesitel,Baterie premium cu senzor,auriu,Alamă,1290,1690,18,Senzor infraroșu,,
         <input id="search" placeholder="Caută produs…" style="max-width:260px;font-family:inherit">
         <select id="filterCat" style="max-width:200px;font-family:inherit"><option value="">Toate categoriile</option></select>
       </div>
-      <div class="tbl-wrap"><table><thead><tr><th></th><th>Nume</th><th>Cat.</th><th>Preț</th><th>Badge</th><th>Trend</th><th>Vizibil</th></tr></thead><tbody id="rows"></tbody></table></div>
+      <p class="muted" style="margin:-6px 0 8px">💡 Закуп+доставка, маржа и срок видны только локально (приватно, не на сайте).</p>
+      <div class="tbl-wrap"><table><thead><tr><th></th><th>Nume</th><th>Cat.</th><th>Preț</th><th>Закуп+дост.</th><th>Маржа</th><th>Срок</th><th>Badge</th><th>Trend</th><th>Vizibil</th></tr></thead><tbody id="rows"></tbody></table></div>
     </div>
   </section>
 
@@ -148,13 +151,15 @@ smesitel,Baterie premium cu senzor,auriu,Alamă,1290,1690,18,Senzor infraroșu,,
   </section>
 </div>
 
-<script src="assets/js/data.js"></script>
+<script src="assets/js/data.js?v=1782653934"></script>
 <script>
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 let PRODUCTS = JSON.parse(JSON.stringify(window.AQ_PRODUCTS||[]));
 const CONTENT = window.AQ_CONTENT||{};
-const CATNAME={smesitel:"Baterii pentru baie",unitaz:"Vase WC",rakovina:"Lavoare",polotenec:"Uscătoare de prosoape",dush:"Sisteme de duș",kuhnya:"Baterii de bucătărie"};
+const CATNAME={smesitel:"Baterii pentru baie",kuhnya:"Baterii de bucătărie",unitaz:"Vase WC",rakovina:"Lavoare",polotenec:"Uscătoare de prosoape",dush:"Sisteme de duș",cazi:"Căzi de baie",cabine:"Cabine de duș",mobila_baie:"Mobilier de baie",oglinzi:"Oglinzi",mobila_buc:"Mobilier de bucătărie",scaune:"Scaune",mese:"Mese",accesorii:"Accesorii"};
 PRODUCTS.forEach(p=>{if(p.visible===undefined)p.visible=true;});
+let SUPPLY={};
+fetch("data/supply.json").then(r=>r.ok?r.json():{}).then(s=>{SUPPLY=s;kpis();if(!$("#t-produse").hidden)renderRows();}).catch(()=>{});
 
 function money(n){return Number(n).toLocaleString("ro-RO")+" lei";}
 function trendScore(p){
@@ -170,10 +175,14 @@ function kpis(){
   $("#kp-real").textContent=vis.filter(p=>p.real).length;
   $("#kp-avg").textContent=vis.length?Math.round(vis.reduce((a,p)=>a+p.price,0)/vis.length).toLocaleString("ro-RO"):0;
   $("#kp-sale").textContent=vis.filter(p=>p.old_price).length;
+  const sup=vis.map(p=>SUPPLY[p.id]).filter(Boolean);
+  if(sup.length){$("#kp-margin").textContent=Math.round(sup.reduce((a,x)=>a+x.margin_pct,0)/sup.length)+"%";
+    $("#kp-profit").textContent=Math.round(sup.reduce((a,x)=>a+x.margin_mdl,0)/1000)+"k";}
+  else{$("#kp-margin").textContent="—";$("#kp-profit").textContent="—";}
 }
 function fillCatSelects(){
   const cats=[...new Set(PRODUCTS.map(p=>p.cat))];
-  const all=["smesitel","unitaz","rakovina","polotenec","dush","kuhnya"];
+  const all=Object.keys(CATNAME);
   ["#filterCat","#peCat"].forEach(sel=>{
     const el=$(sel); el.innerHTML='<option value="">Toate categoriile</option>'+cats.map(c=>`<option value="${c}">${CATNAME[c]||c}</option>`).join("");
   });
@@ -188,6 +197,9 @@ function renderRows(){
       <td><img src="${p.img}" onerror="this.style.opacity=.2"></td>
       <td>${p.name}</td><td class="muted">${CATNAME[p.cat]||p.cat}</td>
       <td><input class="priceinp" type="number" value="${p.price}" onchange="setPrice(${i},this.value)"></td>
+      <td>${SUPPLY[p.id]?money(SUPPLY[p.id].landed_mdl):'<span class="muted">—</span>'}</td>
+      <td>${SUPPLY[p.id]?`<b style="color:#3c7a4a">${SUPPLY[p.id].margin_pct}%</b> <span class="muted">${money(SUPPLY[p.id].margin_mdl)}</span>`:'<span class="muted">—</span>'}</td>
+      <td>${SUPPLY[p.id]?SUPPLY[p.id].delivery_days+' zile':'<span class="muted">—</span>'}</td>
       <td>${p.badge?`<span class="pill ${p.badge}">${p.badge}</span>`:'<span class="muted">—</span>'}</td>
       <td class="score">${trendScore(p)}</td>
       <td><input type="checkbox" ${p.visible?'checked':''} onchange="setVis(${i},this.checked)"></td>
