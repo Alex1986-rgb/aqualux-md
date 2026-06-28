@@ -1,786 +1,786 @@
 [
-{
-"id": "telefoane",
-"name_ro": "Telefoane mobile & smartphone-uri",
-"keyword_en": "android smartphone unlocked",
-"group_ro": "Electronică",
-"ship_usd": 8,
-"margin_k": 1.6
-},
-{
-"id": "casti_audio",
-"name_ro": "Căști & căști wireless",
-"keyword_en": "wireless earbuds bluetooth tws",
-"group_ro": "Electronică",
-"ship_usd": 4,
-"margin_k": 2.6
-},
-{
-"id": "smartwatch",
-"name_ro": "Ceasuri inteligente (smartwatch)",
-"keyword_en": "smart watch fitness",
-"group_ro": "Electronică",
-"ship_usd": 6,
-"margin_k": 2.4
-},
-{
-"id": "tablete",
-"name_ro": "Tablete",
-"keyword_en": "android tablet 10 inch",
-"group_ro": "Electronică",
-"ship_usd": 12,
-"margin_k": 1.7
-},
-{
-"id": "tv_proiectoare",
-"name_ro": "Televizoare & proiectoare",
-"keyword_en": "mini led projector",
-"group_ro": "Electronică",
-"ship_usd": 55,
-"margin_k": 1.6
-},
-{
-"id": "powerbank_incarcatoare",
-"name_ro": "Acumulatoare externe & încărcătoare",
-"keyword_en": "power bank fast charger",
-"group_ro": "Electronică",
-"ship_usd": 7,
-"margin_k": 2.5
-},
-{
-"id": "casa_inteligenta",
-"name_ro": "Casă inteligentă (smart home)",
-"keyword_en": "smart home wifi device",
-"group_ro": "Electronică",
-"ship_usd": 6,
-"margin_k": 2.3
-},
-{
-"id": "boxe_audio",
-"name_ro": "Boxe & difuzoare audio",
-"keyword_en": "bluetooth speaker portable",
-"group_ro": "Electronică",
-"ship_usd": 9,
-"margin_k": 2.2
-},
-{
-"id": "mobilier_gradina",
-"name_ro": "Mobilier de grădină",
-"keyword_en": "outdoor garden furniture set",
-"group_ro": "Grădină & exterior",
-"ship_usd": 48,
-"margin_k": 2.1
-},
-{
-"id": "gratare",
-"name_ro": "Grătare și barbecue",
-"keyword_en": "charcoal bbq grill",
-"group_ro": "Grădină & exterior",
-"ship_usd": 22,
-"margin_k": 2.0
-},
-{
-"id": "unelte_gradina",
-"name_ro": "Unelte de grădină",
-"keyword_en": "garden hand tools set",
-"group_ro": "Grădină & exterior",
-"ship_usd": 9,
-"margin_k": 2.4
-},
-{
-"id": "irigare",
-"name_ro": "Sisteme de irigare",
-"keyword_en": "drip irrigation kit",
-"group_ro": "Grădină & exterior",
-"ship_usd": 7,
-"margin_k": 2.6
-},
-{
-"id": "iluminat_exterior",
-"name_ro": "Iluminat de exterior",
-"keyword_en": "solar garden light",
-"group_ro": "Grădină & exterior",
-"ship_usd": 6,
-"margin_k": 2.8
-},
-{
-"id": "piscine_gonflabile",
-"name_ro": "Piscine și articole gonflabile",
-"keyword_en": "inflatable swimming pool",
-"group_ro": "Grădină & exterior",
-"ship_usd": 18,
-"margin_k": 2.2
-},
-{
-"id": "foisoare_corturi",
-"name_ro": "Foișoare și corturi de grădină",
-"keyword_en": "outdoor gazebo tent",
-"group_ro": "Grădină & exterior",
-"ship_usd": 35,
-"margin_k": 1.9
-},
-{
-"id": "masini_tuns_iarba",
-"name_ro": "Mașini de tuns iarba",
-"keyword_en": "electric lawn mower",
-"group_ro": "Grădină & exterior",
-"ship_usd": 40,
-"margin_k": 1.7
-},
-{
-"id": "lansete",
-"name_ro": "Lansete pescuit",
-"keyword_en": "fishing rod",
-"group_ro": "Vânătoare & pescuit",
-"ship_usd": 12.5,
-"margin_k": 2.0
-},
-{
-"id": "mulinete",
-"name_ro": "Mulinete pescuit",
-"keyword_en": "fishing reel",
-"group_ro": "Vânătoare & pescuit",
-"ship_usd": 7.5,
-"margin_k": 2.2
-},
-{
-"id": "naluci",
-"name_ro": "Năluci și momeli",
-"keyword_en": "fishing lures tackle",
-"group_ro": "Vânătoare & pescuit",
-"ship_usd": 3.5,
-"margin_k": 2.6
-},
-{
-"id": "corturi",
-"name_ro": "Corturi camping",
-"keyword_en": "camping tent",
-"group_ro": "Vânătoare & pescuit",
-"ship_usd": 18.0,
-"margin_k": 1.8
-},
-{
-"id": "saci_dormit",
-"name_ro": "Saci de dormit",
-"keyword_en": "sleeping bag",
-"group_ro": "Vânătoare & pescuit",
-"ship_usd": 11.0,
-"margin_k": 1.9
-},
-{
-"id": "rucsacuri",
-"name_ro": "Rucsacuri outdoor",
-"keyword_en": "hiking backpack",
-"group_ro": "Vânătoare & pescuit",
-"ship_usd": 9.0,
-"margin_k": 2.1
-},
-{
-"id": "binocluri",
-"name_ro": "Binocluri și optică",
-"keyword_en": "hunting binoculars",
-"group_ro": "Vânătoare & pescuit",
-"ship_usd": 6.5,
-"margin_k": 2.4
-},
-{
-"id": "cutite",
-"name_ro": "Cuțite și unelte outdoor",
-"keyword_en": "outdoor survival knife",
-"group_ro": "Vânătoare & pescuit",
-"ship_usd": 4.5,
-"margin_k": 2.5
-},
-{
-"id": "jucarii",
-"name_ro": "Jucării pentru copii",
-"keyword_en": "kids toys",
-"group_ro": "Copii & jucării",
-"ship_usd": 6.5,
-"margin_k": 2.6
-},
-{
-"id": "carucioare",
-"name_ro": "Cărucioare pentru bebeluși",
-"keyword_en": "baby stroller pram",
-"group_ro": "Copii & jucării",
-"ship_usd": 38,
-"margin_k": 2.0
-},
-{
-"id": "scaune_auto",
-"name_ro": "Scaune auto pentru copii",
-"keyword_en": "baby car seat",
-"group_ro": "Copii & jucării",
-"ship_usd": 32,
-"margin_k": 2.1
-},
-{
-"id": "mobilier_copii",
-"name_ro": "Mobilier pentru camera copilului",
-"keyword_en": "kids furniture",
-"group_ro": "Copii & jucării",
-"ship_usd": 28,
-"margin_k": 2.2
-},
-{
-"id": "jucarii_educative",
-"name_ro": "Jucării educative",
-"keyword_en": "educational learning toys",
-"group_ro": "Copii & jucării",
-"ship_usd": 7,
-"margin_k": 2.7
-},
-{
-"id": "masinute_electrice",
-"name_ro": "Mașinuțe electrice pentru copii",
-"keyword_en": "kids ride on car",
-"group_ro": "Copii & jucării",
-"ship_usd": 45,
-"margin_k": 1.9
-},
-{
-"id": "hranire_bebe",
-"name_ro": "Hrănire bebeluși",
-"keyword_en": "baby feeding set",
-"group_ro": "Copii & jucării",
-"ship_usd": 5.5,
-"margin_k": 2.8
-},
-{
-"id": "biciclete_copii",
-"name_ro": "Biciclete și trotinete pentru copii",
-"keyword_en": "kids bike scooter",
-"group_ro": "Copii & jucării",
-"ship_usd": 22,
-"margin_k": 2.1
-},
-{
-"id": "aspirator_robot",
-"name_ro": "Aspiratoare robot",
-"keyword_en": "robot vacuum cleaner",
-"group_ro": "Electrocasnice",
-"ship_usd": 18,
-"margin_k": 1.8
-},
-{
-"id": "aparate_bucatarie",
-"name_ro": "Aparate de bucătărie",
-"keyword_en": "kitchen appliances blender",
-"group_ro": "Electrocasnice",
-"ship_usd": 12,
-"margin_k": 2.0
-},
-{
-"id": "purificator_aer",
-"name_ro": "Purificatoare de aer",
-"keyword_en": "air purifier HEPA",
-"group_ro": "Electrocasnice",
-"ship_usd": 15,
-"margin_k": 1.9
-},
-{
-"id": "masini_gaurit",
-"name_ro": "Mașini de găurit",
-"keyword_en": "cordless power drill",
-"group_ro": "Scule",
-"ship_usd": 14,
-"margin_k": 1.7
-},
-{
-"id": "truse_scule",
-"name_ro": "Truse de scule",
-"keyword_en": "hand tool set kit",
-"group_ro": "Scule",
-"ship_usd": 16,
-"margin_k": 2.1
-},
-{
-"id": "sudura_masurare",
-"name_ro": "Sudură și măsurare",
-"keyword_en": "welding machine laser measure",
-"group_ro": "Scule",
-"ship_usd": 20,
-"margin_k": 1.8
-},
-{
-"id": "echipament_fitness",
-"name_ro": "Echipament de fitness",
-"keyword_en": "home fitness equipment",
-"group_ro": "Sport",
-"ship_usd": 22,
-"margin_k": 2.2
-},
-{
-"id": "accesorii_biciclete",
-"name_ro": "Accesorii pentru biciclete",
-"keyword_en": "bicycle accessories",
-"group_ro": "Sport",
-"ship_usd": 10,
-"margin_k": 2.4
-},
-{
-"id": "imbracaminte_sport",
-"name_ro": "Îmbrăcăminte și echipament sportiv",
-"keyword_en": "sportswear gym gear",
-"group_ro": "Sport",
-"ship_usd": 8,
-"margin_k": 2.6
-},
-{
-"id": "women_clothing",
-"name_ro": "Îmbrăcăminte pentru femei",
-"keyword_en": "women clothing",
-"group_ro": "Modă",
-"ship_usd": 4.5,
-"margin_k": 2.6
-},
-{
-"id": "men_clothing",
-"name_ro": "Îmbrăcăminte pentru bărbați",
-"keyword_en": "men clothing",
-"group_ro": "Modă",
-"ship_usd": 5.0,
-"margin_k": 2.4
-},
-{
-"id": "shoes_footwear",
-"name_ro": "Încălțăminte",
-"keyword_en": "shoes footwear",
-"group_ro": "Modă",
-"ship_usd": 8.5,
-"margin_k": 2.2
-},
-{
-"id": "bags_backpacks",
-"name_ro": "Genți și rucsacuri",
-"keyword_en": "bags backpacks",
-"group_ro": "Modă",
-"ship_usd": 6.0,
-"margin_k": 2.8
-},
-{
-"id": "sunglasses",
-"name_ro": "Ochelari de soare",
-"keyword_en": "sunglasses",
-"group_ro": "Modă",
-"ship_usd": 2.5,
-"margin_k": 3.0
-},
-{
-"id": "hats_accessories",
-"name_ro": "Pălării și accesorii",
-"keyword_en": "hats accessories",
-"group_ro": "Modă",
-"ship_usd": 2.0,
-"margin_k": 3.0
-},
-{
-"id": "fashion_jewelry",
-"name_ro": "Bijuterii fashion",
-"keyword_en": "fashion jewelry",
-"group_ro": "Bijuterii",
-"ship_usd": 1.8,
-"margin_k": 3.2
-},
-{
-"id": "watches",
-"name_ro": "Ceasuri",
-"keyword_en": "wrist watches",
-"group_ro": "Bijuterii",
-"ship_usd": 3.5,
-"margin_k": 2.5
-},
-{
-"id": "rings_necklaces",
-"name_ro": "Inele și coliere",
-"keyword_en": "rings necklaces",
-"group_ro": "Bijuterii",
-"ship_usd": 1.5,
-"margin_k": 3.2
-},
-{
-"id": "earrings",
-"name_ro": "Cercei",
-"keyword_en": "earrings",
-"group_ro": "Bijuterii",
-"ship_usd": 1.5,
-"margin_k": 3.2
-},
-{
-"id": "facial_skincare_serums",
-"name_ro": "Seruri și creme pentru față",
-"keyword_en": "face skincare serum cream set",
-"group_ro": "Frumusețe",
-"ship_usd": 3.2,
-"margin_k": 2.8
-},
-{
-"id": "makeup_cosmetics_kits",
-"name_ro": "Truse de machiaj și cosmetice",
-"keyword_en": "makeup cosmetics palette kit",
-"group_ro": "Frumusețe",
-"ship_usd": 4.5,
-"margin_k": 3.0
-},
-{
-"id": "hair_dryers_styling_tools",
-"name_ro": "Uscătoare și aparate de coafat",
-"keyword_en": "hair dryer styling tool electric",
-"group_ro": "Frumusețe",
-"ship_usd": 8.5,
-"margin_k": 2.2
-},
-{
-"id": "nail_manicure_tools",
-"name_ro": "Instrumente pentru manichiură",
-"keyword_en": "nail manicure tools kit electric",
-"group_ro": "Frumusețe",
-"ship_usd": 3.8,
-"margin_k": 2.9
-},
-{
-"id": "massage_relax_devices",
-"name_ro": "Aparate de masaj și relaxare",
-"keyword_en": "electric massage device handheld",
-"group_ro": "Frumusețe",
-"ship_usd": 7.0,
-"margin_k": 2.4
-},
-{
-"id": "beauty_facial_devices",
-"name_ro": "Aparate de înfrumusețare facială",
-"keyword_en": "beauty facial device LED skin",
-"group_ro": "Frumusețe",
-"ship_usd": 6.0,
-"margin_k": 2.6
-},
-{
-"id": "general_medical_supplies",
-"name_ro": "Consumabile medicale generale",
-"keyword_en": "medical supplies disposable gloves masks",
-"group_ro": "Medical",
-"ship_usd": 4.0,
-"margin_k": 2.0
-},
-{
-"id": "blood_pressure_thermometers",
-"name_ro": "Tensiometre și termometre",
-"keyword_en": "blood pressure monitor digital thermometer",
-"group_ro": "Medical",
-"ship_usd": 5.5,
-"margin_k": 2.3
-},
-{
-"id": "mobility_aids_supports",
-"name_ro": "Dispozitive de mobilitate și suport",
-"keyword_en": "mobility aid walking cane support brace",
-"group_ro": "Medical",
-"ship_usd": 9.0,
-"margin_k": 1.9
-},
-{
-"id": "first_aid_kits",
-"name_ro": "Truse de prim ajutor",
-"keyword_en": "first aid kit bandage medical",
-"group_ro": "Medical",
-"ship_usd": 4.2,
-"margin_k": 2.1
-},
-{
-"id": "car_accessories_interior",
-"name_ro": "Accesorii auto interior",
-"keyword_en": "car interior accessories",
-"group_ro": "Auto & moto",
-"ship_usd": 3.5,
-"margin_k": 2.4
-},
-{
-"id": "car_dashcam_electronics",
-"name_ro": "Camere auto și electronice",
-"keyword_en": "car dash cam dvr",
-"group_ro": "Auto & moto",
-"ship_usd": 6.0,
-"margin_k": 2.1
-},
-{
-"id": "car_care_cleaning",
-"name_ro": "Întreținere și curățare auto",
-"keyword_en": "car care cleaning kit",
-"group_ro": "Auto & moto",
-"ship_usd": 4.2,
-"margin_k": 2.3
-},
-{
-"id": "motorcycle_parts",
-"name_ro": "Piese și accesorii moto",
-"keyword_en": "motorcycle parts accessories",
-"group_ro": "Auto & moto",
-"ship_usd": 5.5,
-"margin_k": 2.0
-},
-{
-"id": "car_diagnostic_tools",
-"name_ro": "Scule și diagnoză auto",
-"keyword_en": "car repair diagnostic tools",
-"group_ro": "Auto & moto",
-"ship_usd": 4.8,
-"margin_k": 2.2
-},
-{
-"id": "car_seat_covers",
-"name_ro": "Huse și covorașe auto",
-"keyword_en": "car seat covers mats",
-"group_ro": "Auto & moto",
-"ship_usd": 7.0,
-"margin_k": 1.9
-},
-{
-"id": "pet_supplies_general",
-"name_ro": "Articole pentru animale",
-"keyword_en": "pet supplies accessories",
-"group_ro": "Animale",
-"ship_usd": 3.8,
-"margin_k": 2.5
-},
-{
-"id": "pet_beds_houses",
-"name_ro": "Paturi și culcușuri",
-"keyword_en": "dog cat bed house",
-"group_ro": "Animale",
-"ship_usd": 6.5,
-"margin_k": 2.2
-},
-{
-"id": "pet_feeders_bowls",
-"name_ro": "Hrănitoare și adăpătoare",
-"keyword_en": "automatic pet feeder",
-"group_ro": "Animale",
-"ship_usd": 5.2,
-"margin_k": 2.3
-},
-{
-"id": "pet_toys_grooming",
-"name_ro": "Jucării și îngrijire animale",
-"keyword_en": "pet toys grooming brush",
-"group_ro": "Animale",
-"ship_usd": 3.2,
-"margin_k": 2.6
-},
-{
-"id": "office_supplies_stationery",
-"name_ro": "Rechizite și papetărie de birou",
-"keyword_en": "office stationery supplies set",
-"group_ro": "Birou",
-"ship_usd": 6.5,
-"margin_k": 2.4
-},
-{
-"id": "office_furniture",
-"name_ro": "Mobilier de birou",
-"keyword_en": "ergonomic office desk chair",
-"group_ro": "Birou",
-"ship_usd": 48.0,
-"margin_k": 1.9
-},
-{
-"id": "printers_consumables",
-"name_ro": "Imprimante și consumabile",
-"keyword_en": "printer ink toner cartridge",
-"group_ro": "Birou",
-"ship_usd": 14.0,
-"margin_k": 2.0
-},
-{
-"id": "school_supplies",
-"name_ro": "Rechizite școlare",
-"keyword_en": "school supplies kit students",
-"group_ro": "Birou",
-"ship_usd": 5.0,
-"margin_k": 2.6
-},
-{
-"id": "desk_organizers",
-"name_ro": "Organizatoare de birou",
-"keyword_en": "desk organizer storage box",
-"group_ro": "Birou",
-"ship_usd": 7.5,
-"margin_k": 2.5
-},
-{
-"id": "bedding_sets",
-"name_ro": "Lenjerie de pat",
-"keyword_en": "bedding set duvet cover",
-"group_ro": "Textile casă",
-"ship_usd": 12.0,
-"margin_k": 2.3
-},
-{
-"id": "curtains_drapes",
-"name_ro": "Perdele și draperii",
-"keyword_en": "blackout window curtains",
-"group_ro": "Textile casă",
-"ship_usd": 9.0,
-"margin_k": 2.4
-},
-{
-"id": "rugs_carpets",
-"name_ro": "Covoare și carpete",
-"keyword_en": "living room area rug carpet",
-"group_ro": "Textile casă",
-"ship_usd": 22.0,
-"margin_k": 2.1
-},
-{
-"id": "towels_blankets",
-"name_ro": "Prosoape și pături",
-"keyword_en": "cotton towel fleece blanket",
-"group_ro": "Textile casă",
-"ship_usd": 8.5,
-"margin_k": 2.5
-},
-{
-"id": "feronerie_constructii",
-"name_ro": "Feronerie și fixare",
-"keyword_en": "construction hardware fasteners",
-"group_ro": "Construcții",
-"ship_usd": 12.5,
-"margin_k": 2.1
-},
-{
-"id": "usi_ferestre",
-"name_ro": "Uși și ferestre",
-"keyword_en": "aluminum doors windows",
-"group_ro": "Construcții",
-"ship_usd": 48.0,
-"margin_k": 1.8
-},
-{
-"id": "pardoseli_gresie",
-"name_ro": "Pardoseli și gresie",
-"keyword_en": "ceramic floor tiles",
-"group_ro": "Construcții",
-"ship_usd": 35.0,
-"margin_k": 1.9
-},
-{
-"id": "scule_vopsit",
-"name_ro": "Scule pentru vopsit",
-"keyword_en": "paint roller brush tools",
-"group_ro": "Construcții",
-"ship_usd": 9.0,
-"margin_k": 2.4
-},
-{
-"id": "tevi_instalatii",
-"name_ro": "Țevi și instalații",
-"keyword_en": "plumbing pipes fittings",
-"group_ro": "Construcții",
-"ship_usd": 18.0,
-"margin_k": 2.0
-},
-{
-"id": "camere_cctv",
-"name_ro": "Camere de supraveghere CCTV",
-"keyword_en": "cctv security camera",
-"group_ro": "Securitate",
-"ship_usd": 14.0,
-"margin_k": 2.2
-},
-{
-"id": "yale_inteligente",
-"name_ro": "Yale inteligente pentru uși",
-"keyword_en": "smart door lock fingerprint",
-"group_ro": "Securitate",
-"ship_usd": 16.5,
-"margin_k": 2.3
-},
-{
-"id": "seifuri",
-"name_ro": "Seifuri",
-"keyword_en": "electronic safe box",
-"group_ro": "Securitate",
-"ship_usd": 28.0,
-"margin_k": 1.9
-},
-{
-"id": "sisteme_alarma",
-"name_ro": "Sisteme de alarmă și senzori",
-"keyword_en": "wireless alarm system sensors",
-"group_ro": "Securitate",
-"ship_usd": 11.0,
-"margin_k": 2.5
-},
-{
-"id": "panouri_solare_fotovoltaice",
-"name_ro": "Panouri solare fotovoltaice",
-"keyword_en": "solar panel",
-"group_ro": "Energie",
-"ship_usd": 85,
-"margin_k": 1.6
-},
-{
-"id": "statii_energie_portabila",
-"name_ro": "Stații de energie portabilă",
-"keyword_en": "portable power station",
-"group_ro": "Energie",
-"ship_usd": 45,
-"margin_k": 1.7
-},
-{
-"id": "baterii_litiu_stocare",
-"name_ro": "Baterii litiu pentru stocare",
-"keyword_en": "lithium battery pack",
-"group_ro": "Energie",
-"ship_usd": 60,
-"margin_k": 1.8
-},
-{
-"id": "invertoare_solare",
-"name_ro": "Invertoare solare",
-"keyword_en": "solar inverter",
-"group_ro": "Energie",
-"ship_usd": 35,
-"margin_k": 1.9
-},
-{
-"id": "statii_incarcare_ev",
-"name_ro": "Stații de încărcare EV",
-"keyword_en": "ev charger",
-"group_ro": "Energie",
-"ship_usd": 40,
-"margin_k": 2.0
-},
-{
-"id": "utilaje_industriale",
-"name_ro": "Utilaje industriale",
-"keyword_en": "industrial machinery",
-"group_ro": "Industrial",
-"ship_usd": 220,
-"margin_k": 1.5
-},
-{
-"id": "masini_ambalare",
-"name_ro": "Mașini de ambalare",
-"keyword_en": "packaging machine",
-"group_ro": "Industrial",
-"ship_usd": 180,
-"margin_k": 1.6
-},
-{
-"id": "echipamente_manipulare",
-"name_ro": "Echipamente de manipulare",
-"keyword_en": "material handling equipment",
-"group_ro": "Industrial",
-"ship_usd": 150,
-"margin_k": 1.4
-},
-{
-"id": "scule_industriale",
-"name_ro": "Scule industriale",
-"keyword_en": "industrial tools",
-"group_ro": "Industrial",
-"ship_usd": 30,
-"margin_k": 2.2
-}
+  {
+    "id": "telefoane",
+    "name_ro": "Telefoane mobile & smartphone-uri",
+    "keyword_en": "android smartphone unlocked",
+    "group_ro": "Electronică",
+    "ship_usd": 8,
+    "margin_k": 1.6
+  },
+  {
+    "id": "casti_audio",
+    "name_ro": "Căști & căști wireless",
+    "keyword_en": "wireless earbuds bluetooth tws",
+    "group_ro": "Electronică",
+    "ship_usd": 4,
+    "margin_k": 2.6
+  },
+  {
+    "id": "smartwatch",
+    "name_ro": "Ceasuri inteligente (smartwatch)",
+    "keyword_en": "smart watch fitness",
+    "group_ro": "Electronică",
+    "ship_usd": 6,
+    "margin_k": 2.4
+  },
+  {
+    "id": "tablete",
+    "name_ro": "Tablete",
+    "keyword_en": "android tablet 10 inch",
+    "group_ro": "Electronică",
+    "ship_usd": 12,
+    "margin_k": 1.7
+  },
+  {
+    "id": "tv_proiectoare",
+    "name_ro": "Televizoare & proiectoare",
+    "keyword_en": "mini led projector",
+    "group_ro": "Electronică",
+    "ship_usd": 55,
+    "margin_k": 1.6
+  },
+  {
+    "id": "powerbank_incarcatoare",
+    "name_ro": "Acumulatoare externe & încărcătoare",
+    "keyword_en": "power bank fast charger",
+    "group_ro": "Electronică",
+    "ship_usd": 7,
+    "margin_k": 2.5
+  },
+  {
+    "id": "casa_inteligenta",
+    "name_ro": "Casă inteligentă (smart home)",
+    "keyword_en": "smart home wifi device",
+    "group_ro": "Electronică",
+    "ship_usd": 6,
+    "margin_k": 2.3
+  },
+  {
+    "id": "boxe_audio",
+    "name_ro": "Boxe & difuzoare audio",
+    "keyword_en": "bluetooth speaker portable",
+    "group_ro": "Electronică",
+    "ship_usd": 9,
+    "margin_k": 2.2
+  },
+  {
+    "id": "mobilier_gradina",
+    "name_ro": "Mobilier de grădină",
+    "keyword_en": "outdoor garden furniture set",
+    "group_ro": "Grădină & exterior",
+    "ship_usd": 48,
+    "margin_k": 2.1
+  },
+  {
+    "id": "gratare",
+    "name_ro": "Grătare și barbecue",
+    "keyword_en": "charcoal bbq grill",
+    "group_ro": "Grădină & exterior",
+    "ship_usd": 22,
+    "margin_k": 2.0
+  },
+  {
+    "id": "unelte_gradina",
+    "name_ro": "Unelte de grădină",
+    "keyword_en": "garden hand tools set",
+    "group_ro": "Grădină & exterior",
+    "ship_usd": 9,
+    "margin_k": 2.4
+  },
+  {
+    "id": "irigare",
+    "name_ro": "Sisteme de irigare",
+    "keyword_en": "drip irrigation kit",
+    "group_ro": "Grădină & exterior",
+    "ship_usd": 7,
+    "margin_k": 2.6
+  },
+  {
+    "id": "iluminat_exterior",
+    "name_ro": "Iluminat de exterior",
+    "keyword_en": "solar garden light",
+    "group_ro": "Grădină & exterior",
+    "ship_usd": 6,
+    "margin_k": 2.8
+  },
+  {
+    "id": "piscine_gonflabile",
+    "name_ro": "Piscine și articole gonflabile",
+    "keyword_en": "inflatable swimming pool",
+    "group_ro": "Grădină & exterior",
+    "ship_usd": 18,
+    "margin_k": 2.2
+  },
+  {
+    "id": "foisoare_corturi",
+    "name_ro": "Foișoare și corturi de grădină",
+    "keyword_en": "outdoor gazebo tent",
+    "group_ro": "Grădină & exterior",
+    "ship_usd": 35,
+    "margin_k": 1.9
+  },
+  {
+    "id": "masini_tuns_iarba",
+    "name_ro": "Mașini de tuns iarba",
+    "keyword_en": "electric lawn mower",
+    "group_ro": "Grădină & exterior",
+    "ship_usd": 40,
+    "margin_k": 1.7
+  },
+  {
+    "id": "lansete",
+    "name_ro": "Lansete pescuit",
+    "keyword_en": "fishing rod",
+    "group_ro": "Vânătoare & pescuit",
+    "ship_usd": 12.5,
+    "margin_k": 2.0
+  },
+  {
+    "id": "mulinete",
+    "name_ro": "Mulinete pescuit",
+    "keyword_en": "fishing reel",
+    "group_ro": "Vânătoare & pescuit",
+    "ship_usd": 7.5,
+    "margin_k": 2.2
+  },
+  {
+    "id": "naluci",
+    "name_ro": "Năluci și momeli",
+    "keyword_en": "fishing lures tackle",
+    "group_ro": "Vânătoare & pescuit",
+    "ship_usd": 3.5,
+    "margin_k": 2.6
+  },
+  {
+    "id": "corturi",
+    "name_ro": "Corturi camping",
+    "keyword_en": "camping tent",
+    "group_ro": "Vânătoare & pescuit",
+    "ship_usd": 18.0,
+    "margin_k": 1.8
+  },
+  {
+    "id": "saci_dormit",
+    "name_ro": "Saci de dormit",
+    "keyword_en": "sleeping bag",
+    "group_ro": "Vânătoare & pescuit",
+    "ship_usd": 11.0,
+    "margin_k": 1.9
+  },
+  {
+    "id": "rucsacuri",
+    "name_ro": "Rucsacuri outdoor",
+    "keyword_en": "hiking backpack",
+    "group_ro": "Vânătoare & pescuit",
+    "ship_usd": 9.0,
+    "margin_k": 2.1
+  },
+  {
+    "id": "binocluri",
+    "name_ro": "Binocluri și optică",
+    "keyword_en": "hunting binoculars",
+    "group_ro": "Vânătoare & pescuit",
+    "ship_usd": 6.5,
+    "margin_k": 2.4
+  },
+  {
+    "id": "cutite",
+    "name_ro": "Cuțite și unelte outdoor",
+    "keyword_en": "outdoor survival knife",
+    "group_ro": "Vânătoare & pescuit",
+    "ship_usd": 4.5,
+    "margin_k": 2.5
+  },
+  {
+    "id": "jucarii",
+    "name_ro": "Jucării pentru copii",
+    "keyword_en": "kids toys",
+    "group_ro": "Copii & jucării",
+    "ship_usd": 6.5,
+    "margin_k": 2.6
+  },
+  {
+    "id": "carucioare",
+    "name_ro": "Cărucioare pentru bebeluși",
+    "keyword_en": "baby stroller pram",
+    "group_ro": "Copii & jucării",
+    "ship_usd": 38,
+    "margin_k": 2.0
+  },
+  {
+    "id": "scaune_auto",
+    "name_ro": "Scaune auto pentru copii",
+    "keyword_en": "baby car seat",
+    "group_ro": "Copii & jucării",
+    "ship_usd": 32,
+    "margin_k": 2.1
+  },
+  {
+    "id": "mobilier_copii",
+    "name_ro": "Mobilier pentru camera copilului",
+    "keyword_en": "kids furniture",
+    "group_ro": "Copii & jucării",
+    "ship_usd": 28,
+    "margin_k": 2.2
+  },
+  {
+    "id": "jucarii_educative",
+    "name_ro": "Jucării educative",
+    "keyword_en": "educational learning toys",
+    "group_ro": "Copii & jucării",
+    "ship_usd": 7,
+    "margin_k": 2.7
+  },
+  {
+    "id": "masinute_electrice",
+    "name_ro": "Mașinuțe electrice pentru copii",
+    "keyword_en": "kids ride on car",
+    "group_ro": "Copii & jucării",
+    "ship_usd": 45,
+    "margin_k": 1.9
+  },
+  {
+    "id": "hranire_bebe",
+    "name_ro": "Hrănire bebeluși",
+    "keyword_en": "baby feeding set",
+    "group_ro": "Copii & jucării",
+    "ship_usd": 5.5,
+    "margin_k": 2.8
+  },
+  {
+    "id": "biciclete_copii",
+    "name_ro": "Biciclete și trotinete pentru copii",
+    "keyword_en": "kids bike scooter",
+    "group_ro": "Copii & jucării",
+    "ship_usd": 22,
+    "margin_k": 2.1
+  },
+  {
+    "id": "aspirator_robot",
+    "name_ro": "Aspiratoare robot",
+    "keyword_en": "robot vacuum cleaner",
+    "group_ro": "Electrocasnice",
+    "ship_usd": 18,
+    "margin_k": 1.8
+  },
+  {
+    "id": "aparate_bucatarie",
+    "name_ro": "Aparate de bucătărie",
+    "keyword_en": "kitchen appliances blender",
+    "group_ro": "Electrocasnice",
+    "ship_usd": 12,
+    "margin_k": 2.0
+  },
+  {
+    "id": "purificator_aer",
+    "name_ro": "Purificatoare de aer",
+    "keyword_en": "air purifier HEPA",
+    "group_ro": "Electrocasnice",
+    "ship_usd": 15,
+    "margin_k": 1.9
+  },
+  {
+    "id": "masini_gaurit",
+    "name_ro": "Mașini de găurit",
+    "keyword_en": "cordless power drill",
+    "group_ro": "Scule",
+    "ship_usd": 14,
+    "margin_k": 1.7
+  },
+  {
+    "id": "truse_scule",
+    "name_ro": "Truse de scule",
+    "keyword_en": "hand tool set kit",
+    "group_ro": "Scule",
+    "ship_usd": 16,
+    "margin_k": 2.1
+  },
+  {
+    "id": "sudura_masurare",
+    "name_ro": "Sudură și măsurare",
+    "keyword_en": "welding machine laser measure",
+    "group_ro": "Scule",
+    "ship_usd": 20,
+    "margin_k": 1.8
+  },
+  {
+    "id": "echipament_fitness",
+    "name_ro": "Echipament de fitness",
+    "keyword_en": "home fitness equipment",
+    "group_ro": "Sport",
+    "ship_usd": 22,
+    "margin_k": 2.2
+  },
+  {
+    "id": "accesorii_biciclete",
+    "name_ro": "Accesorii pentru biciclete",
+    "keyword_en": "bicycle accessories",
+    "group_ro": "Sport",
+    "ship_usd": 10,
+    "margin_k": 2.4
+  },
+  {
+    "id": "imbracaminte_sport",
+    "name_ro": "Îmbrăcăminte și echipament sportiv",
+    "keyword_en": "sportswear gym gear",
+    "group_ro": "Sport",
+    "ship_usd": 8,
+    "margin_k": 2.6
+  },
+  {
+    "id": "women_clothing",
+    "name_ro": "Îmbrăcăminte pentru femei",
+    "keyword_en": "women clothing",
+    "group_ro": "Modă",
+    "ship_usd": 4.5,
+    "margin_k": 2.6
+  },
+  {
+    "id": "men_clothing",
+    "name_ro": "Îmbrăcăminte pentru bărbați",
+    "keyword_en": "men clothing",
+    "group_ro": "Modă",
+    "ship_usd": 5.0,
+    "margin_k": 2.4
+  },
+  {
+    "id": "shoes_footwear",
+    "name_ro": "Încălțăminte",
+    "keyword_en": "shoes footwear",
+    "group_ro": "Modă",
+    "ship_usd": 8.5,
+    "margin_k": 2.2
+  },
+  {
+    "id": "bags_backpacks",
+    "name_ro": "Genți și rucsacuri",
+    "keyword_en": "bags backpacks",
+    "group_ro": "Modă",
+    "ship_usd": 6.0,
+    "margin_k": 2.8
+  },
+  {
+    "id": "sunglasses",
+    "name_ro": "Ochelari de soare",
+    "keyword_en": "sunglasses men women",
+    "group_ro": "Modă",
+    "ship_usd": 2.5,
+    "margin_k": 3.0
+  },
+  {
+    "id": "hats_accessories",
+    "name_ro": "Pălării și accesorii",
+    "keyword_en": "hats accessories",
+    "group_ro": "Modă",
+    "ship_usd": 2.0,
+    "margin_k": 3.0
+  },
+  {
+    "id": "fashion_jewelry",
+    "name_ro": "Bijuterii fashion",
+    "keyword_en": "fashion jewelry",
+    "group_ro": "Bijuterii",
+    "ship_usd": 1.8,
+    "margin_k": 3.2
+  },
+  {
+    "id": "watches",
+    "name_ro": "Ceasuri",
+    "keyword_en": "wrist watches",
+    "group_ro": "Bijuterii",
+    "ship_usd": 3.5,
+    "margin_k": 2.5
+  },
+  {
+    "id": "rings_necklaces",
+    "name_ro": "Inele și coliere",
+    "keyword_en": "rings necklaces",
+    "group_ro": "Bijuterii",
+    "ship_usd": 1.5,
+    "margin_k": 3.2
+  },
+  {
+    "id": "earrings",
+    "name_ro": "Cercei",
+    "keyword_en": "earrings",
+    "group_ro": "Bijuterii",
+    "ship_usd": 1.5,
+    "margin_k": 3.2
+  },
+  {
+    "id": "facial_skincare_serums",
+    "name_ro": "Seruri și creme pentru față",
+    "keyword_en": "face skincare serum cream set",
+    "group_ro": "Frumusețe",
+    "ship_usd": 3.2,
+    "margin_k": 2.8
+  },
+  {
+    "id": "makeup_cosmetics_kits",
+    "name_ro": "Truse de machiaj și cosmetice",
+    "keyword_en": "makeup cosmetics palette kit",
+    "group_ro": "Frumusețe",
+    "ship_usd": 4.5,
+    "margin_k": 3.0
+  },
+  {
+    "id": "hair_dryers_styling_tools",
+    "name_ro": "Uscătoare și aparate de coafat",
+    "keyword_en": "hair dryer styling tool electric",
+    "group_ro": "Frumusețe",
+    "ship_usd": 8.5,
+    "margin_k": 2.2
+  },
+  {
+    "id": "nail_manicure_tools",
+    "name_ro": "Instrumente pentru manichiură",
+    "keyword_en": "nail manicure tools kit electric",
+    "group_ro": "Frumusețe",
+    "ship_usd": 3.8,
+    "margin_k": 2.9
+  },
+  {
+    "id": "massage_relax_devices",
+    "name_ro": "Aparate de masaj și relaxare",
+    "keyword_en": "electric massage device handheld",
+    "group_ro": "Frumusețe",
+    "ship_usd": 7.0,
+    "margin_k": 2.4
+  },
+  {
+    "id": "beauty_facial_devices",
+    "name_ro": "Aparate de înfrumusețare facială",
+    "keyword_en": "beauty facial device LED skin",
+    "group_ro": "Frumusețe",
+    "ship_usd": 6.0,
+    "margin_k": 2.6
+  },
+  {
+    "id": "general_medical_supplies",
+    "name_ro": "Consumabile medicale generale",
+    "keyword_en": "medical supplies disposable gloves masks",
+    "group_ro": "Medical",
+    "ship_usd": 4.0,
+    "margin_k": 2.0
+  },
+  {
+    "id": "blood_pressure_thermometers",
+    "name_ro": "Tensiometre și termometre",
+    "keyword_en": "blood pressure monitor digital thermometer",
+    "group_ro": "Medical",
+    "ship_usd": 5.5,
+    "margin_k": 2.3
+  },
+  {
+    "id": "mobility_aids_supports",
+    "name_ro": "Dispozitive de mobilitate și suport",
+    "keyword_en": "wheelchair walker mobility",
+    "group_ro": "Medical",
+    "ship_usd": 9.0,
+    "margin_k": 1.9
+  },
+  {
+    "id": "first_aid_kits",
+    "name_ro": "Truse de prim ajutor",
+    "keyword_en": "first aid kit bandage medical",
+    "group_ro": "Medical",
+    "ship_usd": 4.2,
+    "margin_k": 2.1
+  },
+  {
+    "id": "car_accessories_interior",
+    "name_ro": "Accesorii auto interior",
+    "keyword_en": "car interior accessories",
+    "group_ro": "Auto & moto",
+    "ship_usd": 3.5,
+    "margin_k": 2.4
+  },
+  {
+    "id": "car_dashcam_electronics",
+    "name_ro": "Camere auto și electronice",
+    "keyword_en": "car dash cam dvr",
+    "group_ro": "Auto & moto",
+    "ship_usd": 6.0,
+    "margin_k": 2.1
+  },
+  {
+    "id": "car_care_cleaning",
+    "name_ro": "Întreținere și curățare auto",
+    "keyword_en": "car care cleaning kit",
+    "group_ro": "Auto & moto",
+    "ship_usd": 4.2,
+    "margin_k": 2.3
+  },
+  {
+    "id": "motorcycle_parts",
+    "name_ro": "Piese și accesorii moto",
+    "keyword_en": "motorcycle parts accessories",
+    "group_ro": "Auto & moto",
+    "ship_usd": 5.5,
+    "margin_k": 2.0
+  },
+  {
+    "id": "car_diagnostic_tools",
+    "name_ro": "Scule și diagnoză auto",
+    "keyword_en": "car repair diagnostic tools",
+    "group_ro": "Auto & moto",
+    "ship_usd": 4.8,
+    "margin_k": 2.2
+  },
+  {
+    "id": "car_seat_covers",
+    "name_ro": "Huse și covorașe auto",
+    "keyword_en": "car seat covers mats",
+    "group_ro": "Auto & moto",
+    "ship_usd": 7.0,
+    "margin_k": 1.9
+  },
+  {
+    "id": "pet_supplies_general",
+    "name_ro": "Articole pentru animale",
+    "keyword_en": "pet supplies accessories",
+    "group_ro": "Animale",
+    "ship_usd": 3.8,
+    "margin_k": 2.5
+  },
+  {
+    "id": "pet_beds_houses",
+    "name_ro": "Paturi și culcușuri",
+    "keyword_en": "dog cat bed house",
+    "group_ro": "Animale",
+    "ship_usd": 6.5,
+    "margin_k": 2.2
+  },
+  {
+    "id": "pet_feeders_bowls",
+    "name_ro": "Hrănitoare și adăpătoare",
+    "keyword_en": "automatic pet feeder",
+    "group_ro": "Animale",
+    "ship_usd": 5.2,
+    "margin_k": 2.3
+  },
+  {
+    "id": "pet_toys_grooming",
+    "name_ro": "Jucării și îngrijire animale",
+    "keyword_en": "pet toys grooming brush",
+    "group_ro": "Animale",
+    "ship_usd": 3.2,
+    "margin_k": 2.6
+  },
+  {
+    "id": "office_supplies_stationery",
+    "name_ro": "Rechizite și papetărie de birou",
+    "keyword_en": "office stationery supplies set",
+    "group_ro": "Birou",
+    "ship_usd": 6.5,
+    "margin_k": 2.4
+  },
+  {
+    "id": "office_furniture",
+    "name_ro": "Mobilier de birou",
+    "keyword_en": "ergonomic office desk chair",
+    "group_ro": "Birou",
+    "ship_usd": 48.0,
+    "margin_k": 1.9
+  },
+  {
+    "id": "printers_consumables",
+    "name_ro": "Imprimante și consumabile",
+    "keyword_en": "printer ink toner cartridge",
+    "group_ro": "Birou",
+    "ship_usd": 14.0,
+    "margin_k": 2.0
+  },
+  {
+    "id": "school_supplies",
+    "name_ro": "Rechizite școlare",
+    "keyword_en": "school supplies kit students",
+    "group_ro": "Birou",
+    "ship_usd": 5.0,
+    "margin_k": 2.6
+  },
+  {
+    "id": "desk_organizers",
+    "name_ro": "Organizatoare de birou",
+    "keyword_en": "desk organizer storage box",
+    "group_ro": "Birou",
+    "ship_usd": 7.5,
+    "margin_k": 2.5
+  },
+  {
+    "id": "bedding_sets",
+    "name_ro": "Lenjerie de pat",
+    "keyword_en": "bedding set duvet cover",
+    "group_ro": "Textile casă",
+    "ship_usd": 12.0,
+    "margin_k": 2.3
+  },
+  {
+    "id": "curtains_drapes",
+    "name_ro": "Perdele și draperii",
+    "keyword_en": "blackout window curtains",
+    "group_ro": "Textile casă",
+    "ship_usd": 9.0,
+    "margin_k": 2.4
+  },
+  {
+    "id": "rugs_carpets",
+    "name_ro": "Covoare și carpete",
+    "keyword_en": "living room area rug carpet",
+    "group_ro": "Textile casă",
+    "ship_usd": 22.0,
+    "margin_k": 2.1
+  },
+  {
+    "id": "towels_blankets",
+    "name_ro": "Prosoape și pături",
+    "keyword_en": "cotton towel fleece blanket",
+    "group_ro": "Textile casă",
+    "ship_usd": 8.5,
+    "margin_k": 2.5
+  },
+  {
+    "id": "feronerie_constructii",
+    "name_ro": "Feronerie și fixare",
+    "keyword_en": "construction hardware fasteners",
+    "group_ro": "Construcții",
+    "ship_usd": 12.5,
+    "margin_k": 2.1
+  },
+  {
+    "id": "usi_ferestre",
+    "name_ro": "Uși și ferestre",
+    "keyword_en": "aluminum doors windows",
+    "group_ro": "Construcții",
+    "ship_usd": 48.0,
+    "margin_k": 1.8
+  },
+  {
+    "id": "pardoseli_gresie",
+    "name_ro": "Pardoseli și gresie",
+    "keyword_en": "floor tile",
+    "group_ro": "Construcții",
+    "ship_usd": 35.0,
+    "margin_k": 1.9
+  },
+  {
+    "id": "scule_vopsit",
+    "name_ro": "Scule pentru vopsit",
+    "keyword_en": "paint brush roller",
+    "group_ro": "Construcții",
+    "ship_usd": 9.0,
+    "margin_k": 2.4
+  },
+  {
+    "id": "tevi_instalatii",
+    "name_ro": "Țevi și instalații",
+    "keyword_en": "plumbing pipes fittings",
+    "group_ro": "Construcții",
+    "ship_usd": 18.0,
+    "margin_k": 2.0
+  },
+  {
+    "id": "camere_cctv",
+    "name_ro": "Camere de supraveghere CCTV",
+    "keyword_en": "cctv security camera",
+    "group_ro": "Securitate",
+    "ship_usd": 14.0,
+    "margin_k": 2.2
+  },
+  {
+    "id": "yale_inteligente",
+    "name_ro": "Yale inteligente pentru uși",
+    "keyword_en": "smart door lock fingerprint",
+    "group_ro": "Securitate",
+    "ship_usd": 16.5,
+    "margin_k": 2.3
+  },
+  {
+    "id": "seifuri",
+    "name_ro": "Seifuri",
+    "keyword_en": "electronic safe box",
+    "group_ro": "Securitate",
+    "ship_usd": 28.0,
+    "margin_k": 1.9
+  },
+  {
+    "id": "sisteme_alarma",
+    "name_ro": "Sisteme de alarmă și senzori",
+    "keyword_en": "security alarm system",
+    "group_ro": "Securitate",
+    "ship_usd": 11.0,
+    "margin_k": 2.5
+  },
+  {
+    "id": "panouri_solare_fotovoltaice",
+    "name_ro": "Panouri solare fotovoltaice",
+    "keyword_en": "solar panel",
+    "group_ro": "Energie",
+    "ship_usd": 85,
+    "margin_k": 1.6
+  },
+  {
+    "id": "statii_energie_portabila",
+    "name_ro": "Stații de energie portabilă",
+    "keyword_en": "power station",
+    "group_ro": "Energie",
+    "ship_usd": 45,
+    "margin_k": 1.7
+  },
+  {
+    "id": "baterii_litiu_stocare",
+    "name_ro": "Baterii litiu pentru stocare",
+    "keyword_en": "lithium battery pack",
+    "group_ro": "Energie",
+    "ship_usd": 60,
+    "margin_k": 1.8
+  },
+  {
+    "id": "invertoare_solare",
+    "name_ro": "Invertoare solare",
+    "keyword_en": "power inverter",
+    "group_ro": "Energie",
+    "ship_usd": 35,
+    "margin_k": 1.9
+  },
+  {
+    "id": "statii_incarcare_ev",
+    "name_ro": "Stații de încărcare EV",
+    "keyword_en": "ev charger",
+    "group_ro": "Energie",
+    "ship_usd": 40,
+    "margin_k": 2.0
+  },
+  {
+    "id": "utilaje_industriale",
+    "name_ro": "Utilaje industriale",
+    "keyword_en": "industrial machinery",
+    "group_ro": "Industrial",
+    "ship_usd": 220,
+    "margin_k": 1.5
+  },
+  {
+    "id": "masini_ambalare",
+    "name_ro": "Mașini de ambalare",
+    "keyword_en": "packaging machine",
+    "group_ro": "Industrial",
+    "ship_usd": 180,
+    "margin_k": 1.6
+  },
+  {
+    "id": "echipamente_manipulare",
+    "name_ro": "Echipamente de manipulare",
+    "keyword_en": "hand pallet truck",
+    "group_ro": "Industrial",
+    "ship_usd": 150,
+    "margin_k": 1.4
+  },
+  {
+    "id": "scule_industriale",
+    "name_ro": "Scule industriale",
+    "keyword_en": "industrial tools",
+    "group_ro": "Industrial",
+    "ship_usd": 30,
+    "margin_k": 2.2
+  }
 ]
