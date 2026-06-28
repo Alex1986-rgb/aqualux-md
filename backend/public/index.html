@@ -48,6 +48,7 @@ th{background:#faf6ec;position:sticky;top:0}td img{width:38px;height:38px;object
     <button data-t="orders">🛒 Comenzi</button>
     <button data-t="parser">🔎 Parser live</button>
     <button data-t="autopilot">🤖 Autopilot</button>
+    <button data-t="outreach">📨 Поставщики</button>
   </div>
 
   <section id="s-catalog" class="card">
@@ -98,6 +99,17 @@ th{background:#faf6ec;position:sticky;top:0}td img{width:38px;height:38px;object
     <div style="max-height:220px;overflow:auto;background:#1a1712;border-radius:8px"><pre id="apLog" style="margin:0;padding:12px;color:#cbb988;font:12px/1.5 monospace;white-space:pre-wrap"></pre></div>
     <div class="warn" style="margin-top:10px">⚠️ На бесплатном Render сервис «засыпает» без трафика → автопилот замрёт. Держи живым внешним пингером (cron-job.org каждые 10 мин) или используй платный тир.</div>
   </section>
+
+  <section id="s-outreach" class="card" hidden>
+    <h2>📨 Авто-обращения к поставщикам (дропшиппинг)</h2>
+    <p class="muted" style="margin-top:-6px">Система сама написала персональное сообщение каждому поставщику. Жми «Открыть» → вставь готовый текст в чат поставщика. <b>Авто-отправка в Alibaba запрещена (бан), поэтому отправляешь ты — одним кликом «Копировать».</b></p>
+    <div class="row" style="margin-bottom:10px">
+      <select id="oLang" style="width:140px"><option value="ru">🇷🇺 Русский</option><option value="en">🇬🇧 English</option></select>
+      <button class="btn btn-ghost" id="oReload">↻ Загрузить</button>
+      <span id="oMsg" class="muted"></span>
+    </div>
+    <div class="tbl" style="max-height:520px"><table><thead><tr><th>Товар</th><th>Кат.</th><th>Закуп $</th><th>Сообщение поставщику</th><th></th></tr></thead><tbody id="oRows"><tr><td colspan="5" class="muted">Нажми «Загрузить»…</td></tr></tbody></table></div>
+  </section>
 </div>
 <script>
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
@@ -143,7 +155,21 @@ async function loadOrders(){
     $("#ordRows").innerHTML=o.length?o.map(x=>`<tr><td><b>${x.orderId||'-'}</b></td><td>${x.name||'-'} ${x.phone||''}</td><td>${x.city||'-'}</td><td>${money(x.total)}</td><td class=muted>${(x.at||'').slice(0,16).replace('T',' ')}</td></tr>`).join(""):'<tr><td colspan=5 class=muted>Încă nu sunt comenzi.</td></tr>';
   }catch(e){}
 }
-$$(".tabs button").forEach(b=>b.onclick=()=>{$$(".tabs button").forEach(x=>x.classList.remove("on"));b.classList.add("on");["catalog","orders","parser","autopilot"].forEach(t=>$("#s-"+t).hidden=(t!==b.dataset.t));if(b.dataset.t==="autopilot"){apStatus();if(!apPoll)apPoll=setInterval(apStatus,4000);}});
+$$(".tabs button").forEach(b=>b.onclick=()=>{$$(".tabs button").forEach(x=>x.classList.remove("on"));b.classList.add("on");["catalog","orders","parser","autopilot","outreach"].forEach(t=>$("#s-"+t).hidden=(t!==b.dataset.t));if(b.dataset.t==="autopilot"){apStatus();if(!apPoll)apPoll=setInterval(apStatus,4000);}if(b.dataset.t==="outreach")loadOutreach();});
+async function loadOutreach(){
+  $("#oMsg").textContent="загружаю…";
+  try{const r=await fetch("/api/admin/outreach?limit=200",{headers:H()});
+    if(r.status===401){$("#oMsg").innerHTML='<span style="color:#922">Неверный ключ</span>';return;}
+    const d=await r.json(); const lang=$("#oLang").value;
+    $("#oMsg").innerHTML=`<b class=green>${d.total}</b> готовых обращений (со ссылкой поставщика всего: ${d.available})`;
+    $("#oRows").innerHTML=d.rows.map(x=>{const msg=(lang==="en"?x.msg_en:x.msg_ru).replace(/`/g,"'");
+      return `<tr><td>${x.name}</td><td class=muted>${x.cat_name}</td><td>$${x.cost}</td>
+      <td><div style="max-width:420px;font-size:12px;color:#5c5343">${msg}</div></td>
+      <td style="white-space:nowrap"><a class="btn btn-gold" style="padding:6px 10px" href="${x.url}" target="_blank">Открыть</a>
+      <button class="btn btn-ghost" style="padding:6px 10px" onclick="navigator.clipboard.writeText(this.dataset.m);this.textContent='✓'" data-m="${msg.replace(/"/g,'&quot;')}">Копир.</button></td></tr>`;}).join("");
+  }catch(e){$("#oMsg").textContent="Ошибка: "+e.message;}
+}
+$("#oReload").onclick=loadOutreach; $("#oLang").onchange=loadOutreach;
 let apPoll=null;
 async function apStatus(){
   try{const r=await fetch("/api/autopilot/status",{headers:H()});if(!r.ok){$("#apState").textContent="🔒 ключ?";return;}const s=await r.json();

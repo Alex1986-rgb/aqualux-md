@@ -119,6 +119,23 @@ app.get("/api/admin/orders", (req, res) => {
   res.json(readJSON("orders.json", []).reverse());
 });
 
+/* ---------- АВТО-ОБРАЩЕНИЯ к поставщикам (генератор сообщений) ---------- */
+app.get("/api/admin/outreach", (req, res) => {
+  if (req.get("X-Admin-Key") !== process.env.ADMIN_KEY) return res.status(401).json({ error: "unauthorized" });
+  const supply = readJSON("supply.json", {}), products = readJSON("products.json", []);
+  const byId = {}; products.forEach(p => byId[p.id] = p);
+  const limit = Math.min(500, +(req.query.limit || 100)), rows = [];
+  for (const [id, s] of Object.entries(supply)) {
+    if (!s.source_url) continue;
+    const p = byId[id]; if (!p) continue;
+    rows.push({ id, name: p.name, cat_name: p.cat_name, price: p.price, cost: s.cost_usd, url: s.source_url,
+      msg_en: `Hello! I'm interested in "${p.name}". I run a premium bathroom & kitchen store in Moldova (dropshipping model). Could you please advise: 1) MOQ; 2) unit price for dropshipping (one-by-one shipping); 3) lead time to Moldova; 4) is neutral/branded packaging possible? 5) do you support Trade Assurance? Thank you!`,
+      msg_ru: `Здравствуйте! Интересует товар "${p.name}". У меня премиум-магазин сантехники и кухни в Молдове (модель дропшиппинг). Подскажите, пожалуйста: 1) MOQ (мин. заказ); 2) цена за 1 шт для дропшиппинга (отгрузка по одной); 3) срок доставки до Молдовы; 4) возможна нейтральная/брендированная упаковка? 5) есть ли Trade Assurance? Спасибо!` });
+    if (rows.length >= limit) break;
+  }
+  res.json({ total: rows.length, available: Object.values(supply).filter(s => s.source_url).length, rows });
+});
+
 /* ---------- МАССОВЫЙ ИМПОРТ: все категории × пагинация ---------- */
 const CAT_KW = { smesitel:"bathroom sensor faucet", kuhnya:"kitchen faucet pull out", unitaz:"smart toilet bidet",
   rakovina:"wash basin sink", polotenec:"heated towel rail", dush:"shower system set", cazi:"freestanding bathtub",
