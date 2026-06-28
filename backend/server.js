@@ -85,7 +85,8 @@ function parseMIC(html, cat, limit) {
     let usd = 0, pb = 1e15; for (const pr of prices) { const d = Math.abs(pr.pos - tpos); if (d < pb) { pb = d; usd = pr.usd; } }
     const name = decode(c[1]).replace(/\s+/g, " ").trim().slice(0, 72);
     if (name.length < 8) continue;
-    out.push({ name, img: images[0], images, usd, price: usd ? Math.round(usd * 80 / 10) * 10 : 3200, cat });
+    const url = "https://www.made-in-china.com/product/" + c[2] + "/" + c[3] + ".html"; // ссылка на поставщика
+    out.push({ name, img: images[0], images, usd, price: usd ? Math.round(usd * 80 / 10) * 10 : 3200, cat, url });
     if (out.length >= limit) break;
   }
   return out;
@@ -221,7 +222,7 @@ async function importChunk(cat, page){
       slug:it.name.toLowerCase().replace(/[^a-z0-9]+/g,"-").slice(0,70)+"-"+pid.toLowerCase(),
       price:retail, old_price:0, discount:0, img:it.img, images:it.images||[it.img], badge:"", rating:4.7, reviews:14, feat:it.name,
       specs:{ Material:"Premium", Finisaj:"standard", Montare:"Standard", Garanție:"3 ani", Origine:"Import Made-in-China" } });
-    supply[pid]={ cost_usd:Math.round(cost*100)/100, ship_usd:ship, landed_mdl:landed, retail_mdl:retail, margin_mdl:margin, margin_pct:Math.round(margin/retail*100), delivery_days:HEAVY.includes(cat)?25:12 };
+    supply[pid]={ cost_usd:Math.round(cost*100)/100, ship_usd:ship, landed_mdl:landed, retail_mdl:retail, margin_mdl:margin, margin_pct:Math.round(margin/retail*100), delivery_days:HEAVY.includes(cat)?25:12, source_url:it.url||"" };
   }
   if(added){ fs.writeFileSync(path.join(DATA,"products.json"), JSON.stringify(products)); fs.writeFileSync(path.join(DATA,"supply.json"), JSON.stringify(supply)); }
   return { added, blocked:false, total:products.length };
