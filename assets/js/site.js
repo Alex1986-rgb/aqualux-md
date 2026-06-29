@@ -280,7 +280,17 @@ function pageCatalog(){
 function pageProduct(){
  const id=param("id");
  if(API){fetch(API+"/api/product/"+encodeURIComponent(id)).then(r=>r.ok?r.json():null).then(pr=>{if(pr){PCACHE[pr.id]=pr;renderProduct(pr);}else renderProduct(pById(id)||snaps()[id]);}).catch(()=>renderProduct(pById(id)||snaps()[id]));return;}
- renderProduct(pById(id)||snaps()[id]);
+ const lite=pById(id)||snaps()[id];
+ const STATIC=(window.AQ_STATIC||"");
+ // гибрид: тянем полную карточку (галерея/видео/specs) из data/full/<cat>.json
+ if(STATIC && lite && lite.cat){
+   fetch(STATIC+"/full/"+encodeURIComponent(lite.cat)+".json")
+     .then(r=>r.ok?r.json():null)
+     .then(m=>{const full=m&&m[id];if(full){PCACHE[full.id]=full;renderProduct(full);}else renderProduct(lite);})
+     .catch(()=>renderProduct(lite));
+   return;
+ }
+ renderProduct(lite);
 }
 function renderProduct(p){
  const root=$("#product");

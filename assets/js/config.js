@@ -9,3 +9,8 @@
 window.AQ_API = (location.hostname === "localhost" || location.hostname === "127.0.0.1")
   ? "http://localhost:4000"
   : "";   // ← сюда вставь URL backend на Render, чтобы live-сайт стал headless
+
+/* AQ_STATIC — гибрид-режим без backend: страница товара тянет полную карточку (галерея/видео/
+   характеристики) из статических data/full/<cat>.json на GitHub Pages. Работает по http(s),
+   не по file://. Если задан AQ_API — используется он (приоритет). */
+window.AQ_STATIC = (location.protocol === "http:" || location.protocol === "https:") ? "data" : "";
