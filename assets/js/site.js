@@ -44,13 +44,14 @@ function card(p){
  PCACHE[p.id]=p;
  const b=p.badge?`<div class="badges"><span class="bdg ${p.badge}">${esc(C.copy.badges_ro[p.badge]||"")}${p.badge==="sale"?" -"+discPct(p)+"%":""}</span></div>`:"";
  const old=p.old_price?`<span class="old">${money(p.old_price)}</span><span class="disc">-${discPct(p)}%</span>`:"";
+ const purl=`produs.html?id=${p.id}`+(p.s!=null?`&s=${p.s}`:"");
  return `<div class="pcard">
-   <a class="pimg" href="produs.html?id=${p.id}"><img src="${p.img}" alt="${esc(p.name)}" loading="lazy">${b}</a>
+   <a class="pimg" href="${purl}"><img src="${p.img}" alt="${esc(p.name)}" loading="lazy">${b}</a>
    <button class="wish${typeof isWished==="function"&&isWished(p.id)?' on':''}" data-wish="${p.id}" title="Favorite">${ICON.heart}</button>
    <button class="qv" data-qv="${p.id}" title="Vizualizare rapidă">${ICON.eye}</button>
    <div class="pb">
      <span class="cat">${esc(p.cat_name)}</span>
-     <a class="pn" href="produs.html?id=${p.id}">${esc(p.name)}</a>
+     <a class="pn" href="${purl}">${esc(p.name)}</a>
      <div class="stars">${stars(p.rating)} <small>(${p.reviews})</small></div>
      <div class="price"><span class="now">${money(p.price)}</span>${old}</div>
      <div class="add"><button class="btn btn-gold" data-add="${p.id}">${esc(C.copy.add_to_cart_ro)}</button></div>
@@ -222,13 +223,21 @@ function pageCatalogAPI(){
 function pageCatalog(){
  if(API && !window.__noapi) return pageCatalogAPI();
  const root=$("#catalog");
- let cat=param("cat"), group=param("group"), q=(param("q")||"").toLowerCase(), sort="pop", page=1, per=12;
+ const STATIC=(window.AQ_STATIC||"");
+ // макс-режим: грузим полный индекс всех товаров один раз, дальше фильтр/поиск/пагинация клиентом
+ if(STATIC && !window.__IDX && !window.__noidx){
+   root.innerHTML='<div class="wrap" style="padding:70px 20px"><p class="muted" style="text-align:center">Se încarcă catalogul complet…</p></div>';
+   fetch(STATIC+"/index.json").then(r=>r.ok?r.json():null).then(d=>{window.__IDX=Array.isArray(d)?d:null;if(!window.__IDX)window.__noidx=1;pageCatalog();}).catch(()=>{window.__noidx=1;pageCatalog();});
+   return;
+ }
+ const DATA=(window.__IDX&&window.__IDX.length)?window.__IDX:P;
+ let cat=param("cat"), group=param("group"), q=(param("q")||"").toLowerCase(), sort="pop", page=1, per=24;
  const groupCats=group?C.cats.filter(c=>c.group===group).map(c=>c.id):[];
  const sel={cats:cat?[cat]:(group?groupCats.slice():[]), mats:[], price:""};
- const allMats=[...new Set(P.map(p=>(p.specs||{}).Material).filter(Boolean))];
+ const allMats=[...new Set(DATA.map(p=>(p.specs||{}).Material).filter(Boolean))];
  const priceB=[["0-3000","sub 3 000 lei"],["3000-7000","3 000 – 7 000 lei"],["7000-15000","7 000 – 15 000 lei"],["15000-999999","peste 15 000 lei"]];
  function filtered(){
-   let l=P.slice();
+   let l=DATA.slice();
    if(sel.cats.length) l=l.filter(p=>sel.cats.includes(p.cat));
    if(sel.mats.length) l=l.filter(p=>sel.mats.includes((p.specs||{}).Material));
    if(sel.price){const[a,b]=sel.price.split("-").map(Number);l=l.filter(p=>p.price>=a&&p.price<=b);}
@@ -279,18 +288,28 @@ function pageCatalog(){
 /* ---------- PRODUCT ---------- */
 function pageProduct(){
  const id=param("id");
- if(API){fetch(API+"/api/product/"+encodeURIComponent(id)).then(r=>r.ok?r.json():null).then(pr=>{if(pr){PCACHE[pr.id]=pr;renderProduct(pr);}else renderProduct(pById(id)||snaps()[id]);}).catch(()=>renderProduct(pById(id)||snaps()[id]));return;}
- const lite=pById(id)||snaps()[id];
  const STATIC=(window.AQ_STATIC||"");
- // гибрид: тянем полную карточку (галерея/видео/specs) из data/full/<cat>.json
- if(STATIC && lite && lite.cat){
-   fetch(STATIC+"/full/"+encodeURIComponent(lite.cat)+".json")
-     .then(r=>r.ok?r.json():null)
-     .then(m=>{const full=m&&m[id];if(full){PCACHE[full.id]=full;renderProduct(full);}else renderProduct(lite);})
-     .catch(()=>renderProduct(lite));
+ const lite=()=>pById(id)||snaps()[id];
+ // макс-режим: полная карточка из шарда data/full/s<N>.json (s из ссылки) или поиск s в индексе
+ const fromShard=sid=>fetch(STATIC+"/full/s"+sid+".json").then(r=>r.ok?r.json():null)
+   .then(m=>{const full=m&&m[id];if(full){PCACHE[full.id]=full;renderProduct(full);}else renderProduct(lite());})
+   .catch(()=>renderProduct(lite()));
+ const staticLoad=()=>{
+   const sp=param("s");
+   if(sp!==null && sp!==""){ fromShard(encodeURIComponent(sp)); return; }
+   fetch(STATIC+"/index.json").then(r=>r.ok?r.json():null).then(ix=>{
+     const rec=Array.isArray(ix)?ix.find(x=>x.id===id):null;
+     if(rec){ if(!pById(id))PCACHE[id]=rec; fromShard(rec.s); } else renderProduct(lite());
+   }).catch(()=>renderProduct(lite()));
+ };
+ if(API){
+   fetch(API+"/api/product/"+encodeURIComponent(id)).then(r=>r.ok?r.json():null).then(pr=>{
+     if(pr){PCACHE[pr.id]=pr;renderProduct(pr);} else if(STATIC){staticLoad();} else renderProduct(lite());
+   }).catch(()=>{ if(STATIC){staticLoad();} else renderProduct(lite()); });
    return;
  }
- renderProduct(lite);
+ if(STATIC){ staticLoad(); return; }
+ renderProduct(lite());
 }
 function renderProduct(p){
  const root=$("#product");

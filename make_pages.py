@@ -64,12 +64,17 @@ _content=json.load(open(os.path.join(BASE,"data","content.json"),encoding="utf-8
 _intros=_content.get("seo",{}).get("category_intros",{})
 _bycat={}
 for _p in prods: _bycat.setdefault(_p.get("cat"),[]).append(_p)
+try: _id2s={r["id"]:r["s"] for r in json.load(open(os.path.join(BASE,"data","index.json"),encoding="utf-8"))}
+except Exception: _id2s={}
+def _purl(p):
+    s=_id2s.get(p["id"]); return f'produs.html?id={_esc(p["id"])}'+(f'&amp;s={s}' if s is not None else "")
 def _pcard(p):
     old=f'<span class="old">{_money(p["old_price"])}</span>' if p.get("old_price") else ""
-    return (f'<div class="pcard"><a class="pimg" href="produs.html?id={_esc(p["id"])}">'
+    u=_purl(p)
+    return (f'<div class="pcard"><a class="pimg" href="{u}">'
             f'<img src="{_esc(p.get("img",""))}" alt="{_esc(p.get("name",""))}" loading="lazy"></a>'
             f'<div class="pb"><span class="cat">{_esc(p.get("cat_name",""))}</span>'
-            f'<a class="pn" href="produs.html?id={_esc(p["id"])}">{_esc(p.get("name",""))}</a>'
+            f'<a class="pn" href="{u}">{_esc(p.get("name",""))}</a>'
             f'<div class="price"><span class="now">{_money(p.get("price",0))}</span>{old}</div>'
             f'<div class="add"><button class="btn btn-gold" data-add="{_esc(p["id"])}">În coș</button></div></div></div>')
 _ncat=0
