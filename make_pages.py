@@ -55,6 +55,43 @@ for file,page,root,meta,extra in PAGES:
         kw=KW,site=SITE,file=file,page=page,root=root,extra=extra,org=ORG)
     open(os.path.join(BASE,file),"w",encoding="utf-8").write(html)
 
+# ===== статические лендинги категорий (SEO: контент + внутренние ссылки) =====
+def _esc(s): return (str(s) if s is not None else "").replace("&","&amp;").replace("<","&lt;").replace(">","&gt;").replace('"',"&quot;")
+def _money(n):
+    try: return f"{int(round(float(n))):,}".replace(","," ")+" lei"
+    except Exception: return str(n)
+_content=json.load(open(os.path.join(BASE,"data","content.json"),encoding="utf-8"))
+_intros=_content.get("seo",{}).get("category_intros",{})
+_bycat={}
+for _p in prods: _bycat.setdefault(_p.get("cat"),[]).append(_p)
+def _pcard(p):
+    old=f'<span class="old">{_money(p["old_price"])}</span>' if p.get("old_price") else ""
+    return (f'<div class="pcard"><a class="pimg" href="produs.html?id={_esc(p["id"])}">'
+            f'<img src="{_esc(p.get("img",""))}" alt="{_esc(p.get("name",""))}" loading="lazy"></a>'
+            f'<div class="pb"><span class="cat">{_esc(p.get("cat_name",""))}</span>'
+            f'<a class="pn" href="produs.html?id={_esc(p["id"])}">{_esc(p.get("name",""))}</a>'
+            f'<div class="price"><span class="now">{_money(p.get("price",0))}</span>{old}</div>'
+            f'<div class="add"><button class="btn btn-gold" data-add="{_esc(p["id"])}">În coș</button></div></div></div>')
+_ncat=0
+for c in _content["cats"]:
+    cid=c["id"]; cnt=c.get("count",0)
+    items=_bycat.get(cid,[])[:10]
+    if not cnt or not items: continue
+    name=c["name"]; intro=_intros.get(cid,"")
+    cards="".join(_pcard(p) for p in items)
+    body=(f'<div class="page-head"><div class="wrap"><div class="bcrumb"><a href="index.html">Acasă</a> / {_esc(name)}</div>'
+          f'<h1>{_esc(name)}</h1>{("<p>"+_esc(intro)+"</p>") if intro else ""}</div></div>'
+          f'<div class="wrap" style="padding:24px 20px 50px"><div class="pgrid">{cards}</div>'
+          f'<div style="text-align:center;margin-top:30px"><a class="btn btn-gold" href="catalog.html?cat={_esc(cid)}">Vezi toate cele {cnt} produse →</a></div></div>')
+    title=f"{name} – preț bun în Moldova | EUROMAG"
+    desc=(intro or f"{name} la EUROMAG — mii de produse, livrare în toată Moldova.")[:158]
+    file=f"cat-{cid}.html"
+    html=HEAD.format(title=title.replace('"',"'"),desc=desc.replace('"',"'"),kw=KW,site=SITE,file=file,page="catpage",root="catpage",extra=f' data-cat="{_esc(cid)}"',org=ORG)
+    html=html.replace('<main id="catpage"></main>', f'<main id="catpage">{body}</main>')
+    open(os.path.join(BASE,file),"w",encoding="utf-8").write(html)
+    _ncat+=1
+print("Категорийных лендингов:",_ncat)
+
 # robots.txt
 open(os.path.join(BASE,"robots.txt"),"w").write("User-agent: *\nAllow: /\nSitemap: %ssitemap.xml\n"%SITE)
 
@@ -62,7 +99,7 @@ open(os.path.join(BASE,"robots.txt"),"w").write("User-agent: *\nAllow: /\nSitema
 urls=[("","1.0"),("catalog.html","0.9"),("despre.html","0.6"),("livrare.html","0.6"),("garantie.html","0.5"),("contacte.html","0.6")]
 import urllib.parse as _up
 _cats=json.load(open(os.path.join(BASE,"data","content.json"),encoding="utf-8"))["cats"]
-urls+=[("catalog.html?cat=%s"%c["id"],"0.75") for c in _cats if c.get("count")]
+urls+=[("cat-%s.html"%c["id"],"0.8") for c in _cats if c.get("count")]
 urls+=[("catalog.html?group=%s"%_up.quote(g),"0.8") for g in sorted(set(c.get("group","") for c in _cats if c.get("group")))]
 urls+=[("produs.html?id=%s"%p["id"],"0.7") for p in prods]
 sm='<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'

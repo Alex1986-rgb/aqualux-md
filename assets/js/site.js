@@ -95,7 +95,7 @@ function buildHeader(){
  }
 }
 function buildFooter(){
- const m=C.marketing, cats=C.cats.map(c=>`<a href="catalog.html?cat=${c.id}">${esc(c.name)}</a>`).join("");
+ const m=C.marketing, cats=C.cats.filter(c=>c.count).slice(0,28).map(c=>`<a href="cat-${c.id}.html">${esc(c.name)}</a>`).join("");
  const h=`<footer class="ftr"><div class="wrap"><div class="ftr-cols">
    <div><div class="logo" style="font-family:Georgia,serif;font-size:24px;font-weight:700">EUROMAG<small style="display:block;font-family:Arial;font-size:9px;letter-spacing:3px">MAGAZIN UNIVERSAL</small></div>
      <p style="font-size:13px;max-width:260px">${esc(m.footer_blurb_ro)}</p>
