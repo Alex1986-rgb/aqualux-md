@@ -84,10 +84,15 @@ for c in _content["cats"]:
     if not cnt or not items: continue
     name=c["name"]; intro=_intros.get(cid,"")
     cards="".join(_pcard(p) for p in items)
+    # ItemList structured data (товарные карусели в Google)
+    itemlist=json.dumps({"@context":"https://schema.org","@type":"ItemList","name":name,
+        "itemListElement":[{"@type":"ListItem","position":i+1,"url":SITE+_purl(p).replace("&amp;","&"),
+            "name":p.get("name","")} for i,p in enumerate(items)]},ensure_ascii=False)
     body=(f'<div class="page-head"><div class="wrap"><div class="bcrumb"><a href="index.html">Acasă</a> / {_esc(name)}</div>'
           f'<h1>{_esc(name)}</h1>{("<p>"+_esc(intro)+"</p>") if intro else ""}</div></div>'
           f'<div class="wrap" style="padding:24px 20px 50px"><div class="pgrid">{cards}</div>'
-          f'<div style="text-align:center;margin-top:30px"><a class="btn btn-gold" href="catalog.html?cat={_esc(cid)}">Vezi toate cele {cnt} produse →</a></div></div>')
+          f'<div style="text-align:center;margin-top:30px"><a class="btn btn-gold" href="catalog.html?cat={_esc(cid)}">Vezi toate cele {cnt} produse →</a></div></div>'
+          f'<script type="application/ld+json">{itemlist}</script>')
     title=f"{name} – preț bun în Moldova | EUROMAG"
     desc=(intro or f"{name} la EUROMAG — mii de produse, livrare în toată Moldova.")[:158]
     file=f"cat-{cid}.html"
