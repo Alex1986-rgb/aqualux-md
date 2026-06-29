@@ -32,11 +32,12 @@ function saveSnap(p){if(!p)return;const s=snaps();s[p.id]={id:p.id,name:p.name,p
 function resolve(id){return pById(id)||PCACHE[id]||snaps()[id]||null;}
 function cartItems(){const c=getCart();return Object.keys(c).map(id=>({p:resolve(id),q:c[id]})).filter(x=>x.p);}
 function cartSub(){return cartItems().reduce((s,x)=>s+x.p.price*x.q,0);}
-function addToCart(id,q=1){const c=getCart();c[id]=(c[id]||0)+q;saveCart(c);saveSnap(PCACHE[id]||pById(id));toast("Adăugat în coș ✓");if(window.__openCart)window.__openCart();}
+function addToCart(id,q=1){const c=getCart();c[id]=(c[id]||0)+q;saveCart(c);saveSnap(PCACHE[id]||pById(id));toast("Adăugat în coș ✓");if(window.__openCart && !/^(cart|checkout)$/.test(document.body.dataset.page||""))window.__openCart();}
 function setQty(id,q){const c=getCart();if(q<=0)delete c[id];else c[id]=q;saveCart(c);}
 function updateCartCount(){const n=cartCount();$$(".cart-count").forEach(e=>{e.textContent=n;e.style.display=n?"flex":"none";});}
 let toastT;function toast(m){let t=$("#toast");if(!t){t=document.createElement("div");t.id="toast";t.className="toast";document.body.appendChild(t);}t.textContent=m;t.classList.add("show");clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove("show"),2200);}
 function discPct(p){return p.discount?p.discount:(p.old_price?Math.round((1-p.price/p.old_price)*100):0);}
+function promoCode(){return (localStorage.getItem("aqualux_promo")||"")==="EURO10"?"EURO10":"";}
 
 /* ---------- product card ---------- */
 function card(p){
@@ -55,7 +56,7 @@ function card(p){
      <div class="add"><button class="btn btn-gold" data-add="${p.id}">${esc(C.copy.add_to_cart_ro)}</button></div>
    </div></div>`;
 }
-function rowOf(list){return `<div class="crow"><button class="car prev">‹</button><div class="ctrack">${list.map(card).join("")}</div><button class="car next">›</button></div>`;}
+function rowOf(list){return `<div class="crow"><button class="car prev" aria-label="Înapoi">‹</button><div class="ctrack">${list.map(card).join("")}</div><button class="car next" aria-label="Înainte">›</button></div>`;}
 
 /* ---------- header / footer / fab ---------- */
 function buildHeader(){
@@ -66,6 +67,7 @@ function buildHeader(){
     <div class="tb-r"><button class="theme-tg" data-theme-toggle title="Schimbă tema">🌙 Temă</button><span>${esc(C.copy.delivery_badge_ro)}</span><span class="lang">Limba: <b>RO</b> / RU</span></div>
   </div></div>
   <header class="hdr"><div class="wrap hdr-main">
+    <button class="burger" type="button" aria-label="Deschide meniul" aria-expanded="false">☰</button>
     <a class="logo" href="index.html"><span class="dot">A</span><span>EUROMAG<small>MAGAZIN UNIVERSAL</small></span></a>
     <form class="search" onsubmit="location.href='catalog.html?q='+encodeURIComponent(this.q.value);return false;">
       <input name="q" placeholder="Caută: telefon, mobilier, baterie, jucării…" value="${esc(param('q')||'')}">
@@ -77,10 +79,20 @@ function buildHeader(){
       <a class="hicon" href="cos.html" data-opencart>${ICON.cart}<span class="cart-count">0</span><span>Coș</span></a>
     </div>
   </div></header>
-  <nav class="nav"><div class="wrap"><a class="all" href="catalog.html">Toate produsele</a>${navItems}<a href="livrare.html">Livrare</a><a href="despre.html">Despre</a><a href="contacte.html">Contacte</a></div></nav>`;
+  <nav class="nav"><div class="wrap"><form class="search msearch" onsubmit="location.href='catalog.html?q='+encodeURIComponent(this.q.value);return false;"><input name="q" placeholder="Caută produse…" aria-label="Caută"><button type="submit" aria-label="Caută">${ICON.search}</button></form><a class="all" href="catalog.html">Toate produsele</a>${navItems}<a href="livrare.html">Livrare</a><a href="despre.html">Despre</a><a href="contacte.html">Contacte</a></div></nav>`;
  const el=$("#site-header"); if(el) el.innerHTML=h;
  const cur=document.body.dataset.cat;
  if(cur) $$(".nav a").forEach(a=>{if(a.getAttribute("href").includes("cat="+cur))a.classList.add("active");});
+ // мобильное меню (бургер + аккордеон групп)
+ const burger=$(".burger",el), navEl=$(".nav",el);
+ if(burger&&navEl){
+   const setOpen=o=>{document.body.classList.toggle("mnav",o);burger.setAttribute("aria-expanded",o);burger.textContent=o?"✕":"☰";};
+   burger.onclick=()=>setOpen(!document.body.classList.contains("mnav"));
+   $$(".navgrp-t",navEl).forEach(t=>t.addEventListener("click",e=>{if(window.matchMedia("(max-width:680px)").matches){e.preventDefault();e.stopPropagation();t.parentElement.classList.toggle("open");}}));
+   navEl.addEventListener("click",e=>{if(e.target.closest("a"))setOpen(false);});
+   document.addEventListener("click",e=>{if(document.body.classList.contains("mnav")&&!e.target.closest(".nav")&&!e.target.closest(".burger"))setOpen(false);});
+   document.addEventListener("keydown",e=>{if(e.key==="Escape"&&document.body.classList.contains("mnav"))setOpen(false);});
+ }
 }
 function buildFooter(){
  const m=C.marketing, cats=C.cats.map(c=>`<a href="catalog.html?cat=${c.id}">${esc(c.name)}</a>`).join("");
@@ -96,7 +108,7 @@ function buildFooter(){
 }
 function buildFab(){const d=document.createElement("div");d.className="fab";
  d.innerHTML=`<a class="wa" href="https://wa.me/${C.whatsapp}" target="_blank" title="WhatsApp"><svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15l-1.3 4.7 4.8-1.3A10 10 0 1 0 12 2zm0 18a8 8 0 0 1-4.1-1.1l-.3-.2-2.8.8.7-2.7-.2-.3A8 8 0 1 1 12 20zm4.4-6c-.2-.1-1.4-.7-1.6-.8-.2-.1-.4-.1-.5.1l-.7.9c-.1.2-.3.2-.5.1a6.5 6.5 0 0 1-3.2-2.8c-.1-.2 0-.4.1-.5l.4-.5c.1-.2.1-.3 0-.5l-.7-1.7c-.2-.4-.4-.4-.5-.4h-.5c-.2 0-.4.1-.6.3a3 3 0 0 0-.9 2.2c0 1.3 1 2.6 1.1 2.8.1.2 1.9 3 4.7 4.1 1.7.7 2.3.7 3.1.6.5 0 1.4-.6 1.6-1.1.2-.6.2-1 .1-1.1z"/></svg></a>
- <button class="up" title="Sus" onclick="scrollTo({top:0,behavior:'smooth'})">↑</button>`;
+ <button class="up" title="Sus" aria-label="Sus" onclick="scrollTo({top:0,behavior:'smooth'})">↑</button>`;
  document.body.appendChild(d);}
 
 /* ---------- carousels ---------- */
@@ -135,7 +147,7 @@ function pageHome(){
  const revs=C.reviews.map(r=>`<div class="rev"><div class="stars">${stars(r.rating)}</div><p>„${esc(r.text_ro)}”</p><div class="who"><div class="av">${esc(r.name[0])}</div><div><b>${esc(r.name)}</b><span>${esc(r.city)} · ${esc(r.product)}</span></div></div></div>`).join("");
  const faq=m.faq.map(f=>`<div class="q"><div class="h">${esc(f.q_ro)}<span class="pl">+</span></div><div class="a">${esc(f.a_ro)}</div></div>`).join("");
  root.innerHTML=`
- <section class="hero"><div class="hero-track">${slides}</div><button class="hero-ar prev">‹</button><button class="hero-ar next">›</button><div class="hero-dots">${m.hero.map((_,k)=>`<span class="${k?'':'on'}"></span>`).join("")}</div></section>
+ <section class="hero"><div class="hero-track">${slides}</div><button class="hero-ar prev" aria-label="Slide anterior">‹</button><button class="hero-ar next" aria-label="Slide următor">›</button><div class="hero-dots">${m.hero.map((_,k)=>`<span class="${k?'':'on'}"></span>`).join("")}</div></section>
  <section class="ustrip"><div class="wrap">${usp}</div></section>
  <div class="flash"><div class="wrap"><span>🔥 <b>Reduceri de sezon</b> — până la −25% la magazin universal. Se termină în:</span><div class="cd" id="cd"><div class="u"><span id="cd-h">00</span><small>ore</small></div><div class="u"><span id="cd-m">00</span><small>min</small></div><div class="u"><span id="cd-s">00</span><small>sec</small></div></div><a class="btn btn-gold" href="catalog.html">Vezi ofertele</a></div></div>
  <section class="sec"><div class="wrap"><div class="sec-t"><div class="k">Catalog complet</div><h2>Cumpără pe secțiuni</h2><p>Peste ${totalProd.toLocaleString("ro-RO")} de produse în ${Object.keys(grpAgg).length} secțiuni — de la sanitehnică la electronice, modă și auto.</p></div><div class="groups-grid">${groupcards}</div></div></section>
@@ -166,7 +178,7 @@ function pageHome(){
  (function(){var f=$$("#vframes img");if(f.length<2)return;var i=0;setInterval(function(){f[i].classList.remove("on");i=(i+1)%f.length;f[i].classList.add("on");},3000);})();
  var pb=$("#playBtn");if(pb)pb.onclick=function(){window.open("https://www.youtube.com/results?search_query=premium+bathroom+faucet+showroom","_blank");};
 }
-function rowOf2(html){return `<div class="crow"><button class="car prev">‹</button><div class="ctrack">${html}</div><button class="car next">›</button></div>`;}
+function rowOf2(html){return `<div class="crow"><button class="car prev" aria-label="Înapoi">‹</button><div class="ctrack">${html}</div><button class="car next" aria-label="Înainte">›</button></div>`;}
 window.__news=f=>{toast("Mulțumim! Codul -10% a fost trimis pe email ✓");f.reset();};
 
 /* ---------- CATALOG (headless API mode) ---------- */
@@ -187,7 +199,8 @@ function pageCatalogAPI(){
    $("#cat-grid").innerHTML='<p class="muted" style="padding:30px">Se încarcă din backend…</p>';
    try{
      const u=`${API}/api/products?page=${page}&per=${per}`+(cat?`&cat=${cat}`:"")+((group&&groupCats.length)?`&cats=${groupCats.join(",")}`:"")+(q?`&q=${encodeURIComponent(q)}`:"")+(sort!=="pop"?`&sort=${sort}`:"");
-     const d=await (await fetch(u)).json();
+     const _r=await fetch(u); if(!_r.ok) throw new Error("http "+_r.status);
+     const d=await _r.json(); if(!d||!Array.isArray(d.items)) throw new Error("bad-shape");
      $("#cat-found").textContent=`${d.total} produse`;
      $("#cat-grid").innerHTML=(d.items&&d.items.length)?d.items.map(card).join(""):`<div class="empty"><div class="big">🔍</div><p>Niciun produs.</p></div>`;
      const pages=d.pages||1; let pg="";
@@ -212,14 +225,14 @@ function pageCatalog(){
  let cat=param("cat"), group=param("group"), q=(param("q")||"").toLowerCase(), sort="pop", page=1, per=12;
  const groupCats=group?C.cats.filter(c=>c.group===group).map(c=>c.id):[];
  const sel={cats:cat?[cat]:(group?groupCats.slice():[]), mats:[], price:""};
- const allMats=[...new Set(P.map(p=>p.specs.Material))];
+ const allMats=[...new Set(P.map(p=>(p.specs||{}).Material).filter(Boolean))];
  const priceB=[["0-3000","sub 3 000 lei"],["3000-7000","3 000 – 7 000 lei"],["7000-15000","7 000 – 15 000 lei"],["15000-999999","peste 15 000 lei"]];
  function filtered(){
    let l=P.slice();
    if(sel.cats.length) l=l.filter(p=>sel.cats.includes(p.cat));
-   if(sel.mats.length) l=l.filter(p=>sel.mats.includes(p.specs.Material));
+   if(sel.mats.length) l=l.filter(p=>sel.mats.includes((p.specs||{}).Material));
    if(sel.price){const[a,b]=sel.price.split("-").map(Number);l=l.filter(p=>p.price>=a&&p.price<=b);}
-   if(q) l=l.filter(p=>(p.name+" "+p.cat_name+" "+p.specs.Material).toLowerCase().includes(q));
+   if(q) l=l.filter(p=>(p.name+" "+p.cat_name+" "+((p.specs||{}).Material||"")).toLowerCase().includes(q));
    if(sort==="asc") l.sort((a,b)=>a.price-b.price);
    else if(sort==="desc") l.sort((a,b)=>b.price-a.price);
    else if(sort==="disc") l.sort((a,b)=>discPct(b)-discPct(a));
@@ -272,11 +285,13 @@ function pageProduct(){
 function renderProduct(p){
  const root=$("#product");
  if(!p){root.innerHTML=`<div class="wrap"><div class="empty"><div class="big">😕</div><p>Produsul nu a fost găsit.</p><a class="btn btn-gold" href="catalog.html">Înapoi la catalog</a></div></div>`;return;}
- document.title=p.name+" | EUROMAG Chișinău";
- const cc=C.copy.category[p.cat], save=p.old_price?p.old_price-p.price:0;
- const specRows=Object.entries(p.specs).map(([k,v])=>`<tr><td>${esc(k)}</td><td>${esc(v)}</td></tr>`).join("");
- const bullets=cc.bullets_ro.map(b=>`<li>${esc(b)}</li>`).join("");
- const pills=p.feat.split(/,|·/).map(s=>s.trim()).filter(Boolean).map(s=>`<span>${esc(s)}</span>`).join("");
+ document.title=p.name+" | EUROMAG";
+ try{var _cn=document.querySelector('link[rel=canonical]');if(_cn)_cn.href=location.href;var _ou=document.querySelector('meta[property="og:url"]');if(_ou)_ou.setAttribute('content',location.href);var _md=document.querySelector('meta[name=description]');if(_md)_md.setAttribute('content',(p.name+" — preț "+money(p.price)+", livrare în Moldova. EUROMAG.").slice(0,160));}catch(e){}
+ const cc=C.copy.category[p.cat]||{bullets_ro:[],intro_ro:"",care_ro:""}, save=p.old_price?p.old_price-p.price:0;
+ const specs=p.specs||{}, feat=p.feat||"";
+ const specRows=Object.entries(specs).map(([k,v])=>`<tr><td>${esc(k)}</td><td>${esc(v)}</td></tr>`).join("");
+ const bullets=(cc.bullets_ro||[]).map(b=>`<li>${esc(b)}</li>`).join("");
+ const pills=feat.split(/,|·/).map(s=>s.trim()).filter(Boolean).map(s=>`<span>${esc(s)}</span>`).join("");
  const related=P.filter(x=>x.cat===p.cat&&x.id!==p.id).slice(0,10);
  const rvItems=getRV().filter(id=>id!==p.id).map(resolve).filter(Boolean).slice(0,10);
  const prevs=C.reviews.filter(r=>r.rating>=4).slice(0,4).map(r=>`<div class="rev"><div class="stars">${stars(r.rating)}</div><p>„${esc(r.text_ro)}”</p><div class="who"><div class="av">${esc(r.name[0])}</div><div><b>${esc(r.name)}</b><span>${esc(r.city)}</span></div></div></div>`).join("");
@@ -284,7 +299,7 @@ function renderProduct(p){
  <div class="pdp">
    <div class="gallery">
      <div class="main"><img id="gmain" src="${(p.images&&p.images[0])||p.img}" alt="${esc(p.name)}"></div>
-     <div class="thumbs">${((p.images&&p.images.length)?p.images:[p.img]).map((u,gi)=>`<img class="${gi===0?'on':''}" src="${u}" onclick="document.getElementById('gmain').src=this.src;this.parentNode.querySelectorAll('img').forEach(t=>t.classList.remove('on'));this.classList.add('on')">`).join("")}</div>
+     <div class="thumbs">${((p.images&&p.images.length)?p.images:[p.img]).map((u,gi)=>`<img class="${gi===0?'on':''}" src="${u}" alt="${esc(p.name)} – imaginea ${gi+1}" onclick="document.getElementById('gmain').src=this.src;this.parentNode.querySelectorAll('img').forEach(t=>t.classList.remove('on'));this.classList.add('on')">`).join("")}</div>
    </div>
    <div class="info">
      <span class="cat">${esc(p.cat_name)}</span><h1>${esc(p.name)}</h1>
@@ -301,12 +316,12 @@ function renderProduct(p){
        <button class="btn btn-dark btn-block" id="pbuy">${esc(C.copy.buy_now_ro)}</button>
      </div>
      <div style="display:flex;gap:18px;font-size:12.5px;color:var(--muted);flex-wrap:wrap">
-       <span>✓ Produs original</span><span>✓ Garanție ${esc(p.specs["Garanție"])}</span><span>✓ Ramburs disponibil</span><span>✓ 14 zile retur</span></div>
+       <span>✓ Produs original</span><span>✓ Garanție ${esc(specs["Garanție"]||"producător")}</span><span>✓ Ramburs disponibil</span><span>✓ 14 zile retur</span></div>
    </div>
  </div>
  <div class="tabs">
    <div class="heads"><button class="on" data-t="d">Descriere</button><button data-t="s">Specificații</button><button data-t="v">Video</button><button data-t="l">Livrare</button><button data-t="r">Recenzii</button></div>
-   <div class="body" id="tb-d"><div class="prose">${p.description?`<p>${esc(p.description)}</p>`:""}<p>${esc(cc.intro_ro)} ${esc(p.feat)}.</p><ul>${bullets}</ul><p style="color:var(--muted);font-size:13px">${esc(cc.care_ro)}</p></div></div>
+   <div class="body" id="tb-d"><div class="prose">${p.description?`<p>${esc(p.description)}</p>`:""}<p>${esc(cc.intro_ro)} ${esc(feat)}.</p><ul>${bullets}</ul><p style="color:var(--muted);font-size:13px">${esc(cc.care_ro)}</p></div></div>
    <div class="body" id="tb-s" hidden><table class="spec-tbl">${specRows}</table></div>
    <div class="body" id="tb-v" hidden>${p.video?`<video controls preload="metadata" style="width:100%;max-width:680px;border-radius:var(--radius);background:#000" src="${p.video}">Browserul nu suportă video.</video>`:`<div class="videobox"><div style="font-size:40px">▶</div><div>Video se adaugă automat din carduri furnizor (enrichment)</div></div>`}</div>
    <div class="body" id="tb-l" hidden><div class="prose"><p>${esc(C.marketing.delivery_ro)}</p><p>${esc(C.marketing.returns_ro)}</p></div></div>
@@ -316,7 +331,8 @@ function renderProduct(p){
  ${rvItems.length?`<section class="sec"><div class="sec-t" style="text-align:left"><div class="k">Istoric</div><h2>Vizualizate recent</h2></div>${rowOf(rvItems)}</section>`:""}
  </div>`;
  // JSON-LD
- const ld={"@context":"https://schema.org/","@type":"Product","name":p.name,"image":[location.origin+"/"+p.img],"description":p.feat,"sku":p.id,"brand":{"@type":"Brand","name":"EUROMAG"},"aggregateRating":{"@type":"AggregateRating","ratingValue":p.rating,"reviewCount":p.reviews},"offers":{"@type":"Offer","priceCurrency":"MDL","price":p.price,"availability":"https://schema.org/InStock"}};
+ const _im=(p.images&&p.images[0])||p.img||"";const _imAbs=/^https?:/.test(_im)?_im:location.href.replace(/[^/]*$/,"")+_im;
+ const ld={"@context":"https://schema.org/","@type":"Product","name":p.name,"image":[_imAbs],"description":feat,"sku":p.id,"brand":{"@type":"Brand","name":"EUROMAG"},"aggregateRating":{"@type":"AggregateRating","ratingValue":p.rating,"reviewCount":p.reviews},"offers":{"@type":"Offer","priceCurrency":"MDL","price":p.price,"availability":"https://schema.org/InStock"}};
  const s=document.createElement("script");s.type="application/ld+json";s.textContent=JSON.stringify(ld);document.head.appendChild(s);
  // interactions
  const pq=$("#pq");
@@ -333,15 +349,16 @@ function pageCart(){
  function render(){
    const items=cartItems();
    if(!items.length){root.innerHTML=`<div class="wrap"><div class="empty"><div class="big">🛒</div><h2>Coșul este gol</h2><p>Adaugă produse premium din catalog.</p><a class="btn btn-gold" href="catalog.html">Spre catalog</a></div></div>`;return;}
-   const sub=cartSub(), deliv=sub>=FREE?0:DELIV, total=sub+deliv, left=Math.max(0,FREE-sub), prog=Math.min(100,sub/FREE*100);
-   const rows=items.map(({p,q})=>`<div class="cart-item"><img src="${p.img}"><div><div class="nm"><a href="produs.html?id=${p.id}">${esc(p.name)}</a></div><div style="font-size:12.5px;color:var(--muted)">${esc(p.specs.Material)} · ${esc(p.specs.Finisaj)}</div><div class="qty" style="margin-top:8px"><button data-m="${p.id}">−</button><input value="${q}" data-i="${p.id}" inputmode="numeric"><button data-p2="${p.id}">+</button></div><button class="rm" data-rm="${p.id}">Șterge</button></div><div class="ip">${money(p.price*q)}</div></div>`).join("");
+   const sub=cartSub(), disc=promoCode()?Math.round(sub*0.1):0, deliv=sub>=FREE?0:DELIV, total=sub-disc+deliv, left=Math.max(0,FREE-sub), prog=Math.min(100,sub/FREE*100);
+   const rows=items.map(({p,q})=>`<div class="cart-item"><img src="${p.img}"><div><div class="nm"><a href="produs.html?id=${p.id}">${esc(p.name)}</a></div>${(p.specs&&(p.specs.Material||p.specs.Finisaj))?`<div style="font-size:12.5px;color:var(--muted)">${esc(p.specs.Material||"")}${p.specs.Material&&p.specs.Finisaj?" · ":""}${esc(p.specs.Finisaj||"")}</div>`:""}<div class="qty" style="margin-top:8px"><button data-m="${p.id}">−</button><input value="${q}" data-i="${p.id}" inputmode="numeric"><button data-p2="${p.id}">+</button></div><button class="rm" data-rm="${p.id}">Șterge</button></div><div class="ip">${money(p.price*q)}</div></div>`).join("");
    root.innerHTML=`<div class="page-head"><div class="wrap"><h1>Coșul tău</h1></div></div>
    <div class="wrap" style="padding:26px 20px 50px"><div class="cart-grid"><div>${rows}</div>
      <aside class="summary"><h3>Sumar comandă</h3>
        ${left>0?`<div style="font-size:12.5px;color:var(--muted)">Mai adaugă <b>${money(left)}</b> pentru livrare gratuită</div><div class="progress"><i style="width:${prog}%"></i></div>`:`<div style="color:var(--green);font-size:13px;font-weight:600">✓ Ai livrare gratuită!</div>`}
        <div class="row"><span>Subtotal</span><span>${money(sub)}</span></div>
+       ${disc?`<div class="row" style="color:var(--green)"><span>Reducere EURO10</span><span>-${money(disc)}</span></div>`:""}
        <div class="row"><span>Livrare</span><span>${deliv?money(deliv):"Gratuit"}</span></div>
-       <div class="promo"><input id="promo" placeholder="Cod promo (EURO10)"><button class="btn btn-ghost" id="promoB">Aplică</button></div>
+       <div class="promo"><input id="promo" placeholder="Cod promo (EURO10)" value="${promoCode()}"><button class="btn btn-ghost" id="promoB">Aplică</button></div>
        <div class="row total"><span>Total</span><span id="ctotal">${money(total)}</span></div>
        <a class="btn btn-gold btn-block" href="checkout.html" style="margin-top:14px">Finalizează comanda</a>
        <a class="btn btn-ghost btn-block" href="catalog.html" style="margin-top:8px">Continuă cumpărăturile</a>
@@ -349,8 +366,8 @@ function pageCart(){
    $$('[data-rm]').forEach(b=>b.onclick=()=>{setQty(b.dataset.rm,0);render();});
    $$('[data-m]').forEach(b=>b.onclick=()=>{const c=getCart();setQty(b.dataset.m,(c[b.dataset.m]||1)-1);render();});
    $$('[data-p2]').forEach(b=>b.onclick=()=>{const c=getCart();setQty(b.dataset.p2,(c[b.dataset.p2]||1)+1);render();});
-   $$('[data-i]').forEach(inp=>inp.onchange=()=>{setQty(inp.dataset.i,Math.max(0,parseInt(inp.value)||0));render();});
-   $("#promoB").onclick=()=>{if(($("#promo").value||"").toUpperCase()==="EURO10"){const t=Math.round((sub*0.9+deliv));$("#ctotal").textContent=money(t);toast("Cod aplicat: -10% ✓");}else toast("Cod invalid");};
+   $$('[data-i]').forEach(inp=>inp.onchange=()=>{setQty(inp.dataset.i,Math.max(1,parseInt(inp.value)||1));render();});
+   $("#promoB").onclick=()=>{if(($("#promo").value||"").toUpperCase()==="EURO10"){localStorage.setItem("aqualux_promo","EURO10");toast("Cod aplicat: -10% ✓");render();}else{localStorage.removeItem("aqualux_promo");toast("Cod invalid");}};
  }
  render();
 }
@@ -359,7 +376,7 @@ function pageCart(){
 function pageCheckout(){
  const root=$("#checkout"), items=cartItems();
  if(!items.length){root.innerHTML=`<div class="wrap"><div class="empty"><div class="big">🛒</div><p>Coșul este gol.</p><a class="btn btn-gold" href="catalog.html">Spre catalog</a></div></div>`;return;}
- const sub=cartSub(), deliv=sub>=FREE?0:DELIV, total=sub+deliv;
+ const sub=cartSub(), disc=promoCode()?Math.round(sub*0.1):0, deliv=sub>=FREE?0:DELIV, total=sub-disc+deliv;
  const sumRows=items.map(({p,q})=>`<div class="row"><span>${esc(p.name)} × ${q}</span><span>${money(p.price*q)}</span></div>`).join("");
  const cityOpts=CITIES.map(c=>`<option>${c}</option>`).join("");
  root.innerHTML=`<div class="page-head"><div class="wrap"><h1>Finalizare comandă</h1></div></div>
@@ -386,6 +403,7 @@ function pageCheckout(){
    </div>
    <aside class="summary"><h3>Comanda ta</h3>${sumRows}
      <div class="row"><span>Subtotal</span><span>${money(sub)}</span></div>
+     ${disc?`<div class="row" style="color:var(--green)"><span>Reducere EURO10</span><span>-${money(disc)}</span></div>`:""}
      <div class="row"><span>Livrare</span><span>${deliv?money(deliv):"Gratuit"}</span></div>
      <div class="row total"><span>Total</span><span>${money(total)}</span></div>
      <button class="btn btn-gold btn-block" type="submit" style="margin-top:14px">Plasează comanda</button>
@@ -398,7 +416,7 @@ function pageCheckout(){
    const ord="EU-"+Date.now().toString().slice(-6);
    const lines=items.map(x=>`${x.p.name} × ${x.q} = ${money(x.p.price*x.q)}`).join("%0A");
    const wa=`https://wa.me/${C.whatsapp}?text=${encodeURIComponent("Comandă nouă "+ord+" — EUROMAG")}%0A${lines}%0ATotal: ${money(total).replace(' ','%20')}%0AClient: ${encodeURIComponent(f.name.value+", "+f.phone.value+", "+f.city.value)}`;
-   localStorage.removeItem(CART_KEY);updateCartCount();
+   localStorage.removeItem(CART_KEY);localStorage.removeItem("aqualux_promo");updateCartCount();
    root.innerHTML=`<div class="wrap"><div class="okbox"><div class="circle">✓</div><h1>Comandă plasată!</h1>
      <p style="color:var(--muted);max-width:480px;margin:10px auto">Numărul comenzii tale: <b>${ord}</b>. Un consultant EUROMAG te va contacta în scurt timp pentru confirmare.</p>
      <div style="display:flex;gap:10px;justify-content:center;margin-top:20px;flex-wrap:wrap">
@@ -540,7 +558,8 @@ function initTheme(){let t=localStorage.getItem(THEME_KEY)||"light";applyTheme(t
 function initReveal(){
  if(!("IntersectionObserver" in window))return;
  document.documentElement.classList.add("has-reveal");
- const io=new IntersectionObserver((es)=>{es.forEach(en=>{if(en.isIntersecting){en.target.classList.add("reveal-on");io.unobserve(en.target);}});},{threshold:.04,rootMargin:"0px 0px -30px 0px"});
+ if(!initReveal._io){initReveal._io=new IntersectionObserver((es)=>{es.forEach(en=>{if(en.isIntersecting){en.target.classList.add("reveal-on");initReveal._io.unobserve(en.target);}});},{threshold:.04,rootMargin:"0px 0px -30px 0px"});}
+ const io=initReveal._io;
  const mark=()=>$$(".sec, .ustrip, .groups-grid > *, .trust, .promo-banner, .citybanner").forEach(el=>{if(!el.classList.contains("reveal")){el.classList.add("reveal");io.observe(el);}});
  mark();[400,1000].forEach(t=>setTimeout(mark,t));
  // safety: никогда не оставляем контент скрытым, даже если observer не сработал

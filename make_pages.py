@@ -17,6 +17,11 @@ HEAD="""<!DOCTYPE html><html lang="ro"><head>
 <meta property="og:site_name" content="EUROMAG">
 <meta property="og:title" content="{title}"><meta property="og:description" content="{desc}">
 <meta property="og:image" content="{site}assets/img/hero/hero1.jpg">
+<meta property="og:url" content="{site}{file}">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{title}"><meta name="twitter:description" content="{desc}">
+<meta name="twitter:image" content="{site}assets/img/hero/hero1.jpg">
+<link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#16130e">
 <link rel="stylesheet" href="assets/css/style.css">
 <script type="application/ld+json">{org}</script>
@@ -31,7 +36,7 @@ HEAD="""<!DOCTYPE html><html lang="ro"><head>
 
 ORG=json.dumps({"@context":"https://schema.org","@type":"Store","name":"EUROMAG","image":SITE+"assets/img/hero/hero1.jpg",
  "description":"Magazin online universal în Moldova — mii de produse cu livrare în toată țara.","url":SITE,"telephone":"+37360000000",
- "address":{"@type":"PostalAddress","addressLocality":"Chișinău","addressCountry":"MD","streetAddress":"bd. Ștefan cel Mare 1"},
+ "address":{"@type":"PostalAddress","addressLocality":"Ialoveni","addressCountry":"MD","streetAddress":"str. Alexandru cel Bun 45"},
  "priceRange":"$$$"},ensure_ascii=False)
 
 PAGES=[
